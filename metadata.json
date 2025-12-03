@@ -1,0 +1,9 @@
+{
+  "name": "HuntProperty 2025",
+  "description": "A futuristic real estate platform powered by Gemini AI.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera",
+    "microphone"
+  ]
+}
