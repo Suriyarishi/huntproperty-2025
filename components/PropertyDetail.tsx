@@ -23,7 +23,6 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [userType, setUserType] = useState<'individual' | 'dealer'>('individual');
 
-  // Mock detailed data based on the prompt
   const DETAILS = {
     rent: "₹ 7,000",
     brokerage: "₹ 7,000",
@@ -44,7 +43,6 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
     description: "Newly Constructed Rooms | Studio Appartments | Separate independent flats. Location: Dharam Colony, Palam Vihar Extension, Gurugram, Haryana."
   };
 
-  // Mock additional slides
   const slides = [
       property.imageUrl,
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
@@ -68,7 +66,6 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
         const base64data = (reader.result as string).split(',')[1];
         const result = await analyzePropertyPhoto(base64data);
         setAnalysis(result);
-        
         const invResult = await getInvestmentAnalysis(`${property.title} in ${property.location} priced at ${property.description}`);
         setInvestmentData(invResult);
         setLoading(false);
@@ -92,16 +89,15 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
 
   return (
     <div className="min-h-screen bg-[#f8fafc] pb-32">
-      {/* 1. Hero Slider */}
       <div className="relative h-[60vh] lg:h-[70vh] w-full bg-slate-900 group cursor-pointer" onClick={() => setIsGalleryOpen(true)}>
             <div className="absolute inset-0">
-                    <img src={slides[currentSlide]} alt="Property" className="w-full h-full object-cover transition-opacity duration-500" />
+                <img src={slides[currentSlide]} alt="Property" className="w-full h-full object-cover transition-opacity duration-500" />
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-90" />
 
             <div className="absolute inset-0 flex items-center justify-between px-4 lg:px-8 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={prevSlide} aria-label="Previous Slide" className="p-4 bg-white/10 backdrop-blur-xl hover:bg-primary hover:text-slate-900 rounded-full text-white pointer-events-auto transition-all border border-white/10"><ChevronLeft size={24} /></button>
-                <button onClick={nextSlide} aria-label="Next Slide" className="p-4 bg-white/10 backdrop-blur-xl hover:bg-primary hover:text-slate-900 rounded-full text-white pointer-events-auto transition-all border border-white/10"><ChevronRight size={24} /></button>
+                <button onClick={prevSlide} className="p-4 bg-white/10 backdrop-blur-xl hover:bg-primary hover:text-slate-900 rounded-full text-white pointer-events-auto transition-all border border-white/10"><ChevronLeft size={24} /></button>
+                <button onClick={nextSlide} className="p-4 bg-white/10 backdrop-blur-xl hover:bg-primary hover:text-slate-900 rounded-full text-white pointer-events-auto transition-all border border-white/10"><ChevronRight size={24} /></button>
             </div>
 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity border border-white/20 flex items-center gap-2">
@@ -111,7 +107,7 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
             <div className="absolute bottom-0 left-0 w-full p-6 lg:p-12">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex gap-3 mb-4 animate-fade-in-up">
-                        <span className="px-4 py-1.5 rounded-full bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider shadow-lg">For Rent</span>
+                        <span className="px-4 py-1.5 rounded-full bg-primary text-slate-900 text-xs font-bold uppercase tracking-wider shadow-lg">For Rent</span>
                         <span className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur text-white text-xs font-bold uppercase tracking-wider border border-white/20 flex items-center gap-2">
                             <CheckCircle2 size={14} className="text-primary" /> Verified
                         </span>
@@ -128,48 +124,26 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
             </div>
       </div>
 
-      {/* Full Screen Gallery Modal */}
       {isGalleryOpen && (
           <div className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-in fade-in duration-200">
-              <button 
-                onClick={() => setIsGalleryOpen(false)}
-                aria-label="Close Gallery"
-                className="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all"
-              >
+              <button onClick={() => setIsGalleryOpen(false)} className="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all">
                   <X size={24} />
               </button>
-              
               <div className="absolute top-6 left-6 text-white font-bold bg-black/50 px-4 py-2 rounded-full border border-white/10">
                   {currentSlide + 1} / {slides.length}
               </div>
-
-              <button 
-                onClick={prevSlide}
-                aria-label="Previous Image"
-                className="absolute left-4 md:left-8 p-4 rounded-full bg-white/10 text-white hover:bg-primary hover:text-slate-900 transition-all border border-white/10"
-              >
+              <button onClick={prevSlide} className="absolute left-4 md:left-8 p-4 rounded-full bg-white/10 text-white hover:bg-primary hover:text-slate-900 transition-all border border-white/10">
                   <ChevronLeft size={32} />
               </button>
-
-              <img 
-                src={slides[currentSlide]} 
-                alt={`Slide ${currentSlide + 1}`} 
-                className="max-w-full max-h-[85vh] object-contain shadow-2xl"
-              />
-
-              <button 
-                onClick={nextSlide}
-                aria-label="Next Image"
-                className="absolute right-4 md:right-8 p-4 rounded-full bg-white/10 text-white hover:bg-primary hover:text-slate-900 transition-all border border-white/10"
-              >
+              <img src={slides[currentSlide]} alt="Slide" className="max-w-full max-h-[85vh] object-contain shadow-2xl" />
+              <button onClick={nextSlide} className="absolute right-4 md:right-8 p-4 rounded-full bg-white/10 text-white hover:bg-primary hover:text-slate-900 transition-all border border-white/10">
                   <ChevronRight size={32} />
               </button>
           </div>
       )}
 
       <div className="max-w-7xl mx-auto px-6 -mt-16 relative z-10">
-         {/* 2. Stats Grid */}
-         <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl p-8 grid grid-cols-3 md:grid-cols-3 gap-8 mb-12">
+         <div className="bg-white/80 backdrop-blur-xl border border-white/60 rounded-3xl shadow-xl p-8 grid grid-cols-3 gap-8 mb-12">
              <div className="flex flex-col items-center justify-center gap-2 border-r border-slate-200/60">
                  <Bed className="text-slate-400" size={32}/> 
                  <div className="text-center">
@@ -194,60 +168,38 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
          </div>
 
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Left Main Content */}
             <div className="lg:col-span-2 space-y-12">
-                 
-                 {/* Specs Grid */}
                  <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8">
                      <h3 className="text-2xl font-display font-bold text-slate-900 mb-8 border-b border-slate-100 pb-4">Property Specifications</h3>
                      <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Carpet Area</p>
-                            <p className="font-bold text-slate-900">{DETAILS.carpetArea}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status</p>
-                            <p className="font-bold text-slate-900">{DETAILS.status}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Transaction</p>
-                            <p className="font-bold text-slate-900">{DETAILS.transactionType}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Floor</p>
-                            <p className="font-bold text-slate-900">{DETAILS.floor}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Furnished</p>
-                            <p className="font-bold text-slate-900">{DETAILS.furnishing}</p>
-                        </div>
-                         <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Facing</p>
-                            <p className="font-bold text-slate-900">{DETAILS.facing}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Ownership</p>
-                            <p className="font-bold text-slate-900">{DETAILS.ownership}</p>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Brokerage</p>
-                            <p className="font-bold text-slate-900">{DETAILS.brokerage}</p>
-                        </div>
+                        {[
+                            { label: 'Carpet Area', val: DETAILS.carpetArea },
+                            { label: 'Status', val: DETAILS.status },
+                            { label: 'Transaction', val: DETAILS.transactionType },
+                            { label: 'Floor', val: DETAILS.floor },
+                            { label: 'Furnished', val: DETAILS.furnishing },
+                            { label: 'Facing', val: DETAILS.facing },
+                            { label: 'Ownership', val: DETAILS.ownership },
+                            { label: 'Brokerage', val: DETAILS.brokerage }
+                        ].map(item => (
+                            <div key={item.label} className="space-y-1">
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{item.label}</p>
+                                <p className="font-bold text-slate-900">{item.val}</p>
+                            </div>
+                        ))}
                      </div>
                  </div>
 
-                 {/* Overview */}
                  <div className="glass-panel p-8 rounded-3xl bg-white">
                      <h3 className="text-2xl font-display font-bold text-slate-900 mb-6">Property Description</h3>
                      <p className="text-slate-600 leading-relaxed text-lg">{DETAILS.description}</p>
                  </div>
 
-                 {/* Amenities */}
                  <div>
                     <h3 className="text-2xl font-display font-bold text-slate-900 mb-6">Amenities</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         <div className="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white border border-slate-100 text-slate-700 font-medium text-center hover:shadow-md transition-all">
-                            <div className="p-3 bg-blue-50 rounded-full text-blue-500"><Droplets size={24}/></div>
+                            <div className="p-3 bg-emerald-50 rounded-full text-emerald-600"><Droplets size={24}/></div>
                             <span className="text-sm font-bold">24 Hour Water Supply</span>
                         </div>
                          <div className="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white border border-slate-100 text-slate-700 font-medium text-center hover:shadow-md transition-all">
@@ -259,16 +211,14 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                             <span className="text-sm font-bold">Power Backup</span>
                         </div>
                          <div className="flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-white border border-slate-100 text-slate-700 font-medium text-center hover:shadow-md transition-all">
-                            <div className="p-3 bg-emerald-50 rounded-full text-emerald-500"><Car size={24}/></div>
+                            <div className="p-3 bg-emerald-50 rounded-full text-emerald-600"><Car size={24}/></div>
                             <span className="text-sm font-bold">Car Parking</span>
                         </div>
                     </div>
                 </div>
 
-                {/* AI Tools */}
                 <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 border border-white/10 shadow-2xl text-white overflow-hidden relative">
                      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
-                     
                      <div className="flex items-center gap-3 mb-8 relative z-10">
                         <div className="p-2 bg-white/10 rounded-lg text-primary backdrop-blur"><Sparkles size={20} /></div>
                         <div>
@@ -276,27 +226,18 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                             <p className="text-slate-400 text-sm">Unlock deeper insights about this property</p>
                         </div>
                      </div>
-                     
                      <div className="grid md:grid-cols-2 gap-4 mb-8 relative z-10">
-                         <button 
-                            onClick={() => { setActiveAiSection(activeAiSection === 'analysis' ? 'none' : 'analysis'); handleAnalyze(); }}
-                            className={`p-6 text-left rounded-2xl border transition-all group ${activeAiSection === 'analysis' ? 'bg-primary text-slate-900 border-primary' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}
-                         >
+                         <button onClick={() => { setActiveAiSection(activeAiSection === 'analysis' ? 'none' : 'analysis'); handleAnalyze(); }} className={`p-6 text-left rounded-2xl border transition-all group ${activeAiSection === 'analysis' ? 'bg-primary text-slate-900 border-primary' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}>
                              <Sparkles className={`mb-4 transition-transform group-hover:scale-110 ${activeAiSection === 'analysis' ? 'text-slate-900' : 'text-primary'}`} />
                              <h4 className="font-bold text-lg mb-1">Investment Analysis</h4>
                              <p className={`text-sm ${activeAiSection === 'analysis' ? 'text-slate-800' : 'text-slate-400'}`}>Market value prediction & ROI analysis.</p>
                          </button>
-
-                         <button 
-                            onClick={() => setActiveAiSection(activeAiSection === 'visualize' ? 'none' : 'visualize')}
-                            className={`p-6 text-left rounded-2xl border transition-all group ${activeAiSection === 'visualize' ? 'bg-primary text-slate-900 border-primary' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}
-                         >
+                         <button onClick={() => setActiveAiSection(activeAiSection === 'visualize' ? 'none' : 'visualize')} className={`p-6 text-left rounded-2xl border transition-all group ${activeAiSection === 'visualize' ? 'bg-primary text-slate-900 border-primary' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}>
                              <BrainCircuit className={`mb-4 transition-transform group-hover:scale-110 ${activeAiSection === 'visualize' ? 'text-slate-900' : 'text-primary'}`} />
                              <h4 className="font-bold text-lg mb-1">AI Renovator</h4>
                              <p className={`text-sm ${activeAiSection === 'visualize' ? 'text-slate-800' : 'text-slate-400'}`}>Redesign interiors instantly.</p>
                          </button>
                      </div>
-
                      {activeAiSection === 'analysis' && (
                          <div className="bg-white/10 p-6 rounded-2xl border border-white/10 animate-fade-in-up backdrop-blur-md relative z-10">
                              {loading ? (
@@ -312,7 +253,6 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                              )}
                          </div>
                      )}
-                     
                      {activeAiSection === 'visualize' && (
                          <div className="bg-white p-2 rounded-2xl border border-white/10 animate-fade-in-up shadow-inner h-[500px] relative z-10">
                              <AIImageStudio initialImage={property.imageUrl} />
@@ -320,7 +260,6 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                      )}
                 </div>
 
-                 {/* Map */}
                  <div>
                      <h3 className="text-2xl font-display font-bold text-slate-900 mb-6">Location Context</h3>
                      <div className="h-[450px] rounded-3xl overflow-hidden border border-slate-200 shadow-lg">
@@ -329,9 +268,7 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                  </div>
             </div>
 
-            {/* Right Sidebar */}
             <div className="space-y-8">
-                {/* Agent / Owner Card */}
                 <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl sticky top-24">
                     <div className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-400">
@@ -345,56 +282,24 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                             </button>
                         </div>
                     </div>
-                    
                     <div className="bg-slate-50 p-5 rounded-2xl space-y-4 border border-slate-100">
                         <h5 className="font-bold text-slate-900">Contact Owner</h5>
-                        <input 
-                            type="text" 
-                            defaultValue="RISHI KESAVAN S K" 
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                        />
-                         <input 
-                            type="email" 
-                            defaultValue="klnmca6@gmail.com" 
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                        />
-                         <input 
-                            type="tel" 
-                            defaultValue="9003486509" 
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                        />
-                        
+                        <input type="text" defaultValue="RISHI KESAVAN S K" className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                        <input type="email" defaultValue="klnmca6@gmail.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+                        <input type="tel" defaultValue="9003486509" className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-900 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
                         <div className="space-y-2">
                              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Interested In</label>
                              <div className="flex bg-white rounded-lg p-1 border border-slate-200">
-                                 <button 
-                                    onClick={() => setUserType('individual')}
-                                    className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${userType === 'individual' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-                                 >
-                                     Individual
-                                 </button>
-                                 <button 
-                                    onClick={() => setUserType('dealer')}
-                                    className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${userType === 'dealer' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-                                 >
-                                     Dealer
-                                 </button>
+                                 <button onClick={() => setUserType('individual')} className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${userType === 'individual' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>Individual</button>
+                                 <button onClick={() => setUserType('dealer')} className={`flex-1 py-2 text-xs font-bold rounded-md transition-all ${userType === 'dealer' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}>Dealer</button>
                              </div>
                         </div>
-
-                        <button className="w-full py-3.5 bg-primary text-slate-900 rounded-xl font-bold hover:bg-emerald-400 transition-all shadow-lg flex items-center justify-center gap-2 mt-2">
-                            Contact Now
-                        </button>
-                        
-                        <p className="text-[10px] text-slate-400 text-center leading-tight">
-                            By submitting I accept Huntproperty's <a href="#" className="underline hover:text-slate-600">Terms & Conditions</a>
-                        </p>
+                        <button className="w-full py-3.5 bg-primary text-slate-900 rounded-xl font-bold hover:bg-emerald-400 transition-all shadow-lg flex items-center justify-center gap-2 mt-2">Contact Now</button>
                     </div>
                 </div>
             </div>
          </div>
 
-         {/* Similar Properties */}
          <div className="mt-20 border-t border-slate-200 pt-16">
             <h3 className="text-3xl font-display font-bold text-slate-900 mb-10">Similar Properties</h3>
             <div className="grid md:grid-cols-3 gap-8">
@@ -405,10 +310,8 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                 ))}
             </div>
          </div>
-
       </div>
 
-      {/* Floating Action Bar (Mobile/Tablet mostly, but visible on desktop) */}
       <div className="fixed bottom-0 left-0 right-0 p-6 z-40 pointer-events-none">
            <div className="max-w-4xl mx-auto pointer-events-auto">
                 <div className="bg-slate-900/90 backdrop-blur-xl text-white p-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 flex items-center justify-between gap-6">
@@ -417,20 +320,13 @@ const PropertyDetail: React.FC<Props> = ({ property, onBack, similarProperties, 
                          <p className="text-2xl font-display font-bold text-primary">{DETAILS.rent}</p>
                     </div>
                     <div className="flex flex-1 gap-3 md:justify-end overflow-x-auto no-scrollbar">
-                        <button className="flex-1 md:flex-none px-6 py-3 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
-                            <MessageCircle size={18} /> WhatsApp
-                        </button>
-                        <button className="flex-1 md:flex-none px-8 py-3 bg-primary text-slate-900 font-bold rounded-xl hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
-                            <Calendar size={18} /> Schedule Visit
-                        </button>
-                        <button className="flex-1 md:flex-none px-6 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors flex items-center justify-center gap-2 border border-white/20 whitespace-nowrap">
-                            <MessageCircle size={18} /> Contact Owner
-                        </button>
+                        <button className="flex-1 md:flex-none px-6 py-3 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#20bd5a] transition-colors flex items-center justify-center gap-2 whitespace-nowrap"><MessageCircle size={18} /> WhatsApp</button>
+                        <button className="flex-1 md:flex-none px-8 py-3 bg-primary text-slate-900 font-bold rounded-xl hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"><Calendar size={18} /> Schedule Visit</button>
+                        <button className="flex-1 md:flex-none px-6 py-3 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors flex items-center justify-center gap-2 border border-white/20 whitespace-nowrap"><MessageCircle size={18} /> Contact Owner</button>
                     </div>
                 </div>
            </div>
       </div>
-
     </div>
   );
 };

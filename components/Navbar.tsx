@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Menu, User, Sparkles, ArrowLeft, Share2, ChevronDown, LogIn, UserPlus, Briefcase } from 'lucide-react';
+import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home } from 'lucide-react';
 
 interface NavbarProps {
     onNavigate: (view: any) => void;
@@ -17,200 +17,256 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
   const handleMouseEnter = (menu: string) => setActiveDropdown(menu);
   const handleMouseLeave = () => setActiveDropdown(null);
 
+  const navItems = [
+    { label: 'Home', view: 'home', hasDropdown: false, icon: Home },
+    { label: 'Buy', view: 'buy', hasDropdown: true },
+    { label: 'Rent', view: 'rent', hasDropdown: true },
+    { label: 'Sell', view: 'sell', hasDropdown: true },
+    { label: 'Tools & Advice', view: 'home', hasDropdown: true },
+    { label: 'Home Loans', view: 'home-loans', hasDropdown: false },
+    { label: 'Channel Partner', view: 'channel-partner', hasDropdown: false },
+  ];
+
+  const buyDropdownContent = {
+    col1: {
+      title: 'New Projects in India',
+      items: [
+        'New Projects in Pune',
+        'New Projects in Bengaluru',
+        'New Projects in Mumbai',
+        'New Projects in Chennai',
+        'New Projects in Hyderabad',
+        'New Projects in Noida',
+        'New Projects in Gurugram'
+      ]
+    },
+    col2: {
+      title: 'Real Estate in India',
+      items: [
+        'New Projects in Mohali',
+        'New Projects in Coimbatore',
+        'New Projects in Kochi',
+        'New Projects in Delhi',
+        'New Projects in Chandigarh',
+        'New Projects in Faridabad',
+        'New Projects in Dehradun',
+        'New Projects in Nagpur'
+      ]
+    }
+  };
+
+  const rentDropdownContent = {
+    col1: {
+      title: 'Rent Property in India',
+      items: [
+        'Rent Projects in Pune',
+        'Rent Projects in Bengaluru',
+        'Rent Projects in Mumbai',
+        'Rent Projects in Chennai',
+        'Rent Projects in Hyderabad',
+        'Rent Projects in Noida',
+        'Rent Projects in Gurugram'
+      ]
+    },
+    col2: {
+      title: 'Exclusive Rental Choices',
+      items: [
+        'Rent Projects in Mohali',
+        'Rent Projects in Coimbatore',
+        'Rent Projects in Kochi',
+        'Rent Projects in Delhi',
+        'Rent Projects in Chandigarh',
+        'Rent Projects in Faridabad',
+        'Rent Projects in Dehradun',
+        'Rent Projects in Nagpur'
+      ]
+    }
+  };
+
+  const sellDropdownContent = {
+    col1: {
+      title: 'Selling Tools',
+      items: [
+        'Post Your Property',
+        'Property Worth Calculator'
+      ]
+    },
+    col2: {
+      title: 'Our Services',
+      items: [
+        'Customer Care',
+        'Sell / Rent Ad Packages'
+      ]
+    }
+  };
+
+  const toolsAdviceItems = [
+    'RERA',
+    'Legal Advisory',
+    'Master Plans',
+    'News Gallery',
+    'Media Gallery',
+    'Video Gallery',
+    'Articles',
+    'NRI Center',
+    'Covid',
+    'Career'
+  ];
+
+  const getDropdownData = (label: string) => {
+    if (label === 'Buy') return buyDropdownContent;
+    if (label === 'Rent') return rentDropdownContent;
+    if (label === 'Sell') return sellDropdownContent;
+    return null;
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 pointer-events-none">
-      <div className="max-w-[90rem] mx-auto glass-panel rounded-full px-6 py-3 flex items-center justify-between pointer-events-auto relative">
-        <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('home')}>
-            <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center shadow-lg shrink-0">
-                <span className="font-display font-bold text-primary text-xl">H</span>
-            </div>
-            {!isDetailView && <span className="text-xl font-display font-bold tracking-tight text-slate-900 hidden sm:block">HuntProperty</span>}
+    <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-6 pointer-events-none">
+      <div className="max-w-[95rem] mx-auto glass-panel rounded-full px-8 py-3 flex items-center justify-between pointer-events-auto shadow-2xl bg-white/95 backdrop-blur-xl border border-white/40">
+        
+        {/* Logo & Back Button */}
+        <div className="flex items-center gap-6">
+            <div className="flex items-center cursor-pointer group" onClick={() => onNavigate('home')}>
+                <div className="flex items-center">
+                    <span className="font-display font-bold text-2xl text-slate-900 tracking-tight">Hunt</span>
+                    <div className="relative -mx-0.5 mb-1">
+                        <MapPin className="text-red-600 fill-red-600" size={26} />
+                    </div>
+                    <span className="font-display font-bold text-2xl text-slate-900 tracking-tight -ml-0.5">roperty</span>
+                </div>
+                <div className="hidden lg:block ml-2 overflow-hidden w-0 group-hover:w-32 transition-all duration-500 opacity-0 group-hover:opacity-100">
+                    <p className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] whitespace-nowrap leading-none">Think Wisely. Invest Smartly.</p>
+                </div>
             </div>
 
             {isDetailView && onBack && (
                 <button 
                     onClick={onBack}
-                    className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-900 transition-colors font-bold text-sm"
+                    className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-primary rounded-full text-white hover:text-slate-900 transition-all font-bold text-xs shadow-lg group shrink-0"
                 >
-                    <ArrowLeft size={16} />
-                    <span className="hidden sm:inline">{backLabel || 'Back'}</span>
+                    <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                    <span>{backLabel || 'Back'}</span>
                 </button>
             )}
         </div>
 
-        {/* Desktop Nav */}
-        <div className="hidden xl:flex items-center gap-1 text-sm font-semibold text-slate-600">
-          {!isDetailView && (
-              <>
-                <button onClick={() => onNavigate('home')} className="px-4 py-2 hover:text-slate-900 transition-colors">Home</button>
-                
-                {/* Buy Dropdown */}
-                <div className="relative group" onMouseEnter={() => handleMouseEnter('buy')} onMouseLeave={handleMouseLeave}>
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center gap-6 h-12">
+            {!isDetailView && navItems.map((item) => (
+                <div 
+                    key={item.label} 
+                    className="relative group h-full flex items-center"
+                    onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.label)}
+                    onMouseLeave={handleMouseLeave}
+                >
                     <button 
-                        onClick={() => onNavigate('buy')} 
-                        className="px-4 py-2 hover:text-slate-900 transition-colors flex items-center gap-1"
+                        onClick={() => !item.hasDropdown && onNavigate(item.view)}
+                        className={`flex items-center gap-1.5 text-[15px] font-semibold transition-colors ${activeDropdown === item.label && (item.label === 'Buy' || item.label === 'Rent' || item.label === 'Sell' || item.label === 'Tools & Advice') ? 'text-red-600' : 'text-slate-700 hover:text-slate-900'}`}
                     >
-                        Buy <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'buy' ? 'rotate-180' : ''}`} />
+                        {item.icon && <item.icon size={18} className={activeDropdown === item.label ? 'text-red-600' : 'text-slate-400'} />}
+                        {item.label}
+                        {item.hasDropdown && <ChevronDown size={14} className={`text-slate-400 transition-transform duration-300 ${activeDropdown === item.label ? 'rotate-180' : ''}`} />}
                     </button>
                     
-                    <div className={`absolute top-full left-0 pt-6 w-[600px] transition-all duration-200 ${activeDropdown === 'buy' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
-                        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 grid grid-cols-2 gap-10">
-                             <div>
-                                <h4 className="text-red-600 font-bold mb-4 uppercase text-xs tracking-wider border-b border-red-100 pb-2">NEW PROJECTS IN INDIA</h4>
-                                <ul className="space-y-2 text-slate-600 text-sm">
-                                    {['New Projects in Pune', 'New Projects in Bengaluru', 'New Projects in Mumbai', 'New Projects in Chennai', 'New Projects in Hyderabad', 'New Projects in Noida', 'New Projects in Gurugram'].map(item => (
-                                        <li key={item} className="hover:text-primary cursor-pointer transition-colors">{item}</li>
-                                    ))}
-                                </ul>
-                             </div>
-                             <div>
-                                <h4 className="text-red-600 font-bold mb-4 uppercase text-xs tracking-wider border-b border-red-100 pb-2">REAL ESTATE IN INDIA</h4>
-                                <ul className="space-y-2 text-slate-600 text-sm">
-                                    {['New Projects in Mohali', 'New Projects in Coimbatore', 'New Projects in Kochi', 'New Projects in Delhi', 'New Projects in Chandigarh', 'New Projects in Faridabad', 'New Projects in Dehradun', 'New Projects in Nagpur'].map(item => (
-                                        <li key={item} className="hover:text-primary cursor-pointer transition-colors">{item}</li>
-                                    ))}
-                                </ul>
-                             </div>
+                    {/* Active Indicator Arrow */}
+                    {activeDropdown === item.label && (item.label === 'Buy' || item.label === 'Rent' || item.label === 'Sell' || item.label === 'Tools & Advice') && (
+                        <div className="absolute bottom-[-13px] left-1/2 -translate-x-1/2 z-[60]">
+                            <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-red-600"></div>
                         </div>
-                    </div>
-                </div>
+                    )}
 
-                {/* Rent Dropdown */}
-                <div className="relative group" onMouseEnter={() => handleMouseEnter('rent')} onMouseLeave={handleMouseLeave}>
-                    <button 
-                        onClick={() => onNavigate('rent')} 
-                        className="px-4 py-2 hover:text-slate-900 transition-colors flex items-center gap-1"
-                    >
-                        Rent <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'rent' ? 'rotate-180' : ''}`} />
-                    </button>
-
-                    <div className={`absolute top-full -left-20 pt-6 w-[600px] transition-all duration-200 ${activeDropdown === 'rent' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
-                        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 grid grid-cols-2 gap-10">
-                             <div>
-                                <h4 className="text-red-600 font-bold mb-4 uppercase text-xs tracking-wider border-b border-red-100 pb-2">RENT PROPERTY IN INDIA</h4>
-                                <ul className="space-y-2 text-slate-600 text-sm">
-                                    {['Rent Projects in Pune', 'Rent Projects in Bengaluru', 'Rent Projects in Mumbai', 'Rent Projects in Chennai', 'Rent Projects in Hyderabad', 'Rent Projects in Noida', 'Rent Projects in Gurugram'].map(item => (
-                                        <li key={item} className="hover:text-primary cursor-pointer transition-colors">{item}</li>
-                                    ))}
-                                </ul>
-                             </div>
-                             <div>
-                                <h4 className="text-red-600 font-bold mb-4 uppercase text-xs tracking-wider border-b border-red-100 pb-2">EXCLUSIVE RENTAL CHOICES</h4>
-                                <ul className="space-y-2 text-slate-600 text-sm">
-                                    {['Rent Projects in Mohali', 'Rent Projects in Coimbatore', 'Rent Projects in Kochi', 'Rent Projects in Delhi', 'Rent Projects in Chandigarh', 'Rent Projects in Faridabad', 'Rent Projects in Dehradun', 'Rent Projects in Nagpur'].map(item => (
-                                        <li key={item} className="hover:text-primary cursor-pointer transition-colors">{item}</li>
-                                    ))}
-                                </ul>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Sell Dropdown */}
-                 <div className="relative group" onMouseEnter={() => handleMouseEnter('sell')} onMouseLeave={handleMouseLeave}>
-                    <button 
-                        onClick={() => onNavigate('sell')} 
-                        className="px-4 py-2 hover:text-slate-900 transition-colors flex items-center gap-1"
-                    >
-                        Sell <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'sell' ? 'rotate-180' : ''}`} />
-                    </button>
-                    
-                    <div className={`absolute top-full -left-10 pt-6 w-[500px] transition-all duration-200 ${activeDropdown === 'sell' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
-                        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 grid grid-cols-2 gap-10">
-                             <div>
-                                <h4 className="text-red-600 font-bold mb-4 uppercase text-xs tracking-wider border-b border-red-100 pb-2">SELLING TOOLS</h4>
-                                <ul className="space-y-3 text-slate-600 text-sm">
-                                    <li className="hover:text-primary cursor-pointer transition-colors" onClick={onPostProperty}>Post Your Property</li>
-                                    <li className="hover:text-primary cursor-pointer transition-colors">Property Worth Calculator</li>
-                                </ul>
-                             </div>
-                             <div>
-                                <h4 className="text-red-600 font-bold mb-4 uppercase text-xs tracking-wider border-b border-red-100 pb-2">OUR SERVICES</h4>
-                                <ul className="space-y-3 text-slate-600 text-sm">
-                                    <li className="hover:text-primary cursor-pointer transition-colors">Customer Care</li>
-                                    <li className="hover:text-primary cursor-pointer transition-colors">Sell / Rent Ad Packages</li>
-                                </ul>
-                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button onClick={onPostProperty} className="px-4 py-2 hover:text-slate-900 transition-colors whitespace-nowrap">Post Your Property</button>
-                
-                {/* Tools & Advice Dropdown */}
-                <div className="relative group" onMouseEnter={() => handleMouseEnter('tools')} onMouseLeave={handleMouseLeave}>
-                    <button 
-                        className="px-4 py-2 hover:text-slate-900 transition-colors flex items-center gap-1 whitespace-nowrap"
-                    >
-                        Tools & Advice <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === 'tools' ? 'rotate-180' : ''}`} />
-                    </button>
-                    
-                    <div className={`absolute top-full left-0 pt-6 w-[250px] transition-all duration-200 ${activeDropdown === 'tools' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
-                        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6">
-                             <ul className="space-y-2 text-slate-600 text-sm">
-                                {[
-                                    'RERA', 
-                                    'Legal Advisory', 
-                                    'Master Plans', 
-                                    'News Gallery', 
-                                    'Media Gallery', 
-                                    'Video Gallery', 
-                                    'Articles', 
-                                    'NRI Center', 
-                                    'Covid', 
-                                    'Investor Relation', 
-                                    'Career'
-                                ].map(item => (
-                                    <li key={item} className="hover:text-primary cursor-pointer transition-colors">{item}</li>
+                    {/* Buy, Rent, or Sell Dropdown Content */}
+                    {(item.label === 'Buy' || item.label === 'Rent' || item.label === 'Sell') && activeDropdown === item.label && (
+                        <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[580px] pt-3 animate-fade-in-up z-50">
+                            <div className="bg-white rounded-lg shadow-[0_15px_45px_rgba(0,0,0,0.18)] border-t-[3px] border-red-600 overflow-hidden px-8 py-8 flex gap-8 text-left">
+                                {Object.entries(getDropdownData(item.label) || {}).map(([key, section]) => (
+                                    <div key={key} className="flex-1">
+                                        <h4 className="text-red-600 font-bold text-xs tracking-wider mb-5 uppercase border-b border-slate-50 pb-2.5">
+                                            {section.title}
+                                        </h4>
+                                        <ul className="space-y-2.5">
+                                            {section.items.map(itemText => (
+                                                <li key={itemText} className="text-slate-600 hover:text-red-600 transition-colors text-[14px] font-medium cursor-pointer">
+                                                    {itemText}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 ))}
-                             </ul>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    )}
 
-                <button onClick={() => onNavigate('home-loans')} className="px-4 py-2 hover:text-slate-900 transition-colors whitespace-nowrap">Home Loans</button>
-                <button onClick={() => onNavigate('channel-partner')} className="px-4 py-2 hover:text-slate-900 transition-colors whitespace-nowrap">Channel Partner</button>
-              </>
-          )}
+                    {/* Tools & Advice Specific Dropdown */}
+                    {item.label === 'Tools & Advice' && activeDropdown === 'Tools & Advice' && (
+                        <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[240px] pt-3 animate-fade-in-up z-50">
+                            <div className="bg-white rounded-lg shadow-[0_15px_45px_rgba(0,0,0,0.18)] border-t-[3px] border-red-600 overflow-hidden px-6 py-6 text-left">
+                                <ul className="space-y-3">
+                                    {toolsAdviceItems.map(tool => (
+                                        <li key={tool} className="text-slate-600 hover:text-red-600 transition-colors text-[14px] font-medium cursor-pointer">
+                                            {tool}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Generic Dropdown for others */}
+                    {item.hasDropdown && activeDropdown === item.label && item.label !== 'Buy' && item.label !== 'Rent' && item.label !== 'Sell' && item.label !== 'Tools & Advice' && (
+                        <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-64 pt-3 animate-fade-in-up z-50">
+                            <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 overflow-hidden">
+                                <ul className="space-y-2 text-left">
+                                    {['Popular Cities', 'Recent Trends', 'Expert Guides'].map(sub => (
+                                        <li key={sub} className="px-4 py-2.5 hover:bg-slate-50 rounded-xl text-sm font-medium text-slate-600 hover:text-primary transition-all cursor-pointer">
+                                            {sub}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ))}
         </div>
 
-        <div className="flex items-center gap-4">
-            {isDetailView && (
-                <button className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-600">
-                    <Share2 size={20} />
+        {/* Action Buttons & User Menu */}
+        <div className="flex items-center gap-3">
+            <button 
+                onClick={onPostProperty}
+                className="hidden sm:flex items-center px-8 py-3 bg-slate-950 text-white font-bold rounded-full hover:bg-primary hover:text-slate-950 transition-all duration-300 shadow-xl hover:shadow-primary/30 active:scale-95 whitespace-nowrap"
+            >
+                Post Your Property
+            </button>
+
+            <div className="relative">
+                <button 
+                    onClick={() => setShowAuthMenu(!showAuthMenu)}
+                    className="flex items-center gap-1.5 p-2 rounded-full hover:bg-slate-100 transition-all text-slate-700"
+                >
+                    <User size={22} className="stroke-[2.5]" />
+                    <ChevronDown size={14} className={`text-slate-400 transition-transform ${showAuthMenu ? 'rotate-180' : ''}`} />
                 </button>
-            )}
-          
-          {/* User Menu */}
-          <div className="relative">
-              <button 
-                onClick={() => setShowAuthMenu(!showAuthMenu)}
-                className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-600 flex items-center gap-1"
-              >
-                 <User size={20} />
-                 <ChevronDown size={14} />
-              </button>
-              
-              {showAuthMenu && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
-                      <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl text-left text-sm font-bold text-slate-700">
-                          <LogIn size={16} className="text-primary" /> Login
-                      </button>
-                      <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl text-left text-sm font-bold text-slate-700">
-                          <UserPlus size={16} className="text-primary" /> Registration
-                      </button>
-                      <div className="h-px bg-slate-100 my-1"></div>
-                      <button onClick={() => { onNavigate('employee-login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 rounded-xl text-left text-sm font-bold text-slate-700">
-                          <Briefcase size={16} className="text-slate-400" /> Employee Login
-                      </button>
-                  </div>
-              )}
-          </div>
-          
-          <button className="p-2 hover:bg-slate-100 rounded-full transition-colors xl:hidden text-slate-600">
-             <Menu size={20} />
-          </button>
+
+                {showAuthMenu && (
+                    <div className="absolute right-0 top-full mt-4 w-60 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
+                        <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-5 py-4 hover:bg-slate-50 rounded-2xl text-left text-[15px] font-bold text-slate-800">
+                            <LogIn size={18} className="text-primary" /> Login
+                        </button>
+                        <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-5 py-4 hover:bg-slate-50 rounded-2xl text-left text-[15px] font-bold text-slate-800">
+                            <UserPlus size={18} className="text-primary" /> Registration
+                        </button>
+                        <div className="h-px bg-slate-100 mx-4 my-1"></div>
+                        <button onClick={() => { onNavigate('employee-login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-5 py-4 hover:bg-slate-50 rounded-2xl text-left text-[15px] font-bold text-slate-600">
+                            <Briefcase size={18} /> Employee Login
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            <button className="lg:hidden p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-700">
+                <Menu size={22} />
+            </button>
         </div>
       </div>
     </nav>

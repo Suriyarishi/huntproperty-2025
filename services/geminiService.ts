@@ -1,14 +1,13 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AspectRatio } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
-
 // 1. Search Grounding (Market Trends)
 export const getMarketTrends = async (query: string) => {
   try {
+    // Fix: Instantiate GoogleGenAI per call using process.env.API_KEY directly
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-flash-preview", // Updated to the recommended model for basic text tasks
       contents: query,
       config: {
         tools: [{ googleSearch: {} }],
@@ -27,6 +26,8 @@ export const getMarketTrends = async (query: string) => {
 // 2. Maps Grounding (Nearby Places)
 export const getNearbyPlaces = async (location: string, lat: number, lng: number) => {
   try {
+    // Fix: Maps grounding is only supported in Gemini 2.5 series models
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `What are the top rated parks, schools, and restaurants near ${location}?`,
@@ -55,6 +56,7 @@ export const getNearbyPlaces = async (location: string, lat: number, lng: number
 // 3. Image Editing (Nano Banana / Gemini 2.5 Flash Image)
 export const editPropertyImage = async (base64Image: string, prompt: string, mimeType: string = 'image/png') => {
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
@@ -92,10 +94,9 @@ export const editPropertyImage = async (base64Image: string, prompt: string, mim
 // 4. Image Generation (Gemini 3 Pro Image Preview)
 export const generatePropertyVisualization = async (prompt: string, aspectRatio: AspectRatio) => {
   try {
-    // Note: Using generateContent for nano banana series, but for High Quality user requested:
-    // The prompt says "Use gemini-3-pro-image-preview".
-    // This model uses generateContent but behaves like an image generator.
-    
+    // Fix: Create a new GoogleGenAI instance right before making an API call for gemini-3-pro-image-preview
+    // to ensure it uses the most up-to-date API key from the selection dialog.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-image-preview',
       contents: {
@@ -125,8 +126,9 @@ export const generatePropertyVisualization = async (prompt: string, aspectRatio:
 // 5. Image Analysis (Gemini 3 Pro Preview)
 export const analyzePropertyPhoto = async (base64Image: string, mimeType: string = 'image/jpeg') => {
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-3-pro-preview', // Updated to recommended model for complex reasoning tasks
       contents: {
         parts: [
             { inlineData: { data: base64Image, mimeType } },
@@ -144,12 +146,13 @@ export const analyzePropertyPhoto = async (base64Image: string, mimeType: string
 // 6. Thinking Mode (Investment Analysis)
 export const getInvestmentAnalysis = async (propertyDetails: string) => {
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
       model: "gemini-3-pro-preview",
       contents: `Analyze the long-term investment potential of this property considering market trends: ${propertyDetails}. Be thorough and weigh pros and cons.`,
       config: {
         thinkingConfig: {
-          thinkingBudget: 32768 // Max for 3 Pro
+          thinkingBudget: 32768 // Max thinking budget for gemini-3-pro-preview
         }
       }
     });
@@ -163,8 +166,9 @@ export const getInvestmentAnalysis = async (propertyDetails: string) => {
 // 7. Fast Chat (Gemini 2.5 Flash Lite)
 export const getFastChatResponse = async (message: string) => {
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-lite-latest", // Alias for flash lite
+      model: "gemini-flash-lite-latest", // Updated to the correct model alias from guidelines
       contents: message,
     });
     return response.text;

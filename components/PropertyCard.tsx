@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Heart, Bed, Bath, Square, MapPin, ArrowRight } from 'lucide-react';
 import { Property } from '../types';
@@ -5,9 +6,23 @@ import { Property } from '../types';
 interface Props {
   property: Property;
   onClick: () => void;
+  variant?: 'primary' | 'emerald';
 }
 
-const PropertyCard: React.FC<Props> = ({ property, onClick }) => {
+const PropertyCard: React.FC<Props> = ({ property, onClick, variant = 'primary' }) => {
+  // Action button is strictly green (#2FED9A)
+  const buttonStyles = 'bg-primary text-slate-900 shadow-lg shadow-primary/20 hover:bg-[#25D488] hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300';
+
+  const iconColors = {
+    primary: 'text-primary',
+    emerald: 'text-emerald-500',
+  };
+
+  const tagColors = {
+    primary: 'bg-primary text-slate-900 border-primary',
+    emerald: 'bg-emerald-600 text-white border-emerald-500',
+  };
+
   return (
     <div 
       className="group relative bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full"
@@ -24,7 +39,7 @@ const PropertyCard: React.FC<Props> = ({ property, onClick }) => {
         {/* Top Badges */}
         <div className="absolute top-4 left-4 flex gap-2">
             {property.tags.slice(0, 2).map((tag, i) => (
-                <span key={tag} className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide backdrop-blur-md border ${i === 0 ? 'bg-primary text-slate-900 border-primary' : 'bg-black/40 text-white border-white/20'}`}>
+                <span key={tag} className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide backdrop-blur-md border ${i === 0 ? tagColors[variant] : 'bg-black/40 text-white border-white/20'}`}>
                     {tag}
                 </span>
             ))}
@@ -48,7 +63,7 @@ const PropertyCard: React.FC<Props> = ({ property, onClick }) => {
         <div className="mb-4">
              <h3 className="text-xl font-display font-bold text-slate-900 mb-2 line-clamp-1" title={property.title}>{property.title}</h3>
              <div className="flex items-center gap-1.5 text-slate-500 text-sm">
-                <MapPin size={14} className="text-primary shrink-0" />
+                <MapPin size={14} className={`${iconColors[variant]} shrink-0`} />
                 <span className="truncate">{property.location}</span>
              </div>
         </div>
@@ -84,7 +99,7 @@ const PropertyCard: React.FC<Props> = ({ property, onClick }) => {
         <div className="mt-auto">
             <button 
                 onClick={onClick}
-                className="w-full py-3.5 rounded-xl bg-slate-900 text-white font-bold flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-slate-900 transition-all shadow-lg hover:shadow-primary/30"
+                className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${buttonStyles}`}
             >
                 See Details <ArrowRight size={16} />
             </button>

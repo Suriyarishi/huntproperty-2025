@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import PropertyCard from './components/PropertyCard';
+import ProjectCard from './components/ProjectCard';
 import PropertyDetail from './components/PropertyDetail';
 import ChatAssistant from './components/ChatAssistant';
 import Footer from './components/Footer';
@@ -18,10 +19,11 @@ import LoginView from './components/LoginView';
 import RegisterView from './components/RegisterView';
 import HomeLoanView from './components/HomeLoanView';
 import ChannelPartnerView from './components/ChannelPartnerView';
+import HomeServices from './components/HomeServices';
 import { Property, Testimonial, Insight } from './types';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
 
-// Mock Data - Properties
+// Mock Data
 const PROPERTIES: Property[] = [
   {
     id: '1',
@@ -33,7 +35,7 @@ const PROPERTIES: Property[] = [
     sqft: 2800,
     imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop",
     tags: ["Luxury", "Penthouse"],
-    description: "A masterpiece of modern architecture perched atop the city's tallest residential tower. Features full smart-glass windows, AI-controlled climate, and a private suspended infinity pool.",
+    description: "A masterpiece of modern architecture perched atop the city's tallest residential tower.",
     category: "luxury"
   },
   {
@@ -46,7 +48,7 @@ const PROPERTIES: Property[] = [
     sqft: 3500,
     imageUrl: "https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070&auto=format&fit=crop",
     tags: ["Eco-Smart", "Villa"],
-    description: "Seamlessly blending nature and technology. This villa features a hydroponic vertical garden, solar roofing, and open-plan living spaces that dissolve the boundary between indoors and outdoors.",
+    description: "Seamlessly blending nature and technology with sustainable infrastructure.",
     category: "smart"
   },
   {
@@ -59,25 +61,125 @@ const PROPERTIES: Property[] = [
     sqft: 1800,
     imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
     tags: ["Loft", "Featured"],
-    description: "For the creative soul. An industrial-chic loft with 20ft ceilings, polished concrete floors, and a modular layout adaptable to any lifestyle or workspace need.",
+    description: "Industrial-chic loft with 20ft ceilings and modular layout.",
     category: "featured"
-  },
-   {
-    id: '4',
-    title: "Azure Coast Mansion",
-    price: "$6,750,000",
-    location: "Malibu, California",
-    beds: 6,
-    baths: 7,
-    sqft: 5200,
-    imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
-    tags: ["Waterfront", "Mansion"],
-    description: "Breathtaking oceanfront estate with direct beach access. Features a home theater, wine cellar, and panoramic views from every room.",
-    category: "luxury"
   }
 ];
 
-// Mock Data - Testimonials
+const RESALE_PROPERTIES: Property[] = [
+  {
+    id: 'r1',
+    title: "Classic Urban Condo",
+    price: "₹ 1.45 Cr",
+    location: "Koramangala, Bengaluru",
+    beds: 2,
+    baths: 2,
+    sqft: 1250,
+    imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop",
+    tags: ["Resale", "Prime Location"],
+    description: "Well-maintained unit in a established premium community.",
+  },
+  {
+    id: 'r2',
+    title: "Modern Skyline Flat",
+    price: "₹ 95 L",
+    location: "Sector 62, Noida",
+    beds: 3,
+    baths: 3,
+    sqft: 1680,
+    imageUrl: "https://images.unsplash.com/photo-1515263487990-61b07816b324?q=80&w=2070&auto=format&fit=crop",
+    tags: ["Resale", "High-Rise"],
+    description: "Spectacular city views from the 18th floor.",
+  },
+  {
+    id: 'r3',
+    title: "Suburban Family House",
+    price: "₹ 2.1 Cr",
+    location: "Balanagar, Hyderabad",
+    beds: 4,
+    baths: 3,
+    sqft: 2400,
+    imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2070&auto=format&fit=crop",
+    tags: ["Resale", "Independent"],
+    description: "Spacious independent kothi with a private garden.",
+  }
+];
+
+const RENTAL_PROPERTIES: Property[] = [
+  {
+    id: 'rt1',
+    title: "Minimalist Studio",
+    price: "₹ 25,000/mo",
+    location: "Powai, Mumbai",
+    beds: 1,
+    baths: 1,
+    sqft: 450,
+    imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop",
+    tags: ["Rent", "Furnished"],
+    description: "Perfect for working professionals in the heart of the IT hub.",
+  },
+  {
+    id: 'rt2',
+    title: "Corporate Suite",
+    price: "₹ 65,000/mo",
+    location: "Golf Course Rd, Gurugram",
+    beds: 3,
+    baths: 3,
+    sqft: 1850,
+    imageUrl: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2076&auto=format&fit=crop",
+    tags: ["Rent", "Luxury"],
+    description: "High-end apartment with concierge services.",
+  },
+  {
+    id: 'rt3',
+    title: "Cozy Garden Flat",
+    price: "₹ 35,000/mo",
+    location: "Whitefield, Bengaluru",
+    beds: 2,
+    baths: 2,
+    sqft: 1100,
+    imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop",
+    tags: ["Rent", "Pet Friendly"],
+    description: "Quiet residential neighborhood near major tech parks.",
+  }
+];
+
+const PROJECTS = [
+  {
+    id: 'p1',
+    title: "The Helix Gardens",
+    developer: "Vortex Realty Group",
+    location: "Neo-West Side, Vancouver",
+    priceRange: "₹ 1.2 Cr - 3.5 Cr",
+    units: 450,
+    status: 'Under Construction' as const,
+    completionDate: "Dec 2026",
+    imageUrl: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    id: 'p2',
+    title: "Azure Sky Towers",
+    developer: "Horizon Developments",
+    location: "Sector 150, Noida",
+    priceRange: "₹ 85 L - 1.8 Cr",
+    units: 1200,
+    status: 'Launching Soon' as const,
+    completionDate: "Aug 2027",
+    imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    id: 'p3',
+    title: "Prism City Center",
+    developer: "Aero Assets",
+    location: "Downtown Hub, Bengaluru",
+    priceRange: "₹ 2.5 Cr - 6.0 Cr",
+    units: 120,
+    status: 'Ready to Move' as const,
+    completionDate: "Mar 2025",
+    imageUrl: "https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?q=80&w=2020&auto=format&fit=crop"
+  }
+];
+
 const TESTIMONIALS: Testimonial[] = [
     {
         id: 't1',
@@ -85,7 +187,7 @@ const TESTIMONIALS: Testimonial[] = [
         role: 'Tech Entrepreneur',
         location: 'San Francisco, CA',
         avatar: 'https://randomuser.me/api/portraits/women/23.jpg',
-        text: 'HuntProperty\'s AI analysis saved me weeks of research. The investment predictions were spot on, and I found my dream smart home in days, not months.'
+        text: 'HuntProperty\'s AI analysis saved me weeks of research. The investment predictions were spot on.'
     },
     {
         id: 't2',
@@ -93,19 +195,10 @@ const TESTIMONIALS: Testimonial[] = [
         role: 'Architect',
         location: 'Singapore',
         avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-        text: 'As an architect, I appreciate the visual fidelity of the platform. The virtual renovation tool helped me visualize potential before even visiting the site.'
-    },
-    {
-        id: 't3',
-        name: 'Sarah Jenkins',
-        role: 'Real Estate Investor',
-        location: 'London, UK',
-        avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
-        text: 'The market pulse feature is a game changer. Real-time data grounded by Google Search gave me the confidence to make a move in a volatile market.'
+        text: 'As an architect, I appreciate the visual fidelity of the platform. The virtual renovation tool is incredible.'
     }
 ];
 
-// Mock Data - Insights
 const INSIGHTS: Insight[] = [
     {
         id: 'i1',
@@ -113,43 +206,9 @@ const INSIGHTS: Insight[] = [
         date: 'Oct 12, 2025',
         category: 'Technology',
         image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop',
-        description: 'How generative AI is reshaping urban planning and residential infrastructure for the next decade of sustainable living.',
+        description: 'How generative AI is reshaping urban planning and residential infrastructure.',
         author: { name: 'Dr. Aris Thorne', role: 'Urban Futurist', avatar: 'https://randomuser.me/api/portraits/men/45.jpg' },
-        content: `The urban landscape is undergoing a seismic shift. As we move deeper into 2025, the integration of Artificial Intelligence into the very fabric of our cities is no longer a futuristic concept—it's a reality. Smart cities are evolving into 'Cognitive Cities', where infrastructure doesn't just collect data but actively thinks, adapts, and responds to the needs of its inhabitants.
-
-        From traffic lights that predict congestion before it happens to energy grids that balance loads with millisecond precision, AI is making urban living more efficient and sustainable. But the most profound changes are happening in residential real estate.
-        
-        "Buildings are becoming living organisms," says leading architect Maria Vos. "With embedded sensors and AI management systems, a high-rise can optimize its own energy consumption, request maintenance repairs automatically, and even adjust its internal climate based on the collective mood of its residents."
-
-        This shift presents massive opportunities for investors. Properties integrated with these cognitive systems are seeing value appreciation rates nearly double that of traditional "dumb" buildings. As we look to the future, the question isn't whether you should invest in smart property, but can you afford not to?`
-    },
-    {
-        id: 'i2',
-        title: 'Investment Hotspots: Beyond the Metros',
-        date: 'Oct 08, 2025',
-        category: 'Market Trends',
-        image: 'https://images.unsplash.com/photo-1448630360428-65456885c650?q=80&w=2067&auto=format&fit=crop',
-        description: 'Discover the emerging tier-2 cities offering higher ROI and better quality of life for remote-first professionals.',
-        author: { name: 'Sarah Jenkins', role: 'Senior Analyst', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-        content: `The remote work revolution didn't end with the pandemic; it matured. In 2025, the 'Digital Nomad' lifestyle has morphed into the 'De-urbanized Professional'. High-net-worth individuals are fleeing congested metros not for suburbs, but for emerging Tier-2 cities that offer world-class amenities at a fraction of the cost.
-
-        Cities like Austin, Raleigh, and Boise have already had their boom. The new frontier lies in places like Chattanooga, Tennessee; Huntsville, Alabama; and specialized pockets in the Midwest. These areas are investing heavily in fiber-optic infrastructure and lifestyle amenities to attract tech talent.
-
-        Our data indicates that property values in these "Zoom Towns" are projected to grow by 15-20% year-over-year, compared to the sluggish 2-4% in established hubs like New York or San Francisco. For the savvy investor, the strategy is clear: follow the fiber lines and the coffee shops.`
-    },
-    {
-        id: 'i3',
-        title: 'Sustainable Luxury: The New Standard',
-        date: 'Sep 28, 2025',
-        category: 'Design',
-        image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1965&auto=format&fit=crop',
-        description: 'Why net-zero energy homes are commanding premium prices and how developers are adapting to the green revolution.',
-        author: { name: 'Marcus Chen', role: 'Eco-Architect', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-        content: `Luxury is being redefined. It is no longer defined solely by marble floors and gold fixtures, but by carbon footprints and energy independence. The ultra-wealthy buyer of 2025 demands a home that is not just beautiful, but responsible.
-
-        Net-Zero Energy homes—buildings that produce as much energy as they consume—have become the gold standard. Features like Tesla Solar Roofs, geothermal heating, and greywater recycling systems are now expected amenities in the $5M+ price bracket.
-
-        "We're seeing a 'Green Premium' of nearly 30%," notes real estate broker Jameson Ford. "If a mansion isn't LEED Platinum certified or equivalent, it sits on the market twice as long." This trend is driving a massive retrofit economy, as owners of historic luxury estates scramble to modernize their sustainability credentials without compromising architectural integrity.`
+        content: `The urban landscape is undergoing a seismic shift...`
     }
 ];
 
@@ -194,14 +253,13 @@ function App() {
   };
 
   const handleScrollToProperties = () => {
-    const element = document.getElementById('listings');
+    const element = document.getElementById('listings-start');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     } else {
-        // If not on home, go to home then scroll
         setCurrentView('home');
         setTimeout(() => {
-             document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' });
+             document.getElementById('listings-start')?.scrollIntoView({ behavior: 'smooth' });
         }, 100);
     }
   };
@@ -225,7 +283,6 @@ function App() {
             );
         case 'property':
             if (selectedProperty) {
-                // Filter out current property for "Similar Properties"
                 const similar = PROPERTIES.filter(p => p.id !== selectedProperty.id).slice(0, 3);
                 return (
                     <PropertyDetail 
@@ -243,9 +300,9 @@ function App() {
             }
             return null;
         case 'buy':
-            return <ListingsView type="buy" properties={PROPERTIES} onPropertySelect={handlePropertySelect} />;
+            return <ListingsView type="buy" properties={[...PROPERTIES, ...RESALE_PROPERTIES]} onPropertySelect={handlePropertySelect} />;
         case 'rent':
-            return <ListingsView type="rent" properties={PROPERTIES} onPropertySelect={handlePropertySelect} />;
+            return <ListingsView type="rent" properties={RENTAL_PROPERTIES} onPropertySelect={handlePropertySelect} />;
         case 'sell':
             return <SellView onPostProperty={handleStartAddProperty} />;
         case 'agents':
@@ -262,32 +319,90 @@ function App() {
                 <>
                     <Hero onSearch={handleScrollToProperties} onPostProperty={handleStartAddProperty} />
 
-                    {/* Featured Listings Section */}
-                    <section id="listings" className="max-w-7xl mx-auto px-6 py-20">
+                    {/* 1. Projects Section */}
+                    <section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-100">
                         <div className="flex justify-between items-end mb-12">
-                        <div>
-                            <span className="text-primary font-bold tracking-wider uppercase text-xs bg-emerald-900/5 px-3 py-1 rounded-lg border border-primary/20">Featured Collection</span>
-                            <h2 className="text-4xl font-display font-bold mt-4 text-slate-900">Curated Residences</h2>
+                            <div className="space-y-3">
+                                <span className="text-primary font-bold tracking-wider uppercase text-[10px] bg-emerald-900/10 px-3 py-1 rounded-full border border-primary/20 flex items-center gap-2 w-fit">
+                                    <Sparkles size={12} /> Upcoming Developments
+                                </span>
+                                <h2 className="text-4xl font-display font-bold text-slate-900">New & Trending <span className="text-emerald-600">Projects</span></h2>
+                                <p className="text-slate-500 max-w-lg">Discover exclusive townships and high-rise luxury towers.</p>
+                            </div>
+                            <button onClick={() => handleNavigate('buy')} className="hidden md:flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold hover:bg-primary hover:text-slate-900 transition-all shadow-xl hover:shadow-primary/20">
+                                Explore Projects <ArrowRight size={18} />
+                            </button>
                         </div>
-                        <button 
-                            onClick={() => handleNavigate('buy')}
-                            className="hidden md:block px-8 py-3 rounded-full border border-slate-200 hover:bg-white hover:shadow-lg transition-all text-sm font-bold text-slate-700 bg-white"
-                        >
-                            View All Properties
-                        </button>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            {PROJECTS.map(project => (
+                                <ProjectCard 
+                                    key={project.id} 
+                                    project={project} 
+                                    onClick={() => handleNavigate('buy')} 
+                                />
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* 2. POPULAR RESALE PROPERTIES */}
+                    <section id="listings-start" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+                        <div className="flex justify-between items-end mb-12">
+                            <div className="space-y-3">
+                                <span className="text-primary font-bold tracking-wider uppercase text-[10px] bg-primary/5 px-3 py-1 rounded-lg border border-primary/20 flex items-center gap-2 w-fit">
+                                    <Repeat size={12} /> Secondary Market
+                                </span>
+                                <h2 className="text-4xl font-display font-bold text-slate-900">Popular <span className="text-primary">Resale</span> Properties</h2>
+                                <p className="text-slate-500 max-w-lg">Highly sought-after pre-owned residences in established neighborhoods.</p>
+                            </div>
+                            <button onClick={() => handleNavigate('buy')} className="hidden md:flex items-center gap-2 text-slate-600 hover:text-primary transition-colors font-bold group">
+                                See all Resale <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                            </button>
                         </div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {PROPERTIES.map(prop => (
-                            <div key={prop.id} className="h-[500px]">
-                                <PropertyCard 
-                                    property={prop} 
-                                    onClick={() => handlePropertySelect(prop)} 
-                                />
-                            </div>
-                        ))}
+                            {RESALE_PROPERTIES.map(prop => (
+                                <div key={prop.id} className="h-[500px]">
+                                    <PropertyCard 
+                                        property={prop} 
+                                        onClick={() => handlePropertySelect(prop)} 
+                                        variant="primary"
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </section>
+
+                    {/* 3. PROPERTY FOR RENT */}
+                    <section className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+                        <div className="flex justify-between items-end mb-12">
+                            <div className="space-y-3">
+                                <span className="text-emerald-600 font-bold tracking-wider uppercase text-[10px] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-2 w-fit">
+                                    <Key size={12} /> Flexible Living
+                                </span>
+                                <h2 className="text-4xl font-display font-bold text-slate-900">Property <span className="text-emerald-700">For Rent</span></h2>
+                                <p className="text-slate-500 max-w-lg">Exclusive rental choices for every lifestyle, from studios to penthouses.</p>
+                            </div>
+                            <button onClick={() => handleNavigate('rent')} className="hidden md:flex items-center gap-2 text-slate-600 hover:text-primary transition-colors font-bold group">
+                                View Rental Map <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
+                            </button>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {RENTAL_PROPERTIES.map(prop => (
+                                <div key={prop.id} className="h-[500px]">
+                                    <PropertyCard 
+                                        property={prop} 
+                                        onClick={() => handlePropertySelect(prop)} 
+                                        variant="emerald"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Hunt Property Services Section - Moved towards bottom */}
+                    <HomeServices />
 
                     {/* Testimonials */}
                     <div className="bg-gradient-to-b from-white to-slate-50 border-y border-slate-100">
@@ -301,19 +416,32 @@ function App() {
     }
   };
 
-  const isDetailView = ['property', 'insight-detail'].includes(currentView);
   const isAuthView = ['login', 'register', 'employee-login'].includes(currentView);
+  const showBackButton = currentView !== 'home';
   
-  let backLabel = 'Back';
-  let onBack = handleBackToHome;
+  const getBackLabel = () => {
+    switch (currentView) {
+      case 'property': return 'Back to Listings';
+      case 'insight-detail': return 'Back to Insights';
+      case 'insights': return 'Back to Home';
+      case 'add-property': return 'Cancel Listing';
+      case 'buy': return 'Back to Home';
+      case 'rent': return 'Back to Home';
+      case 'sell': return 'Back to Home';
+      case 'agents': return 'Back to Home';
+      case 'home-loans': return 'Back to Home';
+      case 'channel-partner': return 'Back to Home';
+      default: return 'Back';
+    }
+  };
 
-  if (currentView === 'insight-detail') {
-      backLabel = 'Back to Insights';
-      onBack = handleBackToInsights;
-  } else if (currentView === 'property') {
-      backLabel = 'Back to Listings';
-      onBack = handleBackToHome;
-  }
+  const handleBack = () => {
+    if (currentView === 'insight-detail') {
+      handleBackToInsights();
+    } else {
+      handleBackToHome();
+    }
+  };
 
   return (
     <div className="min-h-screen font-sans selection:bg-primary selection:text-slate-900 bg-[#f8fafc]">
@@ -321,9 +449,9 @@ function App() {
         <Navbar 
             onNavigate={handleNavigate} 
             onPostProperty={handleStartAddProperty} 
-            isDetailView={isDetailView}
-            onBack={onBack}
-            backLabel={backLabel}
+            isDetailView={showBackButton}
+            onBack={handleBack}
+            backLabel={getBackLabel()}
         />
       )}
       
