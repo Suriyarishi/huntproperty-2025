@@ -20,6 +20,7 @@ import RegisterView from './components/RegisterView';
 import HomeLoanView from './components/HomeLoanView';
 import ChannelPartnerView from './components/ChannelPartnerView';
 import HomeServices from './components/HomeServices';
+import InstagramFeed from './components/InstagramFeed';
 import { Property, Testimonial, Insight } from './types';
 import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
 
@@ -102,6 +103,18 @@ const RESALE_PROPERTIES: Property[] = [
     imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2070&auto=format&fit=crop",
     tags: ["Resale", "Independent"],
     description: "Spacious independent kothi with a private garden.",
+  },
+  {
+      id: 'r4',
+      title: "Greenwood Estate",
+      price: "₹ 3.2 Cr",
+      location: "Banjara Hills, Hyderabad",
+      beds: 5,
+      baths: 4.5,
+      sqft: 4200,
+      imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+      tags: ["Luxury", "Estate"],
+      description: "Magnificent estate with automated features.",
   }
 ];
 
@@ -141,6 +154,18 @@ const RENTAL_PROPERTIES: Property[] = [
     imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop",
     tags: ["Rent", "Pet Friendly"],
     description: "Quiet residential neighborhood near major tech parks.",
+  },
+  {
+      id: 'rt4',
+      title: "Sky View Terrace",
+      price: "₹ 45,000/mo",
+      location: "Gachibowli, Hyderabad",
+      beds: 2,
+      baths: 2,
+      sqft: 1200,
+      imageUrl: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop",
+      tags: ["Rent", "Terrace"],
+      description: "Beautiful apartment with an open terrace view.",
   }
 ];
 
@@ -177,6 +202,17 @@ const PROJECTS = [
     status: 'Ready to Move' as const,
     completionDate: "Mar 2025",
     imageUrl: "https://images.unsplash.com/photo-1479839672679-a46483c0e7c8?q=80&w=2020&auto=format&fit=crop"
+  },
+  {
+    id: 'p4',
+    title: "Infinity Plaza",
+    developer: "Zenith Builders",
+    location: "Electronic City, Bengaluru",
+    priceRange: "₹ 1.5 Cr - 4.2 Cr",
+    units: 300,
+    status: 'Launching Soon' as const,
+    completionDate: "Jan 2028",
+    imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2070&auto=format&fit=crop"
   }
 ];
 
@@ -320,7 +356,7 @@ function App() {
                     <Hero onSearch={handleScrollToProperties} onPostProperty={handleStartAddProperty} />
 
                     {/* 1. Projects Section */}
-                    <section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-100">
+                    <section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-100 overflow-hidden">
                         <div className="flex justify-between items-end mb-12">
                             <div className="space-y-3">
                                 <span className="text-primary font-bold tracking-wider uppercase text-[10px] bg-emerald-900/10 px-3 py-1 rounded-full border border-primary/20 flex items-center gap-2 w-fit">
@@ -334,19 +370,21 @@ function App() {
                             </button>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {/* Horizontal Scroll Container */}
+                        <div className="flex overflow-x-auto no-scrollbar -mx-6 px-6 pb-8 gap-6 snap-x snap-mandatory">
                             {PROJECTS.map(project => (
-                                <ProjectCard 
-                                    key={project.id} 
-                                    project={project} 
-                                    onClick={() => handleNavigate('buy')} 
-                                />
+                                <div key={project.id} className="min-w-[320px] md:min-w-[400px] snap-start">
+                                    <ProjectCard 
+                                        project={project} 
+                                        onClick={() => handleNavigate('buy')} 
+                                    />
+                                </div>
                             ))}
                         </div>
                     </section>
 
                     {/* 2. POPULAR RESALE PROPERTIES */}
-                    <section id="listings-start" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+                    <section id="listings-start" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
                         <div className="flex justify-between items-end mb-12">
                             <div className="space-y-3">
                                 <span className="text-primary font-bold tracking-wider uppercase text-[10px] bg-primary/5 px-3 py-1 rounded-lg border border-primary/20 flex items-center gap-2 w-fit">
@@ -360,9 +398,10 @@ function App() {
                             </button>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* Horizontal Scroll Container */}
+                        <div className="flex overflow-x-auto no-scrollbar -mx-6 px-6 pb-8 gap-6 snap-x snap-mandatory">
                             {RESALE_PROPERTIES.map(prop => (
-                                <div key={prop.id} className="h-[500px]">
+                                <div key={prop.id} className="min-w-[300px] md:min-w-[360px] h-[420px] snap-start">
                                     <PropertyCard 
                                         property={prop} 
                                         onClick={() => handlePropertySelect(prop)} 
@@ -374,7 +413,7 @@ function App() {
                     </section>
 
                     {/* 3. PROPERTY FOR RENT */}
-                    <section className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+                    <section className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
                         <div className="flex justify-between items-end mb-12">
                             <div className="space-y-3">
                                 <span className="text-emerald-600 font-bold tracking-wider uppercase text-[10px] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-2 w-fit">
@@ -388,9 +427,10 @@ function App() {
                             </button>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* Horizontal Scroll Container */}
+                        <div className="flex overflow-x-auto no-scrollbar -mx-6 px-6 pb-8 gap-6 snap-x snap-mandatory">
                             {RENTAL_PROPERTIES.map(prop => (
-                                <div key={prop.id} className="h-[500px]">
+                                <div key={prop.id} className="min-w-[300px] md:min-w-[360px] h-[420px] snap-start">
                                     <PropertyCard 
                                         property={prop} 
                                         onClick={() => handlePropertySelect(prop)} 
@@ -401,7 +441,7 @@ function App() {
                         </div>
                     </section>
 
-                    {/* Hunt Property Services Section - Moved towards bottom */}
+                    {/* Hunt Property Services Section */}
                     <HomeServices />
 
                     {/* Testimonials */}
@@ -411,6 +451,9 @@ function App() {
 
                     {/* Insights */}
                     <Insights items={INSIGHTS} onViewAll={() => handleNavigate('insights')} onInsightSelect={handleInsightSelect} />
+
+                    {/* Instagram Feed - New Section */}
+                    <InstagramFeed />
                 </>
             );
     }
