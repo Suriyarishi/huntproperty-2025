@@ -356,14 +356,14 @@ function App() {
                     <Hero onSearch={handleScrollToProperties} onPostProperty={handleStartAddProperty} />
 
                     {/* 1. Projects Section */}
-                    <section className="max-w-7xl mx-auto px-6 py-20 border-t border-slate-100 overflow-hidden">
-                        <div className="flex justify-between items-end mb-12">
+                    <section className="max-w-7xl mx-auto px-4 md:px-6 py-20 border-t border-slate-100 overflow-hidden">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                             <div className="space-y-3">
                                 <span className="text-primary font-bold tracking-wider uppercase text-[10px] bg-emerald-900/10 px-3 py-1 rounded-full border border-primary/20 flex items-center gap-2 w-fit">
                                     <Sparkles size={12} /> Upcoming Developments
                                 </span>
-                                <h2 className="text-4xl font-display font-bold text-slate-900">New & Trending <span className="text-emerald-600">Projects</span></h2>
-                                <p className="text-slate-500 max-w-lg">Discover exclusive townships and high-rise luxury towers.</p>
+                                <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900">New & Trending <span className="text-emerald-600">Projects</span></h2>
+                                <p className="text-slate-500 max-w-lg text-sm md:text-base">Discover exclusive townships and high-rise luxury towers.</p>
                             </div>
                             <button onClick={() => handleNavigate('buy')} className="hidden md:flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold hover:bg-primary hover:text-slate-900 transition-all shadow-xl hover:shadow-primary/20">
                                 Explore Projects <ArrowRight size={18} />
@@ -371,9 +371,9 @@ function App() {
                         </div>
 
                         {/* Horizontal Scroll Container */}
-                        <div className="flex overflow-x-auto no-scrollbar -mx-6 px-6 pb-8 gap-6 snap-x snap-mandatory">
+                        <div className="flex overflow-x-auto no-scrollbar -mx-4 md:-mx-6 px-4 md:px-6 pb-8 gap-4 md:gap-6 snap-x snap-mandatory">
                             {PROJECTS.map(project => (
-                                <div key={project.id} className="min-w-[320px] md:min-w-[400px] snap-start">
+                                <div key={project.id} className="min-w-[280px] md:min-w-[400px] snap-start">
                                     <ProjectCard 
                                         project={project} 
                                         onClick={() => handleNavigate('buy')} 
@@ -384,14 +384,14 @@ function App() {
                     </section>
 
                     {/* 2. POPULAR RESALE PROPERTIES */}
-                    <section id="listings-start" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
-                        <div className="flex justify-between items-end mb-12">
+                    <section id="listings-start" className="py-24 px-4 md:px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                             <div className="space-y-3">
                                 <span className="text-primary font-bold tracking-wider uppercase text-[10px] bg-primary/5 px-3 py-1 rounded-lg border border-primary/20 flex items-center gap-2 w-fit">
                                     <Repeat size={12} /> Secondary Market
                                 </span>
-                                <h2 className="text-4xl font-display font-bold text-slate-900">Popular <span className="text-primary">Resale</span> Properties</h2>
-                                <p className="text-slate-500 max-w-lg">Highly sought-after pre-owned residences in established neighborhoods.</p>
+                                <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900">Popular <span className="text-primary">Resale</span> Properties</h2>
+                                <p className="text-slate-500 max-w-lg text-sm md:text-base">Highly sought-after pre-owned residences in established neighborhoods.</p>
                             </div>
                             <button onClick={() => handleNavigate('buy')} className="hidden md:flex items-center gap-2 text-slate-600 hover:text-primary transition-colors font-bold group">
                                 See all Resale <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -399,9 +399,9 @@ function App() {
                         </div>
 
                         {/* Horizontal Scroll Container */}
-                        <div className="flex overflow-x-auto no-scrollbar -mx-6 px-6 pb-8 gap-6 snap-x snap-mandatory">
+                        <div className="flex overflow-x-auto no-scrollbar -mx-4 md:-mx-6 px-4 md:px-6 pb-8 gap-4 md:gap-6 snap-x snap-mandatory">
                             {RESALE_PROPERTIES.map(prop => (
-                                <div key={prop.id} className="min-w-[300px] md:min-w-[360px] h-[420px] snap-start">
+                                <div key={prop.id} className="min-w-[260px] md:min-w-[360px] h-[420px] snap-start">
                                     <PropertyCard 
                                         property={prop} 
                                         onClick={() => handlePropertySelect(prop)} 
@@ -413,14 +413,14 @@ function App() {
                     </section>
 
                     {/* 3. PROPERTY FOR RENT */}
-                    <section className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
-                        <div className="flex justify-between items-end mb-12">
+                    <section className="py-24 px-4 md:px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
                             <div className="space-y-3">
                                 <span className="text-emerald-600 font-bold tracking-wider uppercase text-[10px] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-2 w-fit">
                                     <Key size={12} /> Flexible Living
                                 </span>
-                                <h2 className="text-4xl font-display font-bold text-slate-900">Property <span className="text-emerald-700">For Rent</span></h2>
-                                <p className="text-slate-500 max-w-lg">Exclusive rental choices for every lifestyle, from studios to penthouses.</p>
+                                <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900">Property <span className="text-emerald-700">For Rent</span></h2>
+                                <p className="text-slate-500 max-w-lg text-sm md:text-base">Exclusive rental choices for every lifestyle, from studios to penthouses.</p>
                             </div>
                             <button onClick={() => handleNavigate('rent')} className="hidden md:flex items-center gap-2 text-slate-600 hover:text-primary transition-colors font-bold group">
                                 View Rental Map <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -428,9 +428,9 @@ function App() {
                         </div>
 
                         {/* Horizontal Scroll Container */}
-                        <div className="flex overflow-x-auto no-scrollbar -mx-6 px-6 pb-8 gap-6 snap-x snap-mandatory">
+                        <div className="flex overflow-x-auto no-scrollbar -mx-4 md:-mx-6 px-4 md:px-6 pb-8 gap-4 md:gap-6 snap-x snap-mandatory">
                             {RENTAL_PROPERTIES.map(prop => (
-                                <div key={prop.id} className="min-w-[300px] md:min-w-[360px] h-[420px] snap-start">
+                                <div key={prop.id} className="min-w-[260px] md:min-w-[360px] h-[420px] snap-start">
                                     <PropertyCard 
                                         property={prop} 
                                         onClick={() => handlePropertySelect(prop)} 
