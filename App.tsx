@@ -21,6 +21,8 @@ import HomeLoanView from './components/HomeLoanView';
 import ChannelPartnerView from './components/ChannelPartnerView';
 import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
+import PostRequirementView from './components/PostRequirementView';
+import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView, CareerView } from './components/ToolsViews';
 import { Property, Testimonial, Insight } from './types';
 import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
 
@@ -248,7 +250,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -288,6 +290,11 @@ function App() {
       window.scrollTo(0,0);
   };
 
+  const handlePostRequirement = () => {
+      setCurrentView('post-requirement');
+      window.scrollTo(0, 0);
+  };
+
   const handleScrollToProperties = () => {
     const element = document.getElementById('listings-start');
     if (element) {
@@ -316,6 +323,10 @@ function App() {
                         handleBackToHome();
                     }} 
                 />
+            );
+        case 'post-requirement':
+            return (
+                <PostRequirementView onComplete={handleBackToHome} />
             );
         case 'property':
             if (selectedProperty) {
@@ -349,11 +360,25 @@ function App() {
             return <InsightsView insights={INSIGHTS} onInsightSelect={handleInsightSelect} />;
         case 'home-loans':
              return <HomeLoanView onBack={handleBackToHome} />;
+        case 'rera': return <ReraView />;
+        case 'legal-advisory': return <LegalAdvisoryView />;
+        case 'master-plans': return <MasterPlanView />;
+        case 'news-gallery': return <NewsGalleryView />;
+        case 'media-gallery': return <MediaGalleryView />;
+        case 'video-gallery': return <VideoGalleryView />;
+        case 'articles': return <ArticlesView />;
+        case 'nri-center': return <NRICenterView />;
+        case 'covid': return <CovidView />;
+        case 'career': return <CareerView />;
         case 'home':
         default:
             return (
                 <>
-                    <Hero onSearch={handleScrollToProperties} onPostProperty={handleStartAddProperty} />
+                    <Hero 
+                        onSearch={handleScrollToProperties} 
+                        onPostProperty={handleStartAddProperty} 
+                        onPostRequirement={handlePostRequirement}
+                    />
 
                     {/* 1. Projects Section */}
                     <section className="max-w-7xl mx-auto px-4 md:px-6 py-20 border-t border-slate-100 overflow-hidden">
@@ -365,7 +390,7 @@ function App() {
                                 <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900">New & Trending <span className="text-emerald-600">Projects</span></h2>
                                 <p className="text-slate-500 max-w-lg text-sm md:text-base">Discover exclusive townships and high-rise luxury towers.</p>
                             </div>
-                            <button onClick={() => handleNavigate('buy')} className="hidden md:flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold hover:bg-primary hover:text-slate-900 transition-all shadow-xl hover:shadow-primary/20">
+                            <button onClick={() => handleNavigate('buy')} className="hidden md:flex items-center gap-2 px-6 py-3 rounded-2xl bg-slate-950 text-white font-bold hover:bg-primary hover:text-slate-950 transition-all shadow-xl hover:shadow-primary/20">
                                 Explore Projects <ArrowRight size={18} />
                             </button>
                         </div>
@@ -414,7 +439,7 @@ function App() {
 
                     {/* 3. PROPERTY FOR RENT */}
                     <section className="py-24 px-4 md:px-6 max-w-7xl mx-auto border-t border-slate-100 overflow-hidden">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+                        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                             <div className="space-y-3">
                                 <span className="text-emerald-600 font-bold tracking-wider uppercase text-[10px] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-2 w-fit">
                                     <Key size={12} /> Flexible Living
@@ -468,12 +493,23 @@ function App() {
       case 'insight-detail': return 'Back to Insights';
       case 'insights': return 'Back to Home';
       case 'add-property': return 'Cancel Listing';
+      case 'post-requirement': return 'Cancel Requirement';
       case 'buy': return 'Back to Home';
       case 'rent': return 'Back to Home';
       case 'sell': return 'Back to Home';
       case 'agents': return 'Back to Home';
       case 'home-loans': return 'Back to Home';
       case 'channel-partner': return 'Back to Home';
+      case 'rera':
+      case 'legal-advisory':
+      case 'master-plans':
+      case 'news-gallery':
+      case 'media-gallery':
+      case 'video-gallery':
+      case 'articles':
+      case 'nri-center':
+      case 'covid':
+      case 'career': return 'Back to Home';
       default: return 'Back';
     }
   };

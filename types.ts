@@ -11,6 +11,10 @@ export interface Property {
   tags: string[];
   description: string;
   category?: string;
+  postedDate?: string;
+  ownershipType?: string;
+  locality?: string;
+  isOwner?: boolean;
 }
 
 export interface ChatMessage {

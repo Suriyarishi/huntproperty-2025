@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X, Tooltip } from 'lucide-react';
+import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X } from 'lucide-react';
 
 interface NavbarProps {
     onNavigate: (view: any) => void;
@@ -61,7 +61,18 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
     }
   };
 
-  const toolsAdviceItems = ['RERA', 'Legal Advisory', 'Master Plans', 'News Gallery', 'Media Gallery', 'Video Gallery', 'Articles', 'NRI Center', 'Covid', 'Career'];
+  const toolsAdviceItems = [
+      { label: 'RERA', view: 'rera' },
+      { label: 'Legal Advisory', view: 'legal-advisory' },
+      { label: 'Master Plans', view: 'master-plans' },
+      { label: 'News Gallery', view: 'news-gallery' },
+      { label: 'Media Gallery', view: 'media-gallery' },
+      { label: 'Video Gallery', view: 'video-gallery' },
+      { label: 'Articles', view: 'articles' },
+      { label: 'NRI Center', view: 'nri-center' },
+      { label: 'Covid', view: 'covid' },
+      { label: 'Career', view: 'career' }
+  ];
 
   const getDropdownData = (label: string) => {
     if (label === 'Buy') return buyDropdownContent;
@@ -83,7 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                   <div className="flex items-center">
                       <span className="font-display font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">Hunt</span>
                       <div className="relative -mx-0.5 mb-1">
-                          <MapPin className="text-red-600 fill-red-600" size={22} sm-size={26} />
+                          <MapPin className="text-red-600 fill-red-600" size={22} />
                       </div>
                       <span className="font-display font-bold text-xl sm:text-2xl text-slate-900 tracking-tight -ml-0.5">roperty</span>
                   </div>
@@ -118,7 +129,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                           {item.hasDropdown && <ChevronDown size={14} className={`text-slate-400 transition-transform duration-300 ${activeDropdown === item.label ? 'rotate-180' : ''}`} />}
                       </button>
                       
-                      {activeDropdown === item.label && (item.label === 'Buy' || item.label === 'Rent' || item.label === 'Sell' || item.label === 'Tools & Advice') && (
+                      {activeDropdown === item.label && (item.label === 'Buy' || item.label === 'Rent' || item.label === 'Sell') && (
                           <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[580px] pt-3 animate-fade-in-up z-50">
                               <div className="bg-white rounded-lg shadow-[0_15px_45px_rgba(0,0,0,0.18)] border-t-[3px] border-red-600 overflow-hidden px-8 py-8 flex gap-8 text-left">
                                   {Object.entries(getDropdownData(item.label) || {}).map(([key, section]) => (
@@ -144,8 +155,12 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                               <div className="bg-white rounded-lg shadow-[0_15px_45px_rgba(0,0,0,0.18)] border-t-[3px] border-red-600 overflow-hidden px-6 py-6 text-left">
                                   <ul className="space-y-3">
                                       {toolsAdviceItems.map(tool => (
-                                          <li key={tool} className="text-slate-600 hover:text-red-600 transition-colors text-[14px] font-medium cursor-pointer">
-                                              {tool}
+                                          <li 
+                                            key={tool.label} 
+                                            onClick={() => { onNavigate(tool.view); setActiveDropdown(null); }}
+                                            className="text-slate-600 hover:text-red-600 transition-colors text-[14px] font-medium cursor-pointer"
+                                          >
+                                              {tool.label}
                                           </li>
                                       ))}
                                   </ul>
@@ -177,14 +192,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                   {showAuthMenu && (
                       <div className="absolute right-0 top-full mt-4 w-52 sm:w-60 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
                           <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
-                              <LogIn size={16} sm-size={18} className="text-primary" /> Login
+                              <LogIn size={16} className="text-primary" /> Login
                           </button>
                           <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
-                              <UserPlus size={16} sm-size={18} className="text-primary" /> Registration
+                              <UserPlus size={16} className="text-primary" /> Registration
                           </button>
                           <div className="h-px bg-slate-100 mx-4 my-1"></div>
                           <button onClick={() => { onNavigate('employee-login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-600">
-                              <Briefcase size={16} sm-size={18} /> Employee Login
+                              <Briefcase size={16} /> Employee Login
                           </button>
                       </div>
                   )}
