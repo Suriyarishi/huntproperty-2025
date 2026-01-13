@@ -1,12 +1,14 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Map as MapIcon, Loader2, Search, ChevronDown, 
   Heart, Phone, MessageSquare, MapPin, Building2, 
   Layers, Square, Navigation, LayoutGrid,
   Users, SlidersHorizontal, Sparkles, X, ShieldCheck, CheckCircle2,
-  Calendar, Briefcase, Droplets
+  Calendar, Briefcase, Zap, List
 } from 'lucide-react';
 import { Property } from '../types';
+import MapView from './MapView';
 
 interface ListingsViewProps {
   type: 'buy' | 'rent';
@@ -16,6 +18,7 @@ interface ListingsViewProps {
 
 const ListingsView: React.FC<ListingsViewProps> = ({ type: initialType, properties, onPropertySelect }) => {
   const [viewType, setViewType] = useState<'buy' | 'rent'>(initialType);
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [displayedProperties, setDisplayedProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activeSort, setActiveSort] = useState('Relevance');
@@ -243,8 +246,11 @@ const ListingsView: React.FC<ListingsViewProps> = ({ type: initialType, properti
             {/* Context Nav Bar */}
             <div className="bg-white border border-slate-200 flex flex-col md:flex-row items-center justify-between shadow-sm rounded-xl overflow-hidden">
                 <div className="flex items-stretch overflow-x-auto no-scrollbar w-full md:w-auto border-b md:border-b-0 md:border-r border-slate-100">
-                    <button className="flex items-center gap-3 px-6 py-3.5 bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest shrink-0">
-                        <Building2 size={16} className="text-primary" /> {filteredProperties.length} Properties
+                    <button 
+                        onClick={() => setViewMode('list')}
+                        className={`flex items-center gap-3 px-6 py-3.5 font-black text-[10px] uppercase tracking-widest shrink-0 transition-all ${viewMode === 'list' ? 'bg-slate-900 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                        <List size={16} className={viewMode === 'list' ? 'text-primary' : ''} /> {filteredProperties.length} Properties
                     </button>
                     <button className="flex items-center gap-3 px-6 py-3.5 text-slate-500 hover:bg-slate-50 font-black text-[10px] uppercase tracking-widest shrink-0 transition-all border-r border-slate-50">
                         <Sparkles size={16} /> Arrivals
@@ -252,8 +258,11 @@ const ListingsView: React.FC<ListingsViewProps> = ({ type: initialType, properti
                     <button className="flex items-center gap-3 px-6 py-3.5 text-slate-500 hover:bg-slate-50 font-black text-[10px] uppercase tracking-widest shrink-0 transition-all border-r border-slate-50">
                         <Users size={16} /> Agents
                     </button>
-                    <button className="flex items-center gap-3 px-6 py-3.5 text-slate-500 hover:bg-slate-50 font-black text-[10px] uppercase tracking-widest shrink-0 transition-all">
-                        <MapIcon size={16} /> Map
+                    <button 
+                        onClick={() => setViewMode('map')}
+                        className={`flex items-center gap-3 px-6 py-3.5 font-black text-[10px] uppercase tracking-widest shrink-0 transition-all ${viewMode === 'map' ? 'bg-slate-900 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                    >
+                        <MapIcon size={16} className={viewMode === 'map' ? 'text-primary' : ''} /> Neural Map
                     </button>
                 </div>
                 <div className="flex items-center gap-4 py-2 px-6 shrink-0">
@@ -274,154 +283,157 @@ const ListingsView: React.FC<ListingsViewProps> = ({ type: initialType, properti
                 </div>
             </div>
 
-            {/* Property Stream: Reduced Height Cards */}
-            <div className="space-y-4">
-                {filteredProperties.length > 0 ? filteredProperties.map((prop) => (
-                    <div key={prop.id} className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row group relative overflow-hidden rounded-2xl">
-                        
-                        {/* Visual Node: Optimized Height */}
-                        <div className="relative w-full md:w-[240px] h-48 md:h-auto overflow-hidden shrink-0 bg-slate-50 border-r border-slate-100 flex items-center justify-center">
-                            {prop.imageUrl ? (
-                                <img src={prop.imageUrl} alt={prop.title} className="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 cursor-pointer" onClick={() => onPropertySelect(prop)} />
-                            ) : (
-                                <div className="text-slate-200 flex flex-col items-center gap-2">
-                                    <MapIcon size={32} strokeWidth={1} />
-                                    <span className="text-[8px] font-black uppercase tracking-widest italic">Visual Offline</span>
-                                </div>
-                            )}
+            {/* Content Display Switch */}
+            {viewMode === 'list' ? (
+                <div className="space-y-4 animate-fade-in-up">
+                    {filteredProperties.length > 0 ? filteredProperties.map((prop) => (
+                        <div key={prop.id} className="bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row group relative overflow-hidden rounded-2xl">
                             
-                            <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">
-                                {prop.tags.map(tag => (
-                                    <span key={tag} className="px-2.5 py-1 bg-white/95 backdrop-blur-md text-red-600 rounded-md text-[8px] font-black uppercase tracking-widest shadow-sm border border-slate-100/50">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-
-                            <button className="absolute bottom-2.5 right-2.5 p-2 bg-white/90 backdrop-blur-md rounded-lg shadow-lg text-slate-400 hover:text-red-600 transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
-                                <Heart size={16} />
-                            </button>
-                        </div>
-
-                        {/* Content Engine: Tightened Padding & Layout */}
-                        <div className="flex-1 p-4 md:p-6 flex flex-col justify-between relative">
-                            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-3">
-                                        <div className="text-xl font-display font-black text-red-600 tracking-tighter">{prop.price}</div>
-                                        <h3 
-                                            className="text-base font-display font-black text-slate-800 leading-tight uppercase tracking-tight group-hover:text-red-600 transition-colors cursor-pointer" 
-                                            onClick={() => onPropertySelect(prop)}
-                                        >
-                                            {prop.title}
-                                        </h3>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-1.5">
-                                            <MapPin size={10} className="text-red-500" /> {prop.locality || 'Noida'}
-                                        </p>
-                                        <div className="w-1 h-1 bg-slate-200 rounded-full"></div>
-                                        <button className="text-[9px] font-black text-blue-600 hover:underline uppercase tracking-widest italic">
-                                            Geospatial Node
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="text-right hidden sm:flex flex-col items-end gap-0.5 opacity-60">
-                                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Registry ID: #HP-{prop.id}</p>
-                                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Logged: {prop.postedDate}</p>
-                                </div>
-                            </div>
-
-                            {/* Intelligence Matrix: Compact 3-Column Grid */}
-                            <div className="grid grid-cols-3 gap-y-3 gap-x-6 py-4 my-2 border-y border-slate-50/50">
-                                <div className="space-y-0.5">
-                                    <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest block">Spatial Area</span>
-                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-700 uppercase">
-                                        <Square size={12} className="text-slate-300" /> {prop.sqft} <span className="text-[8px] text-slate-400">Sq Ft</span>
-                                    </div>
-                                </div>
-                                <div className="space-y-0.5">
-                                    <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest block">Unit Config</span>
-                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-700 uppercase">
-                                        <Building2 size={12} className="text-slate-300" /> {prop.beds} BHK
-                                    </div>
-                                </div>
-                                <div className="space-y-0.5">
-                                    <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest block">Ownership</span>
-                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-700 uppercase truncate">
-                                        <ShieldCheck size={12} className="text-slate-300" /> {prop.ownershipType}
-                                    </div>
-                                </div>
-                                <div className="space-y-0.5">
-                                    <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest block">Intended For</span>
-                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-700 uppercase">
-                                        <Layers size={12} className="text-slate-300" /> {viewType === 'buy' ? 'Asset Sale' : 'Lease'}
-                                    </div>
-                                </div>
-                                <div className="space-y-0.5">
-                                    <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest block">Listing Type</span>
-                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-700 uppercase">
-                                        <Users size={12} className="text-slate-300" /> {prop.isOwner ? 'Principal' : 'Consultant'}
-                                    </div>
-                                </div>
-                                <div className="space-y-0.5">
-                                    <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest block">Locality</span>
-                                    <div className="flex items-center gap-1.5 text-[11px] font-black text-slate-700 uppercase truncate">
-                                        <Navigation size={12} className="text-slate-300" /> {prop.locality}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Unified Command Modules */}
-                            <div className="flex items-center justify-between pt-1">
-                                <div className="flex items-center gap-2">
-                                    <button className="px-5 py-2.5 bg-red-600 text-white rounded-lg font-black text-[9px] uppercase tracking-[0.2em] hover:bg-red-700 transition-all shadow-lg shadow-red-600/20 active:scale-95 flex items-center gap-2">
-                                        <Phone size={12} strokeWidth={3} /> Get Contact
-                                    </button>
-                                    <button className="px-5 py-2.5 border-2 border-slate-900 text-slate-900 rounded-lg font-black text-[9px] uppercase tracking-[0.2em] hover:bg-slate-900 hover:text-white transition-all active:scale-95 flex items-center gap-2">
-                                        <MessageSquare size={12} /> Contact Agent
-                                    </button>
-                                </div>
-                                
-                                {/* Status Seal Overlay: Strictly following 2025 branding */}
-                                {!prop.isOwner && (
-                                    <div className="hidden lg:flex items-center gap-2 opacity-20 grayscale transition-all group-hover:opacity-60 group-hover:grayscale-0">
-                                        <div className="w-10 h-10 border-2 border-slate-400 rounded-full flex items-center justify-center rotate-12 transition-transform group-hover:rotate-0">
-                                            <div className="text-[6px] font-black uppercase text-center leading-none text-slate-600">Verified<br/>Asset</div>
-                                        </div>
+                            {/* Visual Node: Optimized Compact Height */}
+                            <div className="relative w-full md:w-[220px] h-40 md:h-auto overflow-hidden shrink-0 bg-slate-50 border-r border-slate-100 flex items-center justify-center">
+                                {prop.imageUrl ? (
+                                    <img src={prop.imageUrl} alt={prop.title} className="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 cursor-pointer" onClick={() => onPropertySelect(prop)} />
+                                ) : (
+                                    <div className="text-slate-200 flex flex-col items-center gap-2">
+                                        <MapIcon size={28} strokeWidth={1} />
+                                        <span className="text-[7px] font-black uppercase tracking-widest italic">Visual Offline</span>
                                     </div>
                                 )}
+                                
+                                <div className="absolute top-2 left-2 flex flex-col gap-1">
+                                    {prop.tags.map(tag => (
+                                        <span key={tag} className="px-2 py-0.5 bg-white/95 backdrop-blur-md text-red-600 rounded-md text-[7px] font-black uppercase tracking-widest shadow-sm border border-slate-100/50">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                <button className="absolute bottom-2 right-2 p-1.5 bg-white/90 backdrop-blur-md rounded-lg shadow-lg text-slate-400 hover:text-red-600 transition-all opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0">
+                                    <Heart size={14} />
+                                </button>
+                            </div>
+
+                            {/* Content Engine: Tightened Padding & Efficient Layout */}
+                            <div className="flex-1 p-3 md:p-4 flex flex-col justify-between relative">
+                                <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                                    <div className="space-y-0.5">
+                                        <div className="flex items-center gap-2">
+                                            <div className="text-lg font-display font-black text-red-600 tracking-tighter leading-none">{prop.price}</div>
+                                            <h3 
+                                                className="text-sm font-display font-black text-slate-800 leading-tight uppercase tracking-tight group-hover:text-red-600 transition-colors cursor-pointer truncate max-w-[200px]" 
+                                                onClick={() => onPropertySelect(prop)}
+                                            >
+                                                {prop.title}
+                                            </h3>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.1em] flex items-center gap-1">
+                                                <MapPin size={8} className="text-red-500" /> {prop.locality || 'Noida'}
+                                            </p>
+                                            <div className="w-1 h-1 bg-slate-200 rounded-full"></div>
+                                            <button className="text-[8px] font-black text-blue-600 hover:underline uppercase tracking-widest italic">
+                                                Map Node
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="text-right hidden sm:flex flex-col items-end gap-0 opacity-40">
+                                         <p className="text-[7px] font-black text-slate-400 uppercase tracking-tighter">ID: #{prop.id}</p>
+                                         <p className="text-[7px] font-black text-slate-400 uppercase tracking-tighter">{prop.postedDate}</p>
+                                    </div>
+                                </div>
+
+                                {/* Intelligence Matrix: Super Compact 3-Column Grid */}
+                                <div className="grid grid-cols-3 gap-y-2 gap-x-4 py-2 my-1.5 border-y border-slate-50/50">
+                                    <div className="space-y-0">
+                                        <span className="text-[7px] font-black text-slate-300 uppercase tracking-widest block">Spatial</span>
+                                        <div className="flex items-center gap-1 text-[10px] font-black text-slate-700 uppercase">
+                                            <Square size={10} className="text-slate-300" /> {prop.sqft} <span className="text-[7px] text-slate-400">SqFt</span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-0">
+                                        <span className="text-[7px] font-black text-slate-300 uppercase tracking-widest block">Config</span>
+                                        <div className="flex items-center gap-1 text-[10px] font-black text-slate-700 uppercase">
+                                            <Building2 size={10} className="text-slate-300" /> {prop.beds} BHK
+                                        </div>
+                                    </div>
+                                    <div className="space-y-0">
+                                        <span className="text-[7px] font-black text-slate-300 uppercase tracking-widest block">Class</span>
+                                        <div className="flex items-center gap-1 text-[10px] font-black text-slate-700 uppercase truncate">
+                                            <ShieldCheck size={10} className="text-slate-300" /> {prop.ownershipType}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Unified Command Modules */}
+                                <div className="flex items-center justify-between pt-1">
+                                    <div className="flex items-center gap-2">
+                                        <button className="px-4 py-1.5 bg-red-600 text-white rounded-md font-black text-[8px] uppercase tracking-[0.1em] hover:bg-red-700 transition-all shadow-md shadow-red-600/10 active:scale-95 flex items-center gap-1.5">
+                                            <Phone size={10} strokeWidth={3} /> Get Contact
+                                        </button>
+                                        <button className="px-4 py-1.5 border border-slate-900 text-slate-900 rounded-md font-black text-[8px] uppercase tracking-[0.1em] hover:bg-slate-900 hover:text-white transition-all active:scale-95 flex items-center gap-1.5">
+                                            <MessageSquare size={10} /> Inquire
+                                        </button>
+                                    </div>
+                                    
+                                    {!prop.isOwner && (
+                                        <div className="hidden lg:flex items-center gap-1 opacity-20 grayscale transition-all group-hover:opacity-40">
+                                            <div className="w-8 h-8 border border-slate-400 rounded-full flex items-center justify-center rotate-12">
+                                                <div className="text-[5px] font-black uppercase text-center leading-none text-slate-600">Verified<br/>Hub</div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )) : (
-                    <div className="py-32 text-center bg-white border border-slate-100 rounded-3xl shadow-sm animate-fade-in-up">
-                        <div className="w-20 h-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto text-slate-200 mb-6">
-                            <Search size={40} strokeWidth={1} />
+                    )) : (
+                        <div className="py-24 text-center bg-white border border-slate-100 rounded-2xl shadow-sm">
+                            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto text-slate-200 mb-4">
+                                <Search size={32} />
+                            </div>
+                            <h4 className="text-xl font-display font-black text-slate-950 uppercase">No Matrix Matches</h4>
+                            <button onClick={() => { setSearchQuery(''); setSelectedBHK([]); }} className="mt-6 px-8 py-2.5 bg-slate-950 text-white rounded-lg font-black text-[9px] uppercase tracking-widest shadow-xl">Clear Matrix</button>
                         </div>
-                        <h4 className="text-2xl font-display font-black text-slate-950 uppercase tracking-tighter">No Neural Matches</h4>
-                        <p className="text-slate-400 text-xs font-black uppercase tracking-widest mt-2">Broaden your filter matrix to discover nodes in this sector.</p>
-                        <button onClick={() => { setSearchQuery(''); setSelectedBHK([]); }} className="mt-8 px-10 py-3.5 bg-slate-950 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl active:scale-95 transition-all hover:bg-red-600">Clear Global Filters</button>
+                    )}
+                </div>
+            ) : (
+                <div className="h-[700px] w-full bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-2xl relative group animate-fade-in-up">
+                    <MapView location={searchQuery || "Noida"} />
+                    <div className="absolute top-6 left-6 z-20 pointer-events-none">
+                         <div className="bg-slate-900/90 backdrop-blur-xl p-6 rounded-[2rem] border border-white/10 shadow-2xl space-y-4 max-w-xs pointer-events-auto">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary"><Zap size={20} /></div>
+                                <div>
+                                    <h4 className="text-white font-display font-black text-sm uppercase">Neural Explorer</h4>
+                                    <p className="text-slate-400 text-[9px] font-bold uppercase tracking-widest">Active Mapping Grid</p>
+                                </div>
+                            </div>
+                            <p className="text-slate-300 text-[10px] leading-relaxed italic">
+                                "Mapping {filteredProperties.length} secure property nodes in the {searchQuery} sector. Zoom to explore local amenities and infrastructure."
+                            </p>
+                            <button onClick={() => setViewMode('list')} className="w-full py-2.5 bg-white text-slate-900 rounded-xl font-black text-[9px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-primary transition-all">
+                                <List size={12} /> Return to Grid View
+                            </button>
+                         </div>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
 
-            {/* Futuristic Load Sync */}
-            {filteredProperties.length > 0 && (
+            {/* Load More Sync (only in list mode) */}
+            {viewMode === 'list' && filteredProperties.length > 0 && (
                 <div className="py-12 flex flex-col items-center gap-6">
                     <button 
                         onClick={handleLoadMore}
                         disabled={isLoading}
-                        className="px-16 py-5 bg-slate-900 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] hover:bg-red-600 transition-all duration-500 shadow-2xl disabled:opacity-50 flex items-center gap-4 group"
+                        className="px-12 py-4 bg-slate-900 text-white rounded-2xl font-black text-[9px] uppercase tracking-[0.4em] hover:bg-red-600 transition-all duration-500 shadow-xl disabled:opacity-50 flex items-center gap-3 group"
                     >
-                        {isLoading ? <Loader2 className="animate-spin" size={16} /> : <Briefcase size={16} className="group-hover:rotate-12 transition-transform" />}
-                        {isLoading ? 'Decrypting Registry...' : 'Load More Intelligence'}
+                        {isLoading ? <Loader2 className="animate-spin" size={14} /> : <Briefcase size={14} />}
+                        {isLoading ? 'Decrypting Registry...' : 'Load Intelligence'}
                     </button>
                     
-                    <div className="flex items-center gap-6 text-[8px] font-black text-slate-200 uppercase tracking-[0.8em] opacity-40">
-                        <div className="w-12 h-px bg-slate-300"></div> 
-                        GRID LINK SECURE (AES-256)
-                        <div className="w-12 h-px bg-slate-300"></div>
+                    <div className="flex items-center gap-6 text-[7px] font-black text-slate-200 uppercase tracking-[0.8em] opacity-40">
+                        <div className="w-10 h-px bg-slate-300"></div> 
+                        GRID LINK SECURE
+                        <div className="w-10 h-px bg-slate-300"></div>
                     </div>
                 </div>
             )}
