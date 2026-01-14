@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X } from 'lucide-react';
 
@@ -71,7 +70,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
       { label: 'Articles', view: 'articles' },
       { label: 'NRI Center', view: 'nri-center' },
       { label: 'Covid', view: 'covid' },
-      { label: 'Career', view: 'career' }
+      { label: 'Career', view: 'career' },
+      { label: 'Investors Relation', view: 'investors-relation' }
   ];
 
   const getDropdownData = (label: string) => {
