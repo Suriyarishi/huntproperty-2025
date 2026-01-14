@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -21,7 +22,7 @@ import ChannelPartnerView from './components/ChannelPartnerView';
 import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
-import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView, CareerView, InvestorsRelationView } from './components/ToolsViews';
+import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView, CareerView } from './components/ToolsViews';
 import { Property, Testimonial, Insight } from './types';
 import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
 
@@ -249,7 +250,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'investors-relation';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -369,7 +370,6 @@ function App() {
         case 'nri-center': return <NRICenterView />;
         case 'covid': return <CovidView />;
         case 'career': return <CareerView />;
-        case 'investors-relation': return <InvestorsRelationView />;
         case 'home':
         default:
             return (
@@ -509,8 +509,7 @@ function App() {
       case 'articles':
       case 'nri-center':
       case 'covid':
-      case 'career':
-      case 'investors-relation': return 'Back to Home';
+      case 'career': return 'Back to Home';
       default: return 'Back';
     }
   };
