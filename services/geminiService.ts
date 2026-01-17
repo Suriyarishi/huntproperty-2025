@@ -1,13 +1,13 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { AspectRatio } from "../types";
 
 // 1. Search Grounding (Market Trends)
 export const getMarketTrends = async (query: string) => {
   try {
-    // Fix: Instantiate GoogleGenAI per call using process.env.API_KEY directly
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview", // Updated to the recommended model for basic text tasks
+      model: "gemini-3-flash-preview",
       contents: query,
       config: {
         tools: [{ googleSearch: {} }],
@@ -26,7 +26,6 @@ export const getMarketTrends = async (query: string) => {
 // 2. Maps Grounding (Nearby Places)
 export const getNearbyPlaces = async (location: string, lat: number, lng: number) => {
   try {
-    // Fix: Maps grounding is only supported in Gemini 2.5 series models
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -94,8 +93,6 @@ export const editPropertyImage = async (base64Image: string, prompt: string, mim
 // 4. Image Generation (Gemini 3 Pro Image Preview)
 export const generatePropertyVisualization = async (prompt: string, aspectRatio: AspectRatio) => {
   try {
-    // Fix: Create a new GoogleGenAI instance right before making an API call for gemini-3-pro-image-preview
-    // to ensure it uses the most up-to-date API key from the selection dialog.
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-image-preview',
@@ -123,24 +120,24 @@ export const generatePropertyVisualization = async (prompt: string, aspectRatio:
   }
 };
 
-// 5. Image Analysis (Gemini 3 Pro Preview)
-export const analyzePropertyPhoto = async (base64Image: string, mimeType: string = 'image/jpeg') => {
-  try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview', // Updated to recommended model for complex reasoning tasks
-      contents: {
-        parts: [
-            { inlineData: { data: base64Image, mimeType } },
-            { text: "Analyze this property image in detail. Describe the style, condition, potential renovations, and estimated value tier." }
-        ]
-      }
-    });
-    return response.text;
-  } catch (error) {
-    console.error("Analysis Error:", error);
-    throw error;
-  }
+// 5. Vastu Analysis (Gemini 3 Pro Preview with Thinking Mode)
+export const getVastuAnalysis = async (description: string) => {
+    try {
+        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+        const response = await ai.models.generateContent({
+            model: "gemini-3-pro-preview",
+            contents: `As an expert Vastu consultant, analyze the following floor plan details and provide a detailed Vastu score, element balance analysis, and corrective measures: ${description}. Be technical and accurate.`,
+            config: {
+                thinkingConfig: {
+                    thinkingBudget: 32768
+                }
+            }
+        });
+        return response.text;
+    } catch (error) {
+        console.error("Vastu Analysis Error:", error);
+        throw error;
+    }
 };
 
 // 6. Thinking Mode (Investment Analysis)
@@ -152,7 +149,7 @@ export const getInvestmentAnalysis = async (propertyDetails: string) => {
       contents: `Analyze the long-term investment potential of this property considering market trends: ${propertyDetails}. Be thorough and weigh pros and cons.`,
       config: {
         thinkingConfig: {
-          thinkingBudget: 32768 // Max thinking budget for gemini-3-pro-preview
+          thinkingBudget: 32768
         }
       }
     });
@@ -168,7 +165,7 @@ export const getFastChatResponse = async (message: string) => {
   try {
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
     const response = await ai.models.generateContent({
-      model: "gemini-flash-lite-latest", // Updated to the correct model alias from guidelines
+      model: "gemini-flash-lite-latest",
       contents: message,
     });
     return response.text;

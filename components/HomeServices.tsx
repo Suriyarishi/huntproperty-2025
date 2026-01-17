@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Home, 
@@ -12,9 +11,14 @@ import {
   ChevronRight
 } from 'lucide-react';
 
+interface HomeServicesProps {
+    onNavigate: (view: string) => void;
+}
+
 const SERVICES = [
   { 
     id: 'home-loan', 
+    view: 'home-loans',
     title: 'Home Loan', 
     description: 'Flexible financing solutions for your next big investment.', 
     icon: Home, 
@@ -28,8 +32,9 @@ const SERVICES = [
   },
   { 
     id: 'vastu', 
-    title: 'Vastu', 
-    description: 'Harmony and balance for your living spaces.', 
+    view: 'vastu',
+    title: 'Vastu AI', 
+    description: 'Futuristic AI neural scan for energy harmony in your sanctuary.', 
     icon: Compass, 
     theme: {
       bg: 'bg-amber-50/50',
@@ -41,6 +46,7 @@ const SERVICES = [
   },
   { 
     id: 'property-news', 
+    view: 'news-gallery',
     title: 'Market Insights', 
     description: 'Stay ahead with real-time real estate trends.', 
     icon: Newspaper, 
@@ -54,6 +60,7 @@ const SERVICES = [
   },
   { 
     id: 'rera-services', 
+    view: 'rera',
     title: 'RERA Compliance', 
     description: 'Navigating regulatory standards with precision.', 
     icon: Globe, 
@@ -67,6 +74,7 @@ const SERVICES = [
   },
   { 
     id: 'legal-advisory', 
+    view: 'legal-advisory',
     title: 'Legal Counsel', 
     description: 'Expert legal support for secure transactions.', 
     icon: Scale, 
@@ -80,6 +88,7 @@ const SERVICES = [
   },
   { 
     id: 'channel-partner', 
+    view: 'channel-partner',
     title: 'Partner Network', 
     description: 'Exclusive spaces for investors and partners.', 
     icon: Handshake, 
@@ -93,6 +102,7 @@ const SERVICES = [
   },
   { 
     id: 'nri-center', 
+    view: 'nri-center',
     title: 'NRI Center', 
     description: 'Tailored property management for global citizens.', 
     icon: UserCircle, 
@@ -106,7 +116,7 @@ const SERVICES = [
   },
 ];
 
-const HomeServices = () => {
+const HomeServices: React.FC<HomeServicesProps> = ({ onNavigate }) => {
   return (
     <section className="max-w-7xl mx-auto px-6 py-24 bg-white">
       <div className="flex flex-col lg:flex-row items-end justify-between mb-16 gap-8">
@@ -129,16 +139,18 @@ const HomeServices = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {SERVICES.slice(0, 4).map((service) => (
-          <ServiceCard key={service.id} service={service} />
+          <ServiceCard key={service.id} service={service} onClick={() => onNavigate(service.view)} />
         ))}
         <div className="hidden lg:block"></div> {/* Spacer for layout balance */}
         {SERVICES.slice(4).map((service) => (
-          <ServiceCard key={service.id} service={service} />
+          <ServiceCard key={service.id} service={service} onClick={() => onNavigate(service.view)} />
         ))}
       </div>
       
       <div className="mt-16 flex justify-center">
-        <button className="group flex items-center gap-4 px-8 py-4 bg-slate-900 text-white rounded-full shadow-lg hover:shadow-2xl hover:bg-slate-800 transition-all duration-500">
+        <button 
+            className="group flex items-center gap-4 px-8 py-4 bg-slate-900 text-white rounded-full shadow-lg hover:shadow-2xl hover:bg-slate-800 transition-all duration-500"
+        >
           <span className="text-xs font-bold uppercase tracking-widest">Explore Full Network</span>
           <div className="w-8 h-8 rounded-full bg-primary text-slate-900 flex items-center justify-center group-hover:scale-110 transition-transform">
             <ArrowRight size={16} />
@@ -149,12 +161,15 @@ const HomeServices = () => {
   );
 };
 
-const ServiceCard: React.FC<{ service: any }> = ({ service }) => {
+const ServiceCard: React.FC<{ service: any, onClick: () => void }> = ({ service, onClick }) => {
   const Icon = service.icon;
   const { bg, border, iconBg, iconColor, hoverBg } = service.theme;
   
   return (
-    <div className={`group relative h-[280px] ${bg} rounded-[2.5rem] p-8 flex flex-col justify-between border ${border} transition-all duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] ${hoverBg} hover:-translate-y-2 cursor-pointer overflow-hidden shadow-sm`}>
+    <div 
+        onClick={onClick}
+        className={`group relative h-[280px] ${bg} rounded-[2.5rem] p-8 flex flex-col justify-between border ${border} transition-all duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] ${hoverBg} hover:-translate-y-2 cursor-pointer overflow-hidden shadow-sm`}
+    >
       {/* Subtle Background Accent */}
       <div className={`absolute -top-10 -right-10 w-32 h-32 ${iconBg} rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-700`}></div>
       

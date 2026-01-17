@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X } from 'lucide-react';
 

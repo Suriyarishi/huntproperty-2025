@@ -22,6 +22,7 @@ import ChannelPartnerView from './components/ChannelPartnerView';
 import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
+import VastuView from './components/VastuView';
 import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView, CareerView } from './components/ToolsViews';
 import { Property, Testimonial, Insight } from './types';
 import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
@@ -250,7 +251,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -309,6 +310,7 @@ function App() {
 
   const renderContent = () => {
     switch (currentView) {
+        case 'vastu': return <VastuView />;
         case 'login':
         case 'employee-login':
             return <LoginView onNavigate={handleNavigate} onLogin={handleBackToHome} />;
@@ -467,7 +469,7 @@ function App() {
                     </section>
 
                     {/* Hunt Property Services Section */}
-                    <HomeServices />
+                    <HomeServices onNavigate={handleNavigate} />
 
                     {/* Testimonials */}
                     <div className="bg-gradient-to-b from-white to-slate-50 border-y border-slate-100">
@@ -500,6 +502,7 @@ function App() {
       case 'agents': return 'Back to Home';
       case 'home-loans': return 'Back to Home';
       case 'channel-partner': return 'Back to Home';
+      case 'vastu': return 'Back to Home';
       case 'rera':
       case 'legal-advisory':
       case 'master-plans':
