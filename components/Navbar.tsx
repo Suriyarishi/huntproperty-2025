@@ -61,6 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
   };
 
   const toolsAdviceItems = [
+      { label: 'Investors Relation', view: 'investors' },
       { label: 'RERA', view: 'rera' },
       { label: 'Legal Advisory', view: 'legal-advisory' },
       { label: 'Master Plans', view: 'master-plans' },

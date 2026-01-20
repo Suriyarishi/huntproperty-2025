@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
     ShieldCheck, Scale, Map, Newspaper, Play, 
@@ -621,31 +622,6 @@ export const CovidView = () => {
                      <Syringe size={36} strokeWidth={1} />
                      <Biohazard size={36} strokeWidth={1} />
                  </div>
-            </div>
-        </div>
-    );
-};
-
-// 10. Career View
-export const CareerView = () => {
-    const jobs = [
-        { title: "Property Advisor", type: "Full Time", location: "Noida", icon: UserCircle },
-        { title: "Tech Researcher", type: "Remote", location: "Global", icon: Zap }
-    ];
-    return (
-        <div className="min-h-screen bg-[#f8fafc] pb-32">
-            <Header title="Career" subtitle="Join Our Talent Network" icon={Briefcase} />
-            <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8">
-                {jobs.map((job, i) => (
-                    <div key={i} className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-lg group flex justify-between items-center transition-all hover:shadow-2xl hover:-translate-y-1">
-                        <div>
-                            <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl mb-6 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-all"><job.icon size={24} /></div>
-                            <h4 className="font-display font-black text-slate-950 text-xl uppercase mb-2">{job.title}</h4>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{job.type} • {job.location}</p>
-                        </div>
-                        <button className="p-5 rounded-full bg-slate-900 text-white hover:bg-red-600 transition-all shadow-lg active:scale-90"><ArrowRight size={24} className="-rotate-45" /></button>
-                    </div>
-                ))}
             </div>
         </div>
     );

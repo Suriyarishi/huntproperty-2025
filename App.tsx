@@ -19,11 +19,13 @@ import LoginView from './components/LoginView';
 import RegisterView from './components/RegisterView';
 import HomeLoanView from './components/HomeLoanView';
 import ChannelPartnerView from './components/ChannelPartnerView';
+import InvestorsRelationView from './components/InvestorsRelationView';
+import CareerView from './components/CareerView';
 import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
 import VastuView from './components/VastuView';
-import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView, CareerView } from './components/ToolsViews';
+import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView } from './components/ToolsViews';
 import { Property, Testimonial, Insight } from './types';
 import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
 
@@ -251,7 +253,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -358,6 +360,10 @@ function App() {
             return <AgentsView />;
         case 'channel-partner':
             return <ChannelPartnerView />;
+        case 'investors':
+            return <InvestorsRelationView />;
+        case 'career':
+            return <CareerView />;
         case 'insights':
             return <InsightsView insights={INSIGHTS} onInsightSelect={handleInsightSelect} />;
         case 'home-loans':
@@ -371,7 +377,6 @@ function App() {
         case 'articles': return <ArticlesView />;
         case 'nri-center': return <NRICenterView />;
         case 'covid': return <CovidView />;
-        case 'career': return <CareerView />;
         case 'home':
         default:
             return (
@@ -503,6 +508,8 @@ function App() {
       case 'home-loans': return 'Back to Home';
       case 'channel-partner': return 'Back to Home';
       case 'vastu': return 'Back to Home';
+      case 'investors': return 'Back to Home';
+      case 'career': return 'Back to Home';
       case 'rera':
       case 'legal-advisory':
       case 'master-plans':
@@ -511,8 +518,7 @@ function App() {
       case 'video-gallery':
       case 'articles':
       case 'nri-center':
-      case 'covid':
-      case 'career': return 'Back to Home';
+      case 'covid': return 'Back to Home';
       default: return 'Back';
     }
   };
