@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -21,6 +20,7 @@ import HomeLoanView from './components/HomeLoanView';
 import ChannelPartnerView from './components/ChannelPartnerView';
 import InvestorsRelationView from './components/InvestorsRelationView';
 import CareerView from './components/CareerView';
+import DashboardView from './components/DashboardView';
 import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
@@ -253,7 +253,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -313,6 +313,7 @@ function App() {
   const renderContent = () => {
     switch (currentView) {
         case 'vastu': return <VastuView />;
+        case 'dashboard': return <DashboardView onNavigate={handleNavigate} />;
         case 'login':
         case 'employee-login':
             return <LoginView onNavigate={handleNavigate} onLogin={handleBackToHome} />;
@@ -510,6 +511,7 @@ function App() {
       case 'vastu': return 'Back to Home';
       case 'investors': return 'Back to Home';
       case 'career': return 'Back to Home';
+      case 'dashboard': return 'Back to Home';
       case 'rera':
       case 'legal-advisory':
       case 'master-plans':

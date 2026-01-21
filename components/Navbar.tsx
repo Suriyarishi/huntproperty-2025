@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X } from 'lucide-react';
+import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X, LayoutDashboard } from 'lucide-react';
 
 interface NavbarProps {
     onNavigate: (view: any) => void;
@@ -174,6 +174,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
           {/* Action Buttons & User Menu */}
           <div className="flex items-center gap-1 sm:gap-3">
               <button 
+                  onClick={() => onNavigate('dashboard')}
+                  className="hidden xl:flex items-center gap-2 px-5 py-3 text-slate-700 hover:text-red-600 font-bold text-sm transition-all"
+              >
+                  <LayoutDashboard size={18} className="text-red-600" />
+                  Dashboard
+              </button>
+
+              <button 
                   onClick={onPostProperty}
                   className="hidden sm:flex items-center px-6 sm:px-8 py-3 bg-slate-950 text-white font-bold rounded-full hover:bg-primary hover:text-slate-950 transition-all duration-300 shadow-xl hover:shadow-primary/30 active:scale-95 whitespace-nowrap text-xs sm:text-sm"
               >
@@ -191,15 +199,15 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
                   {showAuthMenu && (
                       <div className="absolute right-0 top-full mt-4 w-52 sm:w-60 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
+                          <button onClick={() => { onNavigate('dashboard'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
+                              <LayoutDashboard size={16} className="text-red-600" /> Dashboard
+                          </button>
+                          <div className="h-px bg-slate-100 mx-4 my-1"></div>
                           <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
                               <LogIn size={16} className="text-primary" /> Login
                           </button>
                           <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
                               <UserPlus size={16} className="text-primary" /> Registration
-                          </button>
-                          <div className="h-px bg-slate-100 mx-4 my-1"></div>
-                          <button onClick={() => { onNavigate('employee-login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-600">
-                              <Briefcase size={16} /> Employee Login
                           </button>
                       </div>
                   )}
@@ -228,6 +236,9 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-2 no-scrollbar">
+                    <button onClick={() => { onNavigate('dashboard'); setIsMobileMenuOpen(false); }} className="w-full flex items-center gap-3 py-4 text-left font-bold text-red-600 border-b border-slate-50">
+                        <LayoutDashboard size={20} /> Dashboard
+                    </button>
                     {navItems.map((item) => (
                         <div key={item.label} className="border-b border-slate-50 last:border-0">
                             <button 
