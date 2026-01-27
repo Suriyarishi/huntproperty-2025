@@ -12,6 +12,21 @@ const AIImageStudio = ({ initialImage }: { initialImage: string }) => {
 
   const handleAction = async () => {
     if (!prompt) return;
+
+    // Fix: Mandatory API Key selection for high-quality image generation model (gemini-3-pro-image-preview).
+    // This follows GenAI guidelines requiring user-selected paid API keys for specific models.
+    if (mode === 'generate') {
+      const aistudio = (window as any).aistudio;
+      if (aistudio) {
+        const hasKey = await aistudio.hasSelectedApiKey();
+        if (!hasKey) {
+          await aistudio.openSelectKey();
+          // GUIDELINE: Assume the key selection was successful after triggering openSelectKey() and proceed to the app. 
+          // Do not add delay to mitigate the race condition.
+        }
+      }
+    }
+
     setLoading(true);
     try {
       if (mode === 'edit') {
@@ -30,8 +45,12 @@ const AIImageStudio = ({ initialImage }: { initialImage: string }) => {
         if (result) setGeneratedImage(result);
         setLoading(false);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      // Fix: Reset the key selection state if the request fails with "Requested entity was not found." as per guidelines.
+      if (e?.message?.includes("Requested entity was not found.") && (window as any).aistudio) {
+        await (window as any).aistudio.openSelectKey();
+      }
       setLoading(false);
     }
   };

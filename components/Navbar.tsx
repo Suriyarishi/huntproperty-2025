@@ -30,33 +30,73 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
   const buyDropdownContent = {
     col1: {
       title: 'New Projects in India',
-      items: ['New Projects in Pune', 'New Projects in Bengaluru', 'New Projects in Mumbai', 'New Projects in Chennai', 'New Projects in Hyderabad', 'New Projects in Noida', 'New Projects in Gurugram']
+      items: [
+        { label: 'New Projects in Pune', view: 'buy' },
+        { label: 'New Projects in Bengaluru', view: 'buy' },
+        { label: 'New Projects in Mumbai', view: 'buy' },
+        { label: 'New Projects in Chennai', view: 'buy' },
+        { label: 'New Projects in Hyderabad', view: 'buy' },
+        { label: 'New Projects in Noida', view: 'buy' },
+        { label: 'New Projects in Gurugram', view: 'buy' }
+      ]
     },
     col2: {
       title: 'Real Estate in India',
-      items: ['New Projects in Mohali', 'New Projects in Coimbatore', 'New Projects in Kochi', 'New Projects in Delhi', 'New Projects in Chandigarh', 'New Projects in Faridabad', 'New Projects in Dehradun', 'New Projects in Nagpur']
+      items: [
+        { label: 'New Projects in Mohali', view: 'buy' },
+        { label: 'New Projects in Coimbatore', view: 'buy' },
+        { label: 'New Projects in Kochi', view: 'buy' },
+        { label: 'New Projects in Delhi', view: 'buy' },
+        { label: 'New Projects in Chandigarh', view: 'buy' },
+        { label: 'New Projects in Faridabad', view: 'buy' },
+        { label: 'New Projects in Dehradun', view: 'buy' },
+        { label: 'New Projects in Nagpur', view: 'buy' }
+      ]
     }
   };
 
   const rentDropdownContent = {
     col1: {
       title: 'Rent Property in India',
-      items: ['Rent Projects in Pune', 'Rent Projects in Bengaluru', 'Rent Projects in Mumbai', 'Rent Projects in Chennai', 'Rent Projects in Hyderabad', 'Rent Projects in Noida', 'Rent Projects in Gurugram']
+      items: [
+        { label: 'Rent Projects in Pune', view: 'rent' },
+        { label: 'Rent Projects in Bengaluru', view: 'rent' },
+        { label: 'Rent Projects in Mumbai', view: 'rent' },
+        { label: 'Rent Projects in Chennai', view: 'rent' },
+        { label: 'Rent Projects in Hyderabad', view: 'rent' },
+        { label: 'Rent Projects in Noida', view: 'rent' },
+        { label: 'Rent Projects in Gurugram', view: 'rent' }
+      ]
     },
     col2: {
       title: 'Exclusive Rental Choices',
-      items: ['Rent Projects in Mohali', 'Rent Projects in Coimbatore', 'Rent Projects in Kochi', 'Rent Projects in Delhi', 'Rent Projects in Chandigarh', 'Rent Projects in Faridabad', 'Rent Projects in Dehradun', 'Rent Projects in Nagpur']
+      items: [
+        { label: 'Rent Projects in Mohali', view: 'rent' },
+        { label: 'Rent Projects in Coimbatore', view: 'rent' },
+        { label: 'Rent Projects in Kochi', view: 'rent' },
+        { label: 'Rent Projects in Delhi', view: 'rent' },
+        { label: 'Rent Projects in Chandigarh', view: 'rent' },
+        { label: 'Rent Projects in Faridabad', view: 'rent' },
+        { label: 'Rent Projects in Dehradun', view: 'rent' },
+        { label: 'Rent Projects in Nagpur', view: 'rent' }
+      ]
     }
   };
 
   const sellDropdownContent = {
     col1: {
       title: 'Selling Tools',
-      items: ['Post Your Property', 'Property Worth Calculator']
+      items: [
+        { label: 'Post Your Property', action: onPostProperty },
+        { label: 'Property Worth Calculator', view: 'worth-calculator' }
+      ]
     },
     col2: {
       title: 'Our Services',
-      items: ['Customer Care', 'Sell / Rent Ad Packages']
+      items: [
+        { label: 'Customer Care', view: 'customer-care' },
+        { label: 'Sell / Rent Ad Packages', view: 'ad-packages' }
+      ]
     }
   };
 
@@ -85,25 +125,25 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-6 pointer-events-none">
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-4 sm:px-6 py-6 pointer-events-none">
         <div className="max-w-[95rem] mx-auto glass-panel rounded-full px-4 sm:px-8 py-3 flex items-center justify-between pointer-events-auto shadow-2xl bg-white/95 backdrop-blur-xl border border-white/40">
           
           {/* Logo & Back Button */}
           <div className="flex items-center gap-4 sm:gap-6">
               <div className="flex items-center cursor-pointer group" onClick={() => onNavigate('home')}>
                   <div className="flex items-center">
-                      <span className="font-display font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">Hunt</span>
+                      <span className="font-display font-bold text-xl sm:text-2xl text-[#1A1A1A] tracking-tight">Hunt</span>
                       <div className="relative -mx-0.5 mb-1">
                           <MapPin className="text-red-600 fill-red-600" size={22} />
                       </div>
-                      <span className="font-display font-bold text-xl sm:text-2xl text-slate-900 tracking-tight -ml-0.5">roperty</span>
+                      <span className="font-display font-bold text-xl sm:text-2xl text-[#1A1A1A] tracking-tight -ml-0.5">roperty</span>
                   </div>
               </div>
 
               {isDetailView && onBack && (
                   <button 
                       onClick={onBack}
-                      className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-900 hover:bg-primary rounded-full text-white hover:text-slate-900 transition-all font-bold text-[10px] sm:text-xs shadow-lg group shrink-0"
+                      className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#1A1A1A] hover:bg-primary rounded-full text-white hover:text-[#1A1A1A] transition-all font-bold text-[10px] sm:text-xs shadow-lg group shrink-0"
                   >
                       <ArrowLeft size={12} className="group-hover:-translate-x-1 transition-transform" />
                       <span className="hidden xs:inline">{backLabel || 'Back'}</span>
@@ -122,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                   >
                       <button 
                           onClick={() => !item.hasDropdown && onNavigate(item.view)}
-                          className={`flex items-center gap-1.5 text-[15px] font-semibold transition-colors ${activeDropdown === item.label ? 'text-red-600' : 'text-slate-700 hover:text-slate-900'}`}
+                          className={`flex items-center gap-1.5 text-[15px] font-semibold transition-colors ${activeDropdown === item.label ? 'text-red-600' : 'text-[#1A1A1A] hover:text-black'}`}
                       >
                           {item.icon && <item.icon size={18} className={activeDropdown === item.label ? 'text-red-600' : 'text-slate-400'} />}
                           {item.label}
@@ -138,9 +178,17 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                                               {section.title}
                                           </h4>
                                           <ul className="space-y-2.5">
-                                              {section.items.map(itemText => (
-                                                  <li key={itemText} className="text-slate-600 hover:text-red-600 transition-colors text-[14px] font-medium cursor-pointer">
-                                                      {itemText}
+                                              {section.items.map((subItem: any) => (
+                                                  <li 
+                                                    key={subItem.label} 
+                                                    onClick={() => {
+                                                        if (subItem.action) subItem.action();
+                                                        else if (subItem.view) onNavigate(subItem.view);
+                                                        setActiveDropdown(null);
+                                                    }}
+                                                    className="text-slate-600 hover:text-red-600 transition-colors text-[14px] font-medium cursor-pointer"
+                                                  >
+                                                      {subItem.label}
                                                   </li>
                                               ))}
                                           </ul>
@@ -175,7 +223,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
           <div className="flex items-center gap-1 sm:gap-3">
               <button 
                   onClick={() => onNavigate('dashboard')}
-                  className="hidden xl:flex items-center gap-2 px-5 py-3 text-slate-700 hover:text-red-600 font-bold text-sm transition-all"
+                  className="hidden xl:flex items-center gap-2 px-5 py-3 text-[#1A1A1A] hover:text-red-600 font-bold text-sm transition-all"
               >
                   <LayoutDashboard size={18} className="text-red-600" />
                   Dashboard
@@ -183,7 +231,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
               <button 
                   onClick={onPostProperty}
-                  className="hidden sm:flex items-center px-6 sm:px-8 py-3 bg-slate-950 text-white font-bold rounded-full hover:bg-primary hover:text-slate-950 transition-all duration-300 shadow-xl hover:shadow-primary/30 active:scale-95 whitespace-nowrap text-xs sm:text-sm"
+                  className="hidden sm:flex items-center px-6 sm:px-8 py-3 bg-[#1A1A1A] text-white font-bold rounded-full hover:bg-primary hover:text-[#1A1A1A] transition-all duration-300 shadow-xl hover:shadow-primary/30 active:scale-95 whitespace-nowrap text-xs sm:text-sm"
               >
                   Post Your Property
               </button>
@@ -191,7 +239,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
               <div className="relative">
                   <button 
                       onClick={() => setShowAuthMenu(!showAuthMenu)}
-                      className="flex items-center gap-1 p-2 rounded-full hover:bg-slate-100 transition-all text-slate-700"
+                      className="flex items-center gap-1 p-2 rounded-full hover:bg-slate-100 transition-all text-[#1A1A1A]"
                   >
                       <User size={20} className="stroke-[2.5]" />
                       <ChevronDown size={12} className={`text-slate-400 transition-transform ${showAuthMenu ? 'rotate-180' : ''}`} />
@@ -199,21 +247,21 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
                   {showAuthMenu && (
                       <div className="absolute right-0 top-full mt-4 w-52 sm:w-60 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
-                          <button onClick={() => { onNavigate('dashboard'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
+                          <button onClick={() => { onNavigate('dashboard'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <LayoutDashboard size={16} className="text-red-600" /> Dashboard
                           </button>
                           <div className="h-px bg-slate-100 mx-4 my-1"></div>
-                          <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
+                          <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <LogIn size={16} className="text-primary" /> Login
                           </button>
-                          <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-slate-800">
+                          <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <UserPlus size={16} className="text-primary" /> Registration
                           </button>
                       </div>
                   )}
               </div>
 
-              <button onClick={toggleMobileMenu} className="lg:hidden p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-700">
+              <button onClick={toggleMobileMenu} className="lg:hidden p-2 hover:bg-slate-100 rounded-full transition-colors text-[#1A1A1A]">
                   <Menu size={20} />
               </button>
           </div>
@@ -222,16 +270,16 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="absolute right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl p-6 flex flex-col animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-0 z-[200] bg-[#1A1A1A]/40 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="absolute right-0 top-0 bottom-0 w-[80%] max-sm max-w-sm bg-white shadow-2xl p-6 flex flex-col animate-in slide-in-from-right duration-300">
                 <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center">
-                        <span className="font-display font-bold text-xl text-slate-900">Hunt</span>
+                        <span className="font-display font-bold text-xl text-[#1A1A1A]">Hunt</span>
                         <MapPin className="text-red-600 fill-red-600 mx-0.5" size={20} />
-                        <span className="font-display font-bold text-xl text-slate-900">roperty</span>
+                        <span className="font-display font-bold text-xl text-[#1A1A1A]">roperty</span>
                     </div>
                     <button onClick={toggleMobileMenu} className="p-2 rounded-full hover:bg-slate-100 transition-colors">
-                        <X size={24} className="text-slate-900" />
+                        <X size={24} className="text-[#1A1A1A]" />
                     </button>
                 </div>
 
@@ -248,7 +296,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                                         setIsMobileMenuOpen(false);
                                     }
                                 }}
-                                className="w-full flex items-center justify-between py-4 text-left font-bold text-slate-700"
+                                className="w-full flex items-center justify-between py-4 text-left font-bold text-[#1A1A1A]"
                             >
                                 <span className="flex items-center gap-3">
                                     {item.icon && <item.icon size={20} className="text-slate-400" />}
@@ -265,7 +313,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                                 onPostProperty();
                                 setIsMobileMenuOpen(false);
                             }}
-                            className="w-full py-4 bg-primary text-slate-900 font-bold rounded-2xl shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-primary text-[#1A1A1A] font-bold rounded-2xl shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
                         >
                             Post Your Property
                         </button>
