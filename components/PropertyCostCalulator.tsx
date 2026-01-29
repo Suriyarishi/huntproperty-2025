@@ -340,4 +340,4 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
     );
 };
 
-export default WorthCalculatorView;
+export default PropertyCostCalulatorView;

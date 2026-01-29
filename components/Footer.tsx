@@ -48,7 +48,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         { label: "Search Agents", view: "agents" },
         // Fix: Updated to point to the new comprehensive calculator view
         { label: "Home loan calculator", view: "home-loan-calculator" },
-        { label: "Property Cost Calulator", view: "Property Cost Calulator" }
+        { label: "Property Cost Calulator", view: "PropertyCostCalulatorr" }
       ]
     }
   ];
