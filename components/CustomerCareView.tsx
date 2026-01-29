@@ -4,7 +4,10 @@ import {
     Search, MessageSquare, Bell, Tag, 
     PhoneCall, Mail, UserCheck, ShieldCheck, 
     Sparkles, ArrowRight, ExternalLink, Globe,
-    Network, Cpu, Info, Target, Landmark
+    Network, Cpu, Info, Target, Landmark,
+    ArrowDownToLine, Building, ChevronRight,
+    MapPin, Smartphone, Map as MapIcon, Users,
+    Briefcase, Zap, Headphones, Navigation
 } from 'lucide-react';
 
 type FaqCategory = 'registration' | 'post-property' | 'search' | 'responses' | 'requirements' | 'tags';
@@ -14,12 +17,12 @@ const CustomerCareView = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     const categories = [
-        { id: 'registration', label: 'User Registration', icon: UserPlus },
-        { id: 'post-property', label: 'Post/Delete/Refresh Property', icon: FileEdit },
-        { id: 'search', label: 'Search on Hunt Property', icon: Search },
-        { id: 'responses', label: 'Responses', icon: MessageSquare },
-        { id: 'requirements', label: 'Post Requirements/Alerts', icon: Bell },
-        { id: 'tags', label: 'Special Tags with Property', icon: Tag }
+        { id: 'registration', label: 'Registration', icon: UserPlus },
+        { id: 'post-property', label: 'Manage Listings', icon: FileEdit },
+        { id: 'search', label: 'Search Interface', icon: Search },
+        { id: 'responses', label: 'Lead Responses', icon: MessageSquare },
+        { id: 'requirements', label: 'Alert Protocols', icon: Bell },
+        { id: 'tags', label: 'Verification Tags', icon: Tag }
     ];
 
     const faqData: Record<FaqCategory, { q: string, a: React.ReactNode }[]> = {
@@ -27,37 +30,31 @@ const CustomerCareView = () => {
             { 
                 q: "Registration with Huntproperty.com", 
                 a: (
-                    <div className="space-y-4">
-                        <p className="font-bold text-slate-900">How much do I have to pay to register on Huntproperty.com?</p>
-                        <p className="text-slate-500 leading-relaxed italic">
-                            "Absolutely free! Registration on Huntproperty.com doesn't require even a single penny. We do not charge any brokerage/commission from any of the users on property transactions."
+                    <div className="space-y-3">
+                        <p className="font-bold text-slate-900 text-sm">How much do I have to pay to register?</p>
+                        <p className="text-slate-500 text-sm leading-relaxed">
+                            Registration is entirely complimentary. We do not charge brokerage or commissions on transactions between users.
                         </p>
-                        <button className="text-red-600 font-black uppercase text-[10px] tracking-widest flex items-center gap-2 hover:underline">
-                            Initialize Registration <ArrowRight size={12} />
-                        </button>
                     </div>
                 )
             },
-            { q: "Forgot Password?", a: "To reset your access key, navigate to the Login portal and select 'Retrieve Credentials'. An authentication link will be transmitted to your registered neural mail." },
-            { q: "Can I create Multiple Accounts with Same Details?", a: "Each data node (Email/Mobile) is mapped uniquely. Multiple accounts with duplicate biometric or contact markers are restricted for registry integrity." },
-            { q: "Can same details be used for new account after deactivation?", a: "Deactivated nodes remain in the cold storage archive for 180 days before being purged for re-entry." },
-            { q: "Account Deactivation", a: "Request deactivation through the Security Settings in your Dashboard. This protocol is irreversible after 24 hours." }
+            { q: "Forgot Access Key?", a: "Navigate to the authentication portal and select 'Retrieve Credentials' to receive a secure link via your registered neural mail." },
+            { q: "Multiple Registry Entries", a: "Duplicate data nodes (Email/Mobile) are restricted to maintain registry integrity." },
         ],
         'post-property': [
-            { q: "How to post a property listing?", a: "Utilize the 'Post Your Property' gateway. Complete the 4-stage data entry flow to synchronize your asset with the global grid." },
-            { q: "How to refresh my existing listing?", a: "Access the 'Manage Matrix' node in your dashboard. Selecting 'Synthesize/Refresh' will push your node to the top of active search stacks." }
+            { q: "How to post a property listing?", a: "Utilize the 'Post Your Property' gateway. Complete the 4-stage data entry flow." },
         ],
         search: [
-            { q: "Advanced Spatial Filtering", a: "Use the Search Grounding interface to filter by geospatial coordinates, budget spectrums, and unit configurations." }
+            { q: "Spatial Filtering Parameters", a: "The Search Grounding interface allows for precise filtering by geospatial coordinates and budget spectrums." }
         ],
         responses: [
-            { q: "Tracking leads in real-time", a: "All incoming handshakes are logged in the 'Response Module' of your dashboard with identity verification scores." }
+            { q: "Real-time Lead Tracking", a: "Incoming lead signals are logged in the Response Module with verified identity scores." }
         ],
         requirements: [
-            { q: "Setting up automated alerts", a: "Define your 'Intelligence Profile' and we will transmit real-time alerts whenever a matching node enters the registry." }
+            { q: "Automated Registry Alerts", a: "Define your intelligence profile to receive real-time alerts when matching nodes enter the registry." }
         ],
         tags: [
-            { q: "Verified Node Badge", a: "Properties passing our RERA and Legal framework validation are assigned the 'Diamond Shield' tag for premium visibility." }
+            { q: "Diamond Shield Protocol", a: "Properties meeting RERA and Legal framework validation are assigned the Verified Badge." }
         ]
     };
 
@@ -65,87 +62,82 @@ const CustomerCareView = () => {
         <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-32 font-sans selection:bg-primary selection:text-[#1A1A1A]">
             <div className="max-w-[100rem] mx-auto px-6">
                 
-                {/* 1. Tactical Header */}
-                <div className="text-center space-y-8 mb-20 animate-fade-in-up">
-                    <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-[#1A1A1A] text-primary border border-white/10 text-[10px] font-black uppercase tracking-[0.5em] shadow-2xl">
-                        <HelpCircle size={16} className="animate-pulse" /> Support Operations v.2025
-                    </div>
-                    <h1 className="text-5xl md:text-8xl font-display font-black text-[#1A1A1A] uppercase tracking-tighter leading-[0.85]">
-                        Customer <span className="text-red-600 italic">Care</span>
-                    </h1>
-                    <p className="text-slate-500 text-2xl font-medium italic opacity-80 max-w-4xl mx-auto leading-relaxed">
-                        "Get answers of all your questions here. Our intelligence agents are standing by to assist with your property grid navigation."
-                    </p>
-                </div>
-
-                <div className="grid lg:grid-cols-12 gap-12 items-start">
-                    
-                    {/* 2. Navigation Sidebar */}
-                    <div className="lg:col-span-4 bg-white rounded-[3.5rem] p-6 shadow-2xl border border-slate-200 sticky top-28">
-                        <div className="px-8 py-8 border-b border-slate-50 mb-6">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 mb-2">Protocol Hub</h3>
-                            <h4 className="text-[#1A1A1A] font-display font-black uppercase text-2xl tracking-tight">Intelligence Categories</h4>
+                {/* 1. Refined Minimal Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 animate-fade-in-up">
+                    <div className="space-y-6">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-primary border border-white/5 text-[9px] font-bold uppercase tracking-[0.3em] shadow-md">
+                            <Headphones size={14} /> Intelligence Support Hub
                         </div>
                         <div className="space-y-2">
+                            <h1 className="text-3xl md:text-5xl font-display font-black text-slate-950 uppercase tracking-tight leading-none">
+                                Help & <span className="text-red-600">Assistance</span>
+                            </h1>
+                            <p className="text-slate-500 text-lg font-medium max-w-2xl leading-relaxed italic opacity-80">
+                                "Direct access to institutional knowledge and real-time support vectors."
+                            </p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-6 opacity-40">
+                         <div className="text-right">
+                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Response Rate</p>
+                             <p className="text-2xl font-black text-slate-900">99.8%</p>
+                         </div>
+                         <div className="w-px h-10 bg-slate-200"></div>
+                         <div className="text-right">
+                             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Sync Status</p>
+                             <p className="text-2xl font-black text-emerald-600 uppercase">Live</p>
+                         </div>
+                    </div>
+                </div>
+
+                {/* 2. Knowledge Terminal & FAQ Section */}
+                <div className="grid lg:grid-cols-12 gap-8 items-start mb-20">
+                    <div className="lg:col-span-3 bg-white rounded-[2rem] p-4 shadow-xl border border-slate-200 sticky top-28">
+                        <div className="px-6 py-5 border-b border-slate-50 mb-4">
+                            <h4 className="text-slate-400 font-bold uppercase text-[9px] tracking-widest">Knowledge Base</h4>
+                        </div>
+                        <div className="space-y-1">
                             {categories.map((cat) => (
                                 <button 
                                     key={cat.id} 
                                     onClick={() => { setActiveCategory(cat.id as FaqCategory); setOpenIndex(0); }} 
-                                    className={`w-full flex items-center justify-between p-5 rounded-[2rem] transition-all duration-500 group ${activeCategory === cat.id ? 'bg-[#1A1A1A] text-white shadow-2xl scale-[1.03] z-10' : 'bg-white text-slate-400 hover:bg-slate-50'}`}
+                                    className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 group ${activeCategory === cat.id ? 'bg-slate-950 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}
                                 >
-                                    <div className="flex items-center gap-5">
-                                        <div className={`w-12 h-12 rounded-[1.2rem] flex items-center justify-center transition-all ${activeCategory === cat.id ? 'bg-red-600 text-white shadow-lg' : 'bg-slate-50 text-slate-400 group-hover:bg-white shadow-sm'}`}>
-                                            <cat.icon size={20} strokeWidth={2.5} />
-                                        </div>
-                                        <span className="text-[11px] font-black uppercase tracking-widest text-left leading-tight max-w-[140px]">{cat.label}</span>
+                                    <div className="flex items-center gap-4">
+                                        <cat.icon size={16} className={activeCategory === cat.id ? 'text-primary' : 'text-slate-300 group-hover:text-slate-900'} />
+                                        <span className="text-[11px] font-bold uppercase tracking-wide">{cat.label}</span>
                                     </div>
-                                    <ChevronDown size={16} className={`transition-transform duration-500 ${activeCategory === cat.id ? '-rotate-90 text-primary' : '-rotate-90 opacity-0 group-hover:opacity-100'}`} />
+                                    <ChevronDown size={14} className={`transition-transform duration-300 ${activeCategory === cat.id ? '-rotate-90 text-primary' : 'opacity-0 group-hover:opacity-100'}`} />
                                 </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* 3. Knowledge Accordion Terminal */}
-                    <div className="lg:col-span-8 space-y-6">
-                        <div className="bg-white rounded-[4.5rem] p-10 md:p-20 shadow-[0_50px_150px_-30px_rgba(0,0,0,0.1)] border border-slate-200 min-h-[600px] relative overflow-hidden group/terminal">
-                            <div className="absolute top-0 right-0 p-16 opacity-[0.03] pointer-events-none group-hover/terminal:scale-110 transition-transform duration-[6000ms]">
-                                <Network size={500} />
-                            </div>
-
-                            <div className="space-y-10 relative z-10">
-                                <div className="flex items-center justify-between border-b border-slate-50 pb-8">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-14 h-14 bg-red-50 text-red-600 rounded-[1.5rem] flex items-center justify-center shadow-inner">
-                                            <Info size={28} />
-                                        </div>
+                    <div className="lg:col-span-9">
+                        <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-slate-200 min-h-[450px] relative overflow-hidden flex flex-col">
+                            <div className="absolute top-0 right-0 p-12 opacity-[0.01] pointer-events-none"><Network size={400} /></div>
+                            <div className="relative z-10 flex-1">
+                                <div className="flex items-center justify-between border-b border-slate-100 pb-8 mb-10">
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center shadow-sm"><Info size={22} /></div>
                                         <div>
-                                            <h3 className="text-3xl font-display font-black text-[#1A1A1A] uppercase tracking-tight">Active Matrix</h3>
-                                            <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mt-1">{categories.find(c => c.id === activeCategory)?.label}</p>
+                                            <h3 className="text-xl font-display font-black text-slate-900 uppercase tracking-tight">Technical Matrix</h3>
+                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1">{categories.find(c => c.id === activeCategory)?.label}</p>
                                         </div>
-                                    </div>
-                                    <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full border border-emerald-100 text-emerald-700">
-                                        <ShieldCheck size={14} />
-                                        <span className="text-[10px] font-black uppercase tracking-widest">Verified Content</span>
                                     </div>
                                 </div>
-
-                                <div className="space-y-4">
+                                <div className="space-y-3">
                                     {faqData[activeCategory].map((item, idx) => (
-                                        <div key={idx} className={`rounded-[2.5rem] border transition-all duration-500 overflow-hidden ${openIndex === idx ? 'bg-slate-50 border-red-200 shadow-lg' : 'bg-white border-slate-100 hover:border-slate-200'}`}>
-                                            <button 
-                                                onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-                                                className="w-full flex items-center justify-between p-8 text-left group/item"
-                                            >
-                                                <span className={`text-sm font-black uppercase tracking-tight transition-colors ${openIndex === idx ? 'text-red-600' : 'text-slate-900'}`}>{item.q}</span>
-                                                <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all ${openIndex === idx ? 'bg-red-600 border-red-600 text-white rotate-180' : 'bg-white border-slate-100 text-slate-400 group-hover/item:text-red-600'}`}>
-                                                    <ChevronDown size={14} strokeWidth={3} />
+                                        <div key={idx} className={`rounded-2xl border transition-all duration-300 overflow-hidden ${openIndex === idx ? 'bg-slate-50/50 border-red-200 shadow-md' : 'bg-white border-slate-100 hover:border-slate-200'}`}>
+                                            <button onClick={() => setOpenIndex(openIndex === idx ? null : idx)} className="w-full flex items-center justify-between px-8 py-5 text-left group/item">
+                                                <span className={`text-[12px] font-bold uppercase tracking-tight transition-colors ${openIndex === idx ? 'text-red-600' : 'text-slate-700'}`}>{item.q}</span>
+                                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${openIndex === idx ? 'bg-red-600 border-red-600 text-white rotate-180' : 'bg-white border-slate-100 text-slate-300 group-hover/item:text-red-600'}`}>
+                                                    <ChevronDown size={12} strokeWidth={3} />
                                                 </div>
                                             </button>
                                             {openIndex === idx && (
-                                                <div className="px-10 pb-10 animate-fade-in-up">
-                                                    <div className="bg-white p-8 rounded-3xl border border-slate-100 text-sm font-medium text-slate-500 leading-relaxed shadow-inner">
-                                                        {item.a}
-                                                    </div>
+                                                <div className="px-8 pb-6 animate-fade-in-up">
+                                                    <div className="text-[13px] font-medium text-slate-500 leading-relaxed bg-white p-6 rounded-xl border border-slate-100 shadow-inner">{item.a}</div>
                                                 </div>
                                             )}
                                         </div>
@@ -153,49 +145,108 @@ const CustomerCareView = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        {/* 4. Sales Enquiry Hub */}
-                        <div className="mt-12 bg-[#1A1A1A] rounded-[4rem] p-10 md:p-16 text-white shadow-2xl relative overflow-hidden group/footer">
-                            <div className="absolute top-0 right-0 p-12 opacity-[0.05] group-hover/footer:scale-110 transition-transform duration-[8000ms]">
-                                <PhoneCall size={300} />
+                {/* 3. Sales Enquiry Hub - Based on User Provided Image */}
+                <div className="bg-white rounded-[3.5rem] border border-slate-200 shadow-2xl overflow-hidden mb-12 animate-fade-in-up">
+                    <div className="p-10 md:p-14 border-b border-slate-100 flex flex-col md:flex-row items-center justify-between gap-10">
+                        <div className="flex items-center gap-6 group">
+                            <div className="w-16 h-16 bg-slate-900 text-primary rounded-[1.8rem] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                                <PhoneCall size={32} />
                             </div>
-                            
-                            <div className="relative z-10 grid md:grid-cols-12 gap-12 items-center">
-                                <div className="md:col-span-4 space-y-6">
-                                    <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/10 shadow-lg group-hover/footer:scale-110 transition-transform">
-                                        <Target size={32} />
-                                    </div>
-                                    <h2 className="text-4xl font-display font-black uppercase tracking-tighter leading-none">Sales <br/><span className="text-primary italic">Enquiry</span> Node</h2>
-                                    <div className="h-1 w-20 bg-primary/20 rounded-full"></div>
-                                </div>
+                            <div className="space-y-1">
+                                <h3 className="text-3xl font-display font-black text-slate-950 uppercase tracking-tighter">Sales Enquiry</h3>
+                                <div className="h-1 w-12 bg-red-600 rounded-full group-hover:w-24 transition-all duration-700"></div>
+                            </div>
+                        </div>
 
-                                <div className="md:col-span-8 grid sm:grid-cols-3 gap-8">
-                                    {[
-                                        { label: 'Property Owners', email: 'contactus@huntproperty.com', icon: UserCheck },
-                                        { label: 'Brokers & Builders', email: 'contactus@huntproperty.com', icon: Building },
-                                        { label: 'Channel Partners', email: 'channelpartner@huntproperty.com', icon: Globe }
-                                    ].map((hub, i) => (
-                                        <div key={i} className="space-y-4 p-6 bg-white/5 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors">
-                                            <div className="flex items-center gap-3 text-slate-400">
-                                                <hub.icon size={16} className="text-primary" />
-                                                <span className="text-[10px] font-black uppercase tracking-widest">{hub.label}</span>
+                        <div className="flex-1 grid md:grid-cols-3 gap-8 md:ml-12">
+                            {[
+                                { title: 'For Property Owners', email: 'contactus@huntproperty.com', icon: UserCheck },
+                                { title: 'For Brokers & Builders', email: 'contactus@huntproperty.com', icon: Building },
+                                { title: 'For Channel Partners', email: 'channelpartner@huntproperty.com', icon: Users }
+                            ].map((item, i) => (
+                                <div key={i} className="space-y-2 group/card">
+                                    <div className="flex items-center gap-3 text-slate-400">
+                                        <item.icon size={14} className="group-hover/card:text-red-600 transition-colors" />
+                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{item.title}</p>
+                                    </div>
+                                    <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Email : <a href={`mailto:${item.email}`} className="text-red-600 hover:underline">{item.email}</a></p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 4. Still Have Questions Section - Based on User Provided Image */}
+                    <div className="p-10 md:p-14 bg-slate-50/50">
+                        <div className="mb-14">
+                            <h2 className="text-2xl font-display font-black text-slate-900 uppercase tracking-tight">Still Have questions? Contact us on</h2>
+                        </div>
+
+                        <div className="grid lg:grid-cols-12 gap-12 items-start">
+                            {/* Phone / Email Node */}
+                            <div className="lg:col-span-3 flex items-start gap-6 border-r border-slate-200 pr-8">
+                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-300 border border-slate-100 shadow-sm shrink-0">
+                                    <Mail size={32} strokeWidth={1} />
+                                </div>
+                                <div className="space-y-4">
+                                    <h4 className="text-xl font-display font-black text-slate-950 uppercase leading-none">Phone/Email</h4>
+                                    <div className="space-y-1">
+                                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tight">Email : <a href="mailto:contactus@huntproperty.com" className="text-red-600 hover:underline">contactus@huntproperty.com</a></p>
+                                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tight">Phone No. : <span className="text-red-600 font-bold">+91 9899 095 939</span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Head Office Node */}
+                            <div className="lg:col-span-4 flex items-start gap-6 border-r border-slate-200 pr-8">
+                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-300 border border-slate-100 shadow-sm shrink-0">
+                                    <MapPin size={32} strokeWidth={1} />
+                                </div>
+                                <div className="space-y-4">
+                                    <h4 className="text-xl font-display font-black text-slate-950 uppercase leading-none">Head Office</h4>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-bold text-slate-600 uppercase leading-tight">Hunt Property Infratech Pvt Ltd</p>
+                                        <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tight leading-relaxed">
+                                            3rd Floor The Homestop@104, Sector 104,<br/>
+                                            Hazipur, Noida, U.P 201304
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Map Visualization Node */}
+                            <div className="lg:col-span-5">
+                                <div className="relative h-48 w-full rounded-2xl overflow-hidden border-4 border-white shadow-xl group/map">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop" 
+                                        className="w-full h-full object-cover grayscale opacity-40 group-hover/map:grayscale-0 group-hover/map:opacity-100 transition-all duration-1000" 
+                                        alt="Map Preview" 
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="bg-white/90 backdrop-blur-md px-6 py-4 rounded-2xl border border-white shadow-2xl flex items-center gap-4">
+                                            {/* Fix: Added missing Navigation import from lucide-react */}
+                                            <div className="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center"><Navigation size={18} /></div>
+                                            <div>
+                                                <p className="text-[10px] font-black text-slate-950 uppercase">The Home Stop@104</p>
+                                                <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="text-[9px] font-bold text-blue-600 uppercase hover:underline">View larger map</a>
                                             </div>
-                                            <a href={`mailto:${hub.email}`} className="text-[11px] font-bold text-slate-200 hover:text-primary transition-colors block break-all">{hub.email}</a>
                                         </div>
-                                    ))}
+                                    </div>
+                                    <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded text-[8px] font-black text-slate-400 uppercase">Google Neural Maps</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Footer Validation */}
-                <div className="mt-32 pt-16 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity duration-1000 text-center space-y-12">
-                     <p className="text-[10px] font-black text-slate-900 uppercase tracking-[1em]">HUNT PROPERTY INTELLECTUAL PROPERTY SYSTEM</p>
-                     <div className="flex flex-wrap justify-center gap-24">
-                         {/* Fix: Landmark is now imported from lucide-react */}
+                {/* Footer Minimal Strips */}
+                <div className="mt-24 pt-12 border-t border-slate-200 opacity-20 hover:opacity-100 transition-opacity duration-1000 text-center space-y-10">
+                     <p className="text-[9px] font-black text-slate-950 uppercase tracking-[0.8em]">HUNT PROPERTY INTELLECTUAL FINANCIAL SYSTEM • V.2025</p>
+                     <div className="flex flex-wrap justify-center gap-16 grayscale group-hover:grayscale-0 transition-all">
                          {[ShieldCheck, Globe, Network, Cpu, ArrowDownToLine, Landmark].map((Icon, i) => (
-                             <Icon key={i} size={36} strokeWidth={1} className="text-slate-400 hover:text-red-600 transition-colors cursor-crosshair" />
+                             <Icon key={i} size={32} strokeWidth={1} className="text-slate-400 hover:text-red-600 transition-colors cursor-crosshair" />
                          ))}
                      </div>
                 </div>
@@ -203,14 +254,5 @@ const CustomerCareView = () => {
         </div>
     );
 };
-
-// Internal icon helpers for specific modules
-const ArrowDownToLine = ({ size, className }: { size: number, className?: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/></svg>
-);
-
-const Building = ({ size, className }: { size: number, className?: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/></svg>
-);
 
 export default CustomerCareView;
