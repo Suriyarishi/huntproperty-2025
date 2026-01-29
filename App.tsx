@@ -17,13 +17,16 @@ import InsightDetailView from './components/InsightDetailView';
 import LoginView from './components/LoginView';
 import RegisterView from './components/RegisterView';
 import HomeLoanView from './components/HomeLoanView';
+import HomeLoanCalculatorView from './components/HomeLoanCalculatorView';
 import ChannelPartnerView from './components/ChannelPartnerView';
 import InvestorsRelationView from './components/InvestorsRelationView';
 import CareerView from './components/CareerView';
 import DashboardView from './components/DashboardView';
 import AdPackagesView from './components/AdPackagesView';
 import WorthCalculatorView from './components/WorthCalculatorView';
+import PropertyCostCalulatorView from './components/PropertyCostCalulator';
 import CustomerCareView from './components/CustomerCareView';
+import AdvertiseWithUsView from './components/AdvertiseWithUsView';
 import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
@@ -256,7 +259,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'customer-care';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -319,7 +322,9 @@ function App() {
         case 'dashboard': return <DashboardView onNavigate={handleNavigate} />;
         case 'ad-packages': return <AdPackagesView onNavigate={handleNavigate} />;
         case 'worth-calculator': return <WorthCalculatorView onNavigate={handleNavigate} />;
+        case 'PropertyCostCalulator': return <PropertyCostCalulatorView onNavigate={handleNavigate} />;
         case 'customer-care': return <CustomerCareView />;
+        case 'advertise': return <AdvertiseWithUsView onNavigate={handleNavigate} />;
         case 'login':
         case 'employee-login':
             return <LoginView onNavigate={handleNavigate} onLogin={handleBackToHome} />;
@@ -375,6 +380,8 @@ function App() {
             return <InsightsView insights={INSIGHTS} onInsightSelect={handleInsightSelect} />;
         case 'home-loans':
              return <HomeLoanView onBack={handleBackToHome} />;
+        case 'home-loan-calculator':
+             return <HomeLoanCalculatorView />;
         case 'rera': return <ReraView />;
         case 'legal-advisory': return <LegalAdvisoryView />;
         case 'master-plans': return <MasterPlanView />;
@@ -513,6 +520,7 @@ function App() {
       case 'sell': return 'Back to Home';
       case 'agents': return 'Back to Home';
       case 'home-loans': return 'Back to Home';
+      case 'home-loan-calculator': return 'Back to Home';
       case 'channel-partner': return 'Back to Home';
       case 'vastu': return 'Back to Home';
       case 'investors': return 'Back to Home';
@@ -520,7 +528,9 @@ function App() {
       case 'dashboard': return 'Back to Home';
       case 'ad-packages': return 'Back to Home';
       case 'worth-calculator': return 'Back to Home';
+      case 'PropertyCostCalulator': return 'Back to Home';
       case 'customer-care': return 'Back to Home';
+      case 'advertise': return 'Back to Home';
       case 'rera':
       case 'legal-advisory':
       case 'master-plans':
@@ -556,7 +566,7 @@ function App() {
       
       {renderContent()}
 
-      {!isAuthView && <Footer />}
+      {!isAuthView && <Footer onNavigate={handleNavigate} />}
 
       <ChatAssistant />
     </div>

@@ -54,7 +54,7 @@ const TableRow: React.FC<TableRowProps> = ({ item, annexure, onUpdate }) => (
     </div>
 );
 
-const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
+const PropertyCostCalulatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
     const [loading, setLoading] = useState(false);
     const [calculated, setCalculated] = useState(false);
     
@@ -69,7 +69,7 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
         unitType: 'Select Unit'
     });
 
-    // Annexure I: Core Property Cost
+    // Annexure I: Core Property Cost (Matching Screenshot)
     const [annexureI, setAnnexureI] = useState<LineItem[]>([
         { id: 1, particulars: 'Basic Selling Price (BSP)', pricePerUnit: 0, noOfUnit: 0 },
         { id: 2, particulars: 'Electrification Charges (EFC)', pricePerUnit: 0, noOfUnit: 0 },
@@ -83,13 +83,13 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
         { id: 10, particulars: 'Sinking Fund Charges', pricePerUnit: 0, noOfUnit: 0 },
     ]);
 
-    // Annexure II: External & Internal Development
+    // Annexure II: External & Internal Development (Matching Screenshot)
     const [annexureII, setAnnexureII] = useState<LineItem[]>([
         { id: 11, particulars: 'External Development Charges (EDC)', pricePerUnit: 0, noOfUnit: 0 },
         { id: 12, particulars: 'Internal Development Charges (IDC)', pricePerUnit: 0, noOfUnit: 0 },
     ]);
 
-    // Annexure III: Utility & Premium Amenities
+    // Annexure III: Utility & Premium Amenities (Matching Screenshot)
     const [annexureIII, setAnnexureIII] = useState<LineItem[]>([
         { id: 13, particulars: 'Car Parking (Open)', pricePerUnit: 0, noOfUnit: 1 },
         { id: 14, particulars: 'Car Parking (Covered)', pricePerUnit: 0, noOfUnit: 1 },
@@ -135,10 +135,10 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                 {/* 1. Precise Header Section */}
                 <div className="space-y-4 mb-16 animate-fade-in-up">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-1 bg-red-600 rounded-full"></div>
-                        <h1 className="text-3xl font-display font-black text-slate-900 uppercase tracking-tight leading-none">Property Cost Calculator</h1>
+                        <div className="w-12 h-1 bg-red-600 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.2)]"></div>
+                        <h1 className="text-3xl font-display font-black text-slate-900 uppercase tracking-tight leading-none">Property Cost Calulator</h1>
                     </div>
-                    <p className="text-slate-400 font-bold text-sm ml-16 italic">"Please fill in the form below to compute absolute acquisition value across all statutory and development nodes."</p>
+                    <p className="text-slate-400 font-bold text-sm ml-16 italic">"Initialize global financial nodes to compute absolute acquisition value."</p>
                 </div>
 
                 {/* 2. Parameters Console */}
@@ -151,14 +151,14 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Developer Name (required)</label>
                             <div className="relative">
                                 <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-                                <input type="text" name="developerName" value={formData.developerName} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
+                                <input type="text" name="developerName" placeholder="Skyline Ventures" value={formData.developerName} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Project Name (required)</label>
                             <div className="relative">
                                 <Landmark className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-                                <input type="text" name="projectName" value={formData.projectName} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
+                                <input type="text" name="projectName" placeholder="The Grid Towers" value={formData.projectName} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -192,14 +192,14 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Property Location (required)</label>
                             <div className="relative">
                                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-                                <input type="text" name="location" value={formData.location} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
+                                <input type="text" name="location" placeholder="City Hub" value={formData.location} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
                             </div>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Property Size (required)</label>
                             <div className="relative">
                                 <Square className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={14} />
-                                <input type="number" name="propertySize" value={formData.propertySize} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 pl-10 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
+                                <input type="number" name="propertySize" placeholder="Area" value={formData.propertySize} onChange={handleInputChange} className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold outline-none focus:border-red-600 transition-all shadow-inner" />
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -234,7 +234,7 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                     <div className="bg-slate-50/50">
                         <div className="px-10 py-5 bg-slate-100/50 text-center border-b border-slate-200 flex items-center justify-center gap-4">
                             <div className="h-px bg-slate-200 flex-1"></div>
-                            <span className="text-xs font-black uppercase tracking-[0.5em] text-slate-900">Annexure I: Infrastructure Nodes</span>
+                            <span className="text-xs font-black uppercase tracking-[0.5em] text-slate-900">Annexure I: Primary Acquisition Nodes</span>
                             <div className="h-px bg-slate-200 flex-1"></div>
                         </div>
                         <div className="p-2 md:px-10">
@@ -246,7 +246,7 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                     <div className="bg-white">
                         <div className="px-10 py-5 bg-slate-100/50 text-center border-b border-slate-200 border-t border-slate-200 flex items-center justify-center gap-4">
                             <div className="h-px bg-slate-200 flex-1"></div>
-                            <span className="text-xs font-black uppercase tracking-[0.5em] text-slate-900">Annexure II: Statutory Levies</span>
+                            <span className="text-xs font-black uppercase tracking-[0.5em] text-slate-900">Annexure II: Statutory Grid Charges</span>
                             <div className="h-px bg-slate-200 flex-1"></div>
                         </div>
                         <div className="p-2 md:px-10">
@@ -258,7 +258,7 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                     <div className="bg-slate-50/50">
                         <div className="px-10 py-5 bg-slate-100/50 text-center border-b border-slate-200 border-t border-slate-200 flex items-center justify-center gap-4">
                             <div className="h-px bg-slate-200 flex-1"></div>
-                            <span className="text-xs font-black uppercase tracking-[0.5em] text-slate-900">Annexure III: Utility & Premium Services</span>
+                            <span className="text-xs font-black uppercase tracking-[0.5em] text-slate-900">Annexure III: Utility & Premium Modifiers</span>
                             <div className="h-px bg-slate-200 flex-1"></div>
                         </div>
                         <div className="p-2 md:px-10">
@@ -275,11 +275,11 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                             </div>
                             <div className="space-y-1">
                                 <h4 className="text-3xl font-display font-black text-white uppercase tracking-tighter leading-none">Total Cost of the Unit</h4>
-                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">Aggregated Acquisition Value • V.2025</p>
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.5em]">Aggregated Acquisition Value • v.2025</p>
                             </div>
                         </div>
                         <div className="flex flex-col md:items-end gap-2 relative z-10">
-                             <div className="text-[10px] font-black text-primary uppercase tracking-[0.6em] mb-1">Final Computation Result</div>
+                             <div className="text-[10px] font-black text-primary uppercase tracking-[0.6em] mb-1">Final Computation Output</div>
                              <div className="text-6xl md:text-8xl font-display font-black text-white tracking-tighter leading-none flex items-start">
                                 <span className="text-3xl md:text-5xl text-primary mt-3 mr-3">₹</span>
                                 {totalCost.toLocaleString()}
@@ -299,17 +299,17 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                         {loading ? (
                             <>SYNCING GRID NODES... <Loader2 className="animate-spin" size={24} /></>
                         ) : (
-                            <>Submit to Registry <ArrowRight size={24} className="group-hover:translate-x-3 transition-transform" strokeWidth={3} /></>
+                            <>Submit to Matrix <ArrowRight size={24} className="group-hover:translate-x-3 transition-transform" strokeWidth={3} /></>
                         )}
                     </button>
                     <button className="px-12 py-7 bg-white border-2 border-slate-100 text-slate-500 rounded-[2.5rem] font-black text-[11px] uppercase tracking-[0.4em] hover:border-emerald-500 hover:text-emerald-600 transition-all flex items-center gap-6 shadow-xl hover:shadow-emerald-500/10 active:scale-95">
-                        <Download size={22} /> Export Intelligence PDF
+                        <Download size={22} /> Export Intelligence Report
                     </button>
                 </div>
 
                 {/* 5. Validation Matrix Footer */}
                 <div className="mt-40 pt-20 border-t border-slate-200 opacity-20 hover:opacity-100 transition-all duration-1000 text-center space-y-16">
-                     <p className="text-[11px] font-black text-slate-900 uppercase tracking-[1em]">HUNT PROPERTY INTELLECTUAL FINANCIAL HUB • V.2025</p>
+                     <p className="text-[11px] font-black text-slate-900 uppercase tracking-[1em]">HUNT PROPERTY INTELLECTUAL FINANCIAL SYSTEM • V.2025</p>
                      <div className="flex flex-wrap justify-center gap-16 md:gap-32 grayscale hover:grayscale-0 transition-all duration-1000">
                          {[ShieldCheck, Globe, Network, Cpu, Receipt, CheckCircle2, IndianRupee].map((Icon, i) => (
                              <Icon key={i} size={42} strokeWidth={1} className="text-slate-400 hover:text-emerald-600 transition-colors cursor-crosshair" />
@@ -330,7 +330,7 @@ const WorthCalculatorView = ({ onNavigate }: { onNavigate: (v: any) => void }) =
                             </div>
                         </div>
                         <div className="text-right pr-4">
-                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Valuation</p>
+                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Current Valuation</p>
                              <p className="text-3xl font-black text-primary tracking-tighter">₹ {totalCost.toLocaleString()}</p>
                         </div>
                     </div>

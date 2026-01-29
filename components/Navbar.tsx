@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X, LayoutDashboard } from 'lucide-react';
 
 interface NavbarProps {
@@ -11,7 +11,8 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailView, onBack, backLabel }) => {
   const [showAuthMenu, setShowAuthMenu] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  // Defaulting to 'Buy' to satisfy the "always shown" request on initial mount
+  const [activeDropdown, setActiveDropdown] = useState<string | null>('Buy');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMouseEnter = (menu: string) => setActiveDropdown(menu);
@@ -130,7 +131,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
           
           {/* Logo & Back Button */}
           <div className="flex items-center gap-4 sm:gap-6">
-              <div className="flex items-center cursor-pointer group" onClick={() => onNavigate('home')}>
+              <div className="flex items-center cursor-pointer group" onClick={() => { setActiveDropdown(null); onNavigate('home'); }}>
                   <div className="flex items-center">
                       <span className="font-display font-bold text-xl sm:text-2xl text-[#1A1A1A] tracking-tight">Hunt</span>
                       <div className="relative -mx-0.5 mb-1">
@@ -222,7 +223,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
           {/* Action Buttons & User Menu */}
           <div className="flex items-center gap-1 sm:gap-3">
               <button 
-                  onClick={() => onNavigate('dashboard')}
+                  onClick={() => { setActiveDropdown(null); onNavigate('dashboard'); }}
                   className="hidden xl:flex items-center gap-2 px-5 py-3 text-[#1A1A1A] hover:text-red-600 font-bold text-sm transition-all"
               >
                   <LayoutDashboard size={18} className="text-red-600" />
@@ -247,14 +248,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
                   {showAuthMenu && (
                       <div className="absolute right-0 top-full mt-4 w-52 sm:w-60 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
-                          <button onClick={() => { onNavigate('dashboard'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
+                          <button onClick={() => { onNavigate('dashboard'); setShowAuthMenu(false); setActiveDropdown(null); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <LayoutDashboard size={16} className="text-red-600" /> Dashboard
                           </button>
                           <div className="h-px bg-slate-100 mx-4 my-1"></div>
-                          <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
+                          <button onClick={() => { onNavigate('login'); setShowAuthMenu(false); setActiveDropdown(null); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <LogIn size={16} className="text-primary" /> Login
                           </button>
-                          <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
+                          <button onClick={() => { onNavigate('register'); setShowAuthMenu(false); setActiveDropdown(null); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <UserPlus size={16} className="text-primary" /> Registration
                           </button>
                       </div>
@@ -271,7 +272,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
       {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[200] bg-[#1A1A1A]/40 backdrop-blur-sm animate-in fade-in duration-300">
-            <div className="absolute right-0 top-0 bottom-0 w-[80%] max-sm max-w-sm bg-white shadow-2xl p-6 flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="absolute right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl p-6 flex flex-col animate-in slide-in-from-right duration-300">
                 <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center">
                         <span className="font-display font-bold text-xl text-[#1A1A1A]">Hunt</span>
@@ -284,7 +285,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-2 no-scrollbar">
-                    <button onClick={() => { onNavigate('dashboard'); setIsMobileMenuOpen(false); }} className="w-full flex items-center gap-3 py-4 text-left font-bold text-red-600 border-b border-slate-50">
+                    <button onClick={() => { onNavigate('dashboard'); setIsMobileMenuOpen(false); setActiveDropdown(null); }} className="w-full flex items-center gap-3 py-4 text-left font-bold text-red-600 border-b border-slate-50">
                         <LayoutDashboard size={20} /> Dashboard
                     </button>
                     {navItems.map((item) => (
@@ -294,6 +295,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                                     if(!item.hasDropdown) {
                                         onNavigate(item.view);
                                         setIsMobileMenuOpen(false);
+                                        setActiveDropdown(null);
                                     }
                                 }}
                                 className="w-full flex items-center justify-between py-4 text-left font-bold text-[#1A1A1A]"
