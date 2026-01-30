@@ -31,6 +31,9 @@ import HomeServices from './components/HomeServices';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
 import VastuView from './components/VastuView';
+import AboutUsView from './components/AboutUsView';
+import TermsAndConditionsView from './components/TermsAndConditionsView';
+import TestimonialsView from './components/TestimonialsView';
 import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView } from './components/ToolsViews';
 import { Property, Testimonial, Insight } from './types';
 import { Loader2, ArrowRight, Sparkles, Home, Repeat, Key } from 'lucide-react';
@@ -259,7 +262,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'testimonials';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -318,6 +321,9 @@ function App() {
 
   const renderContent = () => {
     switch (currentView) {
+        case 'testimonials': return <TestimonialsView />;
+        case 'terms': return <TermsAndConditionsView />;
+        case 'about-us': return <AboutUsView />;
         case 'vastu': return <VastuView />;
         case 'dashboard': return <DashboardView onNavigate={handleNavigate} />;
         case 'ad-packages': return <AdPackagesView onNavigate={handleNavigate} />;
@@ -531,6 +537,9 @@ function App() {
       case 'PropertyCostCalulator': return 'Back to Home';
       case 'customer-care': return 'Back to Home';
       case 'advertise': return 'Back to Home';
+      case 'about-us': return 'Back to Home';
+      case 'terms': return 'Back to Home';
+      case 'testimonials': return 'Back to Home';
       case 'rera':
       case 'legal-advisory':
       case 'master-plans':

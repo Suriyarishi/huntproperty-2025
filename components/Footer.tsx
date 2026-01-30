@@ -23,9 +23,9 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     {
       title: "Company",
       links: [
-        { label: "About Us", view: "home" },
+        { label: "About Us", view: "about-us" },
         { label: "Careers", view: "career" },
-        { label: "Testimonials", view: "home" },
+        { label: "Testimonials", view: "testimonials" },
         { label: "Blogs", view: "insights" },
         { label: "Customer Care", view: "customer-care" },
         { label: "Contact Us", view: "customer-care" }
@@ -34,7 +34,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     {
       title: "Company Policy",
       links: [
-        { label: "Terms and Conditions", view: "home" },
+        { label: "Terms and Conditions", view: "terms" },
         { label: "Privacy Policy", view: "home" },
         { label: "Refund and Cancellation Policy", view: "home" },
         { label: "Package Policy", view: "ad-packages" }
