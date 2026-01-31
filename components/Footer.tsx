@@ -17,7 +17,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         { label: "Apply for Home Loan", view: "home-loans" },
         { label: "Advertise with Us", view: "advertise" },
         { label: "All Property", view: "buy" },
-        { label: "Sitemap", view: "home" }
+        { label: "Sitemap", view: "sitemap" }
       ]
     },
     {
@@ -35,9 +35,9 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       title: "Company Policy",
       links: [
         { label: "Terms and Conditions", view: "terms" },
-        { label: "Privacy Policy", view: "home" },
-        { label: "Refund and Cancellation Policy", view: "home" },
-        { label: "Package Policy", view: "ad-packages" }
+        { label: "Privacy Policy", view: "privacy" },
+        { label: "Refund and Cancellation Policy", view: "refund-policy" },
+        { label: "Package Policy", view: "package-policy" }
       ]
     },
     {
@@ -46,7 +46,6 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         { label: "Search Property", view: "buy" },
         { label: "Search Projects", view: "buy" },
         { label: "Search Agents", view: "agents" },
-        // Fix: Updated to point to the new comprehensive calculator view
         { label: "Home loan calculator", view: "home-loan-calculator" },
         { label: "Property Cost Calulator", view: "PropertyCostCalulator" }
       ]
@@ -165,8 +164,8 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Bottom Strip: Legal & Copyright */}
         <div className="pt-10 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-6 text-[12px] font-medium text-slate-500">
           <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4 md:gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <button onClick={() => onNavigate?.('privacy')} className="hover:text-white transition-colors">Privacy Policy</button>
+            <button onClick={() => onNavigate?.('terms')} className="hover:text-white transition-colors">Terms of Service</button>
             <div className="flex items-center gap-2">
               <span className="text-primary font-bold">RERA: UPRERAAGT20169</span>
             </div>
