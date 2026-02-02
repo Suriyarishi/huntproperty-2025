@@ -36,6 +36,7 @@ import TermsAndConditionsView from './components/TermsAndConditionsView';
 import PrivacyPolicyView from './components/PrivacyPolicyView';
 import RefundPolicyView from './components/RefundPolicyView';
 import PackagePolicyView from './components/PackagePolicyView';
+import SearchProjectView from './components/SearchProjectView';
 import TestimonialsView from './components/TestimonialsView';
 import SitemapView from './components/SitemapView';
 import { ReraView, LegalAdvisoryView, MasterPlanView, NewsGalleryView, MediaGalleryView, VideoGalleryView, ArticlesView, NRICenterView, CovidView } from './components/ToolsViews';
@@ -266,7 +267,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'privacy' | 'refund-policy' | 'package-policy' | 'testimonials' | 'sitemap';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'privacy' | 'refund-policy' | 'package-policy' | 'search-projects' | 'testimonials' | 'sitemap';
 
 function App() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -331,6 +332,7 @@ function App() {
         case 'privacy': return <PrivacyPolicyView />;
         case 'refund-policy': return <RefundPolicyView />;
         case 'package-policy': return <PackagePolicyView />;
+        case 'search-projects': return <SearchProjectView />;
         case 'about-us': return <AboutUsView />;
         case 'vastu': return <VastuView />;
         case 'dashboard': return <DashboardView onNavigate={handleNavigate} />;
@@ -551,6 +553,7 @@ function App() {
       case 'privacy': return 'Back to Home';
       case 'refund-policy': return 'Back to Home';
       case 'package-policy': return 'Back to Home';
+      case 'search-projects': return 'Back to Home';
       case 'testimonials': return 'Back to Home';
       case 'rera':
       case 'legal-advisory':

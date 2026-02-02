@@ -44,7 +44,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       title: "Property Services",
       links: [
         { label: "Search Property", view: "buy" },
-        { label: "Search Projects", view: "buy" },
+        { label: "Search Projects", view: "search-projects" },
         { label: "Search Agents", view: "agents" },
         { label: "Home loan calculator", view: "home-loan-calculator" },
         { label: "Property Cost Calulator", view: "PropertyCostCalulator" }
