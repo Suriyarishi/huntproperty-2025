@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-    User, Mail, Phone, ShieldCheck, MapPin, 
-    LayoutDashboard, Briefcase, MessageSquare, 
-    Bell, CreditCard, HelpCircle, LogOut, 
-    Search, Filter, ChevronRight, Plus, 
-    ArrowUpRight, Clock, Eye, Edit3, 
+import {
+    User, Mail, Phone, ShieldCheck, MapPin,
+    LayoutDashboard, Briefcase, MessageSquare,
+    Bell, CreditCard, HelpCircle, LogOut,
+    Search, Filter, ChevronRight, Plus,
+    ArrowUpRight, Clock, Eye, Edit3,
     Trash2, ImagePlus, CheckCircle2, Info,
     Home, Repeat, Key, Sparkles, Building,
     Calendar, Users, IndianRupee, FileText,
@@ -122,7 +122,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                     {topTabs.map(tab => {
                         const isActive = activeTab === tab.id;
                         return (
-                            <button 
+                            <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as DashboardTab)}
                                 className={`flex-1 flex items-center justify-center gap-4 p-5 rounded-[2.5rem] transition-all duration-700 group relative overflow-hidden ${isActive ? 'bg-primary text-[#1A1A1A] shadow-[0_0_40px_rgba(47,237,154,0.3)] scale-[1.02] z-10' : 'text-slate-500 hover:text-white'}`}
@@ -152,7 +152,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                                         homeSubTabs.map(sub => {
                                             const isSubActive = activeHomeSubTab === sub.id;
                                             return (
-                                                <button 
+                                                <button
                                                     key={sub.id}
                                                     onClick={() => sub.id === 'post' ? onNavigate('add-property') : setActiveHomeSubTab(sub.id as HomeSubTab)}
                                                     className={`w-full flex items-center justify-between p-6 rounded-[2rem] transition-all duration-500 group ${isSubActive ? 'bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] text-red-600 scale-[1.05] border-l-8 border-red-600' : 'text-slate-400 hover:bg-white/80 hover:text-[#1A1A1A]'}`}
@@ -169,7 +169,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                                         subscriptionSubTabs.map(sub => {
                                             const isSubActive = activeSubSubTab === sub.id;
                                             return (
-                                                <button 
+                                                <button
                                                     key={sub.id}
                                                     onClick={() => setActiveSubSubTab(sub.id as SubscriptionSubTab)}
                                                     className={`w-full flex items-center justify-between p-6 rounded-[2rem] transition-all duration-500 group ${isSubActive ? 'bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] text-red-600 scale-[1.05] border-l-8 border-red-600' : 'text-slate-400 hover:bg-white/80 hover:text-[#1A1A1A]'}`}
@@ -202,8 +202,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
                                 {activeTab === 'services' && <ServicesNode onNavigate={onNavigate} />}
                                 {activeTab === 'responses' && <ResponsesNode />}
                                 {activeTab === 'subscriptions' && (
-                                    <SubscriptionsNode 
-                                        activeSubTab={activeSubSubTab} 
+                                    <SubscriptionsNode
+                                        activeSubTab={activeSubSubTab}
                                         activeViewServicesTab={activeViewServicesTab}
                                         onViewServicesTabChange={setActiveViewServicesTab}
                                     />
@@ -244,7 +244,7 @@ const ManagePropertiesNode = () => {
                             </div>
                             <div className="flex justify-end gap-3 pt-4 border-t border-slate-50">
                                 <button className="px-6 py-2 bg-[#1A1A1A] text-primary rounded-xl font-black text-[10px] uppercase tracking-widest">Reconfigure</button>
-                                <button className="px-4 py-2 border border-slate-100 text-slate-300 rounded-xl font-black text-[10px] uppercase hover:text-red-600 transition-all active:scale-95"><Trash2 size={14}/></button>
+                                <button className="px-4 py-2 border border-slate-100 text-slate-300 rounded-xl font-black text-[10px] uppercase hover:text-red-600 transition-all active:scale-95"><Trash2 size={14} /></button>
                             </div>
                         </div>
                     </div>
@@ -366,7 +366,7 @@ const ResponsesNode = () => {
                                 <p className="text-slate-600 font-black text-[13px] tracking-tight lowercase">{r.email}</p>
                             </div>
                         </div>
-                        <button className="relative z-10 px-8 py-4 bg-[#1A1A1A] text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-primary hover:text-[#1A1A1A] transition-all shadow-lg active:scale-95 border border-white/5 flex items-center gap-3">Handshake <ArrowRight size={14}/></button>
+                        <button className="relative z-10 px-8 py-4 bg-[#1A1A1A] text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-primary hover:text-[#1A1A1A] transition-all shadow-lg active:scale-95 border border-white/5 flex items-center gap-3">Handshake <ArrowRight size={14} /></button>
                         <div className="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-primary/10 transition-colors"></div>
                     </div>
                 ))}
@@ -375,14 +375,14 @@ const ResponsesNode = () => {
     );
 };
 
-const SubscriptionsNode = ({ 
-    activeSubTab, 
-    activeViewServicesTab, 
-    onViewServicesTabChange 
-}: { 
-    activeSubTab: SubscriptionSubTab, 
+const SubscriptionsNode = ({
+    activeSubTab,
+    activeViewServicesTab,
+    onViewServicesTabChange
+}: {
+    activeSubTab: SubscriptionSubTab,
     activeViewServicesTab: ViewServicesSubTab,
-    onViewServicesTabChange: (t: ViewServicesSubTab) => void 
+    onViewServicesTabChange: (t: ViewServicesSubTab) => void
 }) => {
     const historyData = [
         { id: '114107135936', product: 'Owner-Metal-0', date: '2025-11-20 19:32:59', status: 'Invalid' },
@@ -419,13 +419,13 @@ const SubscriptionsNode = ({
                 </div>
                 {activeSubTab === 'view' && (
                     <div className="flex gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit border border-slate-200 shadow-inner">
-                        <button 
+                        <button
                             onClick={() => onViewServicesTabChange('listing-packages')}
                             className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeViewServicesTab === 'listing-packages' ? 'bg-[#1A1A1A] text-white shadow-xl' : 'text-slate-400 hover:text-slate-900'}`}
                         >
                             Listing Packages
                         </button>
-                        <button 
+                        <button
                             onClick={() => onViewServicesTabChange('more-services')}
                             className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeViewServicesTab === 'more-services' ? 'bg-[#1A1A1A] text-white shadow-xl' : 'text-slate-400 hover:text-slate-900'}`}
                         >
@@ -477,7 +477,7 @@ const SubscriptionsNode = ({
                 <div className="animate-fade-in-up">
                     {activeViewServicesTab === 'listing-packages' ? (
                         <div className="bg-white rounded-[4rem] border-2 border-slate-100 overflow-hidden shadow-2xl">
-                             <div className="overflow-x-auto no-scrollbar">
+                            <div className="overflow-x-auto no-scrollbar">
                                 <table className="w-full text-center border-collapse">
                                     <thead>
                                         <tr className="bg-slate-50 border-b border-slate-100">
@@ -541,7 +541,7 @@ const SubscriptionsNode = ({
                                 <div key={service.title} className="bg-white border-2 border-slate-100 rounded-[3rem] p-10 hover:shadow-2xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden flex flex-col justify-between h-[360px] shadow-sm">
                                     <div className="absolute -top-10 -right-10 w-56 h-56 bg-slate-50 rounded-full opacity-30 group-hover:opacity-100 group-hover:scale-125 transition-all duration-700 flex items-center justify-center"><service.icon size={100} className="text-slate-200 group-hover:text-primary transition-all opacity-10 group-hover:opacity-40" /></div>
                                     <div className="space-y-6 relative z-10">
-                                        <div className="w-16 h-16 bg-[#1A1A1A] text-primary rounded-[1.2rem] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform"><service.icon size={28}/></div>
+                                        <div className="w-16 h-16 bg-[#1A1A1A] text-primary rounded-[1.2rem] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform"><service.icon size={28} /></div>
                                         <div className="space-y-2">
                                             <h3 className="text-2xl font-black uppercase tracking-tighter text-secondary leading-none pr-16">{service.title}</h3>
                                             <div className="w-12 h-1 bg-primary/20 rounded-full group-hover:w-20 transition-all duration-500"></div>
@@ -553,24 +553,24 @@ const SubscriptionsNode = ({
                             ))}
                         </div>
                     )}
-                    
+
                     {/* Integrated Support Hub */}
                     <div className="mt-16 bg-[#1A1A1A] rounded-[4rem] p-12 flex flex-col md:flex-row items-center justify-center gap-16 text-white shadow-2xl relative overflow-hidden ring-4 ring-primary/5">
-                         <div className="absolute top-0 right-0 p-20 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-[8000ms]"><Network size={400} /></div>
-                         <div className="flex items-center gap-8 group cursor-pointer relative z-10">
+                        <div className="absolute top-0 right-0 p-20 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-[8000ms]"><Network size={400} /></div>
+                        <div className="flex items-center gap-8 group cursor-pointer relative z-10">
                             <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/10 shadow-2xl group-hover:scale-110 group-hover:bg-primary/20 transition-all"><Phone size={28} /></div>
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Direct Uplink</p>
                                 <p className="text-2xl font-black tracking-tighter">8588 002009</p>
                             </div>
-                         </div>
-                         <div className="flex items-center gap-8 group cursor-pointer relative z-10">
+                        </div>
+                        <div className="flex items-center gap-8 group cursor-pointer relative z-10">
                             <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-red-500 border border-white/10 shadow-2xl group-hover:scale-110 group-hover:bg-red-600/20 transition-all"><Mail size={28} /></div>
                             <div className="space-y-1">
                                 <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Mail Vector</p>
                                 <p className="text-2xl font-black tracking-tighter uppercase">INFO@HUNTPROPERTY.COM</p>
                             </div>
-                         </div>
+                        </div>
                     </div>
                 </div>
             )}
@@ -595,7 +595,7 @@ const ServicesNode = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
                 <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-[#1A1A1A] text-primary border border-white/10 text-[11px] font-black uppercase tracking-[0.5em] shadow-2xl">
                     <Repeat size={16} className="animate-spin-slow" /> Strategic Asset Matrix
                 </div>
-                <h3 className="text-7xl md:text-9xl font-black text-secondary tracking-tighter uppercase leading-[0.8]">Market Your <br/> <span className="text-primary italic">Sanctuary</span></h3>
+                <h3 className="text-7xl md:text-9xl font-black text-secondary tracking-tighter uppercase leading-[0.8]">Market Your <br /> <span className="text-primary italic">Sanctuary</span></h3>
                 <p className="text-slate-500 text-3xl font-medium italic opacity-90 leading-relaxed max-w-4xl mx-auto">"Accelerate transaction finality with high-fidelity intelligence services powered by Gemini Neural Engine."</p>
             </div>
             <div className="grid md:grid-cols-4 gap-10">
@@ -643,7 +643,7 @@ const AdviceNode = () => {
 
 // Custom Gavel Icon Helper
 const Gavel = ({ size, className }: { size: number, className?: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m14.5 12.5-8 8a2.11 2.11 0 1 1-3-3l8-8"/><path d="m16 16 2 2"/><path d="m19 13 2 2"/><path d="m5 5 3 3"/><path d="m2 8 3 3"/><path d="m15 4 6 6"/></svg>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m14.5 12.5-8 8a2.11 2.11 0 1 1-3-3l8-8" /><path d="m16 16 2 2" /><path d="m19 13 2 2" /><path d="m5 5 3 3" /><path d="m2 8 3 3" /><path d="m15 4 6 6" /></svg>
 );
 
 export default DashboardView;

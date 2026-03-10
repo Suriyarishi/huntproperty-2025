@@ -17,6 +17,7 @@ import InsightDetailView from './components/InsightDetailView';
 import LoginView from './components/LoginView';
 import RegisterView from './components/RegisterView';
 import AgentDashboardView from './components/AgentDashboardView';
+import ProjectListingFlow from './components/ProjectListingFlow';
 import HomeLoanView from './components/HomeLoanView';
 import HomeLoanCalculatorView from './components/HomeLoanCalculatorView';
 import ChannelPartnerView from './components/ChannelPartnerView';
@@ -268,7 +269,7 @@ const INSIGHTS: Insight[] = [
     }
 ];
 
-type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'privacy' | 'refund-policy' | 'package-policy' | 'search-projects' | 'testimonials' | 'sitemap';
+type ViewState = 'home' | 'property' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'privacy' | 'refund-policy' | 'package-policy' | 'search-projects' | 'testimonials' | 'sitemap' | 'agent-dashboard' | 'project-listing';
 
 function App() {
     const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -370,6 +371,16 @@ function App() {
                         onComplete={() => {
                             alert("Property submitted successfully!");
                             handleBackToHome();
+                        }}
+                    />
+                );
+            case 'project-listing':
+                return (
+                    <ProjectListingFlow
+                        onCancel={() => handleNavigate('agent-dashboard')}
+                        onComplete={() => {
+                            alert("Project submitted successfully!");
+                            handleNavigate('agent-dashboard');
                         }}
                     />
                 );
