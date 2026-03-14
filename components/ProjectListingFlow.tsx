@@ -6,8 +6,18 @@ import {
     DollarSign, Percent, ShieldCheck, Check,
     Upload, Trash2, Calendar, Search, Home,
     Info, Star, Layers, Activity, Dumbbell,
-    Waves, Bike, Timer, Sun, Wifi, Video
+    Waves, Bike, Timer, Sun, Wifi, Video,
+    FileUp, Maximize, Map
 } from 'lucide-react';
+import AddPlotsDetails from './ProjectListing/Steps/AddPlotsDetails';
+import AddBlockPlan from './ProjectListing/Steps/AddBlockPlan';
+import AddPlotDimensions from './ProjectListing/Steps/AddPlotDimensions';
+import AddTowerDetails from './ProjectListing/Steps/AddTowerDetails';
+import AddPricingOverview from './ProjectListing/Steps/AddPricingOverview';
+import AddCLP from './ProjectListing/Steps/AddCLP';
+import AddFPP from './ProjectListing/Steps/AddFPP';
+import AddSPP from './ProjectListing/Steps/AddSPP';
+import AddDPP from './ProjectListing/Steps/AddDPP';
 
 interface ProjectListingFlowProps {
     onCancel: () => void;
@@ -190,10 +200,47 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
         assuredRental: [
             { id: 1, product: '', ar: '', unit: '/Sqft' }
         ],
+        // Residential specific
+        blockDetails: [
+            { id: 1, name: '', totalPlots: '' }
+        ],
+        plotPlans: [
+            { id: 1, type: '', direction: '', file: null, plcTags: [] }
+        ],
+        plotDimensions: [
+            { id: 1, size: '', unit: 'Sqyds', dimensions: '', floorPlanFile: null }
+        ],
+        hasBlockPlan: true,
+        blockPlans: [] as { blockId: number; blockName: string; file: File | null }[],
+        bankApprovals: [] as string[],
         confirmed: false
     });
 
-    const steps = [
+    const isResidential = projectType === 'residential';
+
+    const steps = isResidential ? [
+        "Builder Details",
+        "RERA Registration",
+        "Compliance Check",
+        "Basic Project Details",
+        "About Builder",
+        "Project Overview",
+        "Block Details",
+        "Plot Floor Plan & PLC",
+        "Plot Dimensions",
+        "Site & Location",
+        "Pricing Overview",
+        "Construction Link Plan (CLP)",
+        "Flexi Payment Plan (FPP)",
+        "Special Payment Plan (SPP)",
+        "Down Payment Plan (DPP)",
+        "Other Charges",
+        "Facing/View PLC",
+        "Location Advantage",
+        "Amenities",
+        "Project Media Center",
+        "Submission"
+    ] : [
         "Builder Details",
         "RERA Registration",
         "Compliance Check",
@@ -201,10 +248,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
         "About Builder",
         "Project Overview",
         "Tower Details",
-        "Floor Plans",
-        "Cluster Plans",
         "Site & Location",
-        "Inventory Details",
         "Pricing Overview",
         "Construction Link Plan (CLP)",
         "Flexi Payment Plan (FPP)",
@@ -214,13 +258,13 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
         "Assured Rental",
         "Other Charges",
         "Facing/View PLC",
-        "Floor PLC",
         "Location Advantage",
-        "Specifications & Features",
         "Amenities",
         "Project Media Center",
         "Submission"
     ];
+
+    const totalSteps = steps.length;
 
     const nextStep = () => {
         if (step === 2) {
@@ -266,8 +310,8 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
 
     // UI Helpers
     const renderProgressBar = () => {
-        if (step === 0 || step === 27) return null;
-        const percentage = (step / 26) * 100;
+        if (step === 0 || step === totalSteps + 1) return null;
+        const percentage = (step / totalSteps) * 100;
         return (
             <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mb-8">
                 <div
@@ -279,7 +323,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
     };
 
     const renderSidebar = () => {
-        if (step === 0 || step === 27) return null;
+        if (step === 0 || step === totalSteps + 1) return null;
         // Let's check step 16 is submission, step 17 is success.
         // Wait, I updated success to 16 in previous session.
         // Let's make success 17 again for clarity if it's a 16-step flow.
@@ -379,7 +423,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                 </button>
                             </div>
                         </div>
-                    ) : step === 27 ? (
+                    ) : step === totalSteps + 1 ? (
                         <div className="min-h-[600px] flex flex-col items-center justify-center space-y-12 py-20 animate-fade-in">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-[#2FED9A]/20 blur-[100px] rounded-full animate-pulse" />
@@ -433,9 +477,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             <h3 className="text-3xl font-black text-[#1a1c21] uppercase tracking-tight">
                                                 {steps[step - 1]}
                                             </h3>
-                                            <p className="text-[10px] font-bold text-teal-500 uppercase tracking-[0.3em]">
-                                                Project Listing • Step {step} of 26
-                                            </p>
+                                                Project Listing • Step {step} of {totalSteps}
                                         </div>
                                         <button
                                             onClick={prevStep}
@@ -451,12 +493,12 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         {step === 1 && (
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
                                                 <div className="md:col-span-2 space-y-2">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Builder/ Developer Name</label>
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Builder/ Developer</label>
                                                     <input
                                                         type="text"
                                                         value={formData.builderName}
                                                         onChange={(e) => setFormData({ ...formData, builderName: e.target.value })}
-                                                        placeholder="Enter Builder Name"
+                                                        placeholder="Name"
                                                         className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl px-6 font-bold text-sm outline-none focus:border-[#2FED9A] shadow-sm"
                                                     />
                                                 </div>
@@ -516,16 +558,18 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                                     />
                                                 </div>
 
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Website</label>
-                                                    <input
-                                                        type="text"
-                                                        value={formData.builderWebsite}
-                                                        onChange={(e) => setFormData({ ...formData, builderWebsite: e.target.value })}
-                                                        placeholder="www.example.com"
-                                                        className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl px-6 font-bold text-sm outline-none focus:border-[#2FED9A] shadow-sm"
-                                                    />
-                                                </div>
+                                                {projectType !== 'residential' && (
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Website</label>
+                                                        <input
+                                                            type="text"
+                                                            value={formData.builderWebsite}
+                                                            onChange={(e) => setFormData({ ...formData, builderWebsite: e.target.value })}
+                                                            placeholder="www.example.com"
+                                                            className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl px-6 font-bold text-sm outline-none focus:border-[#2FED9A] shadow-sm"
+                                                        />
+                                                    </div>
+                                                )}
 
                                                 <div className="space-y-2">
                                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Contact Person</label>
@@ -1218,7 +1262,14 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                                             className="w-32 h-14 bg-gray-50 border border-gray-100 rounded-xl px-4 font-bold text-xs"
                                                         >
                                                             <option value="Acres">Acres</option>
-                                                            <option value="Sqft">Sqft</option>
+                                                            {isResidential ? (
+                                                                <>
+                                                                    <option value="Meters">Meters</option>
+                                                                    <option value="Sqyd">Sqyd</option>
+                                                                </>
+                                                            ) : (
+                                                                <option value="Sqft">Sqft</option>
+                                                            )}
                                                             <option value="Sqm">Sqm</option>
                                                         </select>
                                                     </div>
@@ -1334,352 +1385,40 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 7: Tower Details (Screen 3) */}
+                                        {/* Step 7: Tower Details / Block Details (Screen 3) */}
                                         {step === 7 && (
-                                            <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                    <div className="w-16 h-16 bg-[#FF8A00]/10 text-[#FF8A00] rounded-2xl flex items-center justify-center">
-                                                        <Building2 size={32} />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <h3 className="text-2xl font-black uppercase tracking-tight text-[#1a1c21]">Add Tower Details</h3>
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">DEFINING PROJECT STRUCTURE & TOWERS</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="max-w-xs space-y-2">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Total No of Tower</label>
-                                                    <input 
-                                                        type="number"
-                                                        value={formData.totalTowers}
-                                                        onChange={(e) => setFormData({...formData, totalTowers: e.target.value})}
-                                                        placeholder="0"
-                                                        className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl px-6 font-bold text-sm outline-none focus:border-[#FF8A00] shadow-sm"
-                                                    />
-                                                </div>
-
-                                                <div className="overflow-x-auto">
-                                                    <table className="w-full text-left border-separate border-spacing-y-3">
-                                                        <thead>
-                                                            <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                                <th className="px-6 py-2">S. No.</th>
-                                                                <th className="px-6 py-2">Tower Name/ No.</th>
-                                                                <th className="px-6 py-2">Total No of Floor</th>
-                                                                <th className="px-6 py-2">Each Floor Size</th>
-                                                                <th className="px-6 py-2">Unit</th>
-                                                                <th className="px-6 py-2">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {formData.towerDetails.map((tower, idx) => (
-                                                                <tr key={tower.id} className="group">
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-l border-gray-100 rounded-l-2xl text-sm font-black text-[#1a1c21]">{idx + 1}</td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={tower.name}
-                                                                            onChange={(e) => {
-                                                                                const newTowers = [...formData.towerDetails];
-                                                                                newTowers[idx].name = e.target.value;
-                                                                                setFormData({ ...formData, towerDetails: newTowers });
-                                                                            }}
-                                                                            placeholder="Sun Court"
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-4 font-bold text-xs outline-none focus:border-[#FF8A00]"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <input 
-                                                                            type="number"
-                                                                            value={tower.floors}
-                                                                            onChange={(e) => {
-                                                                                const newTowers = [...formData.towerDetails];
-                                                                                newTowers[idx].floors = e.target.value;
-                                                                                setFormData({ ...formData, towerDetails: newTowers });
-                                                                            }}
-                                                                            placeholder="15"
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-4 font-bold text-xs outline-none focus:border-[#FF8A00]"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <input 
-                                                                            type="number"
-                                                                            value={tower.size}
-                                                                            onChange={(e) => {
-                                                                                const newTowers = [...formData.towerDetails];
-                                                                                newTowers[idx].size = e.target.value;
-                                                                                setFormData({ ...formData, towerDetails: newTowers });
-                                                                            }}
-                                                                            placeholder="40000"
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-4 font-bold text-xs outline-none focus:border-[#FF8A00]"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <select 
-                                                                            value={tower.unit}
-                                                                            onChange={(e) => {
-                                                                                const newTowers = [...formData.towerDetails];
-                                                                                newTowers[idx].unit = e.target.value;
-                                                                                setFormData({ ...formData, towerDetails: newTowers });
-                                                                            }}
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-3 font-bold text-xs outline-none focus:border-[#FF8A00]"
-                                                                        >
-                                                                            <option value="Sqft">Sqft</option>
-                                                                            <option value="Sqm">Sqm</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-r border-gray-100 rounded-r-2xl">
-                                                                        <button 
-                                                                            onClick={() => {
-                                                                                const newTowers = formData.towerDetails.filter((_, i) => i !== idx);
-                                                                                setFormData({ ...formData, towerDetails: newTowers });
-                                                                            }}
-                                                                            className="p-2 text-gray-300 hover:text-red-500 transition-colors"
-                                                                        >
-                                                                            <Trash2 size={16} />
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                                <button 
-                                                    onClick={() => setFormData({ ...formData, towerDetails: [...formData.towerDetails, { id: Date.now(), name: '', floors: '', size: '', unit: 'Sqft' }] })}
-                                                    className="flex items-center gap-3 h-14 px-8 bg-[#FF8A00] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#FF8A00]/20"
-                                                >
-                                                    <Plus size={18} /> Add Button
-                                                </button>
-                                            </div>
+                                            isResidential ? (
+                                                <AddPlotsDetails 
+                                                    formData={formData} 
+                                                    updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                                />
+                                            ) : (
+                                                <AddTowerDetails 
+                                                    formData={formData} 
+                                                    updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                                />
+                                            )
                                         )}
 
-                                        {/* Step 8: Floor Plans (Screen 4) */}
-                                        {step === 8 && (
-                                            <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                    <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
-                                                        <Layout size={32} />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <h3 className="text-2xl font-black uppercase tracking-tight text-[#1a1c21]">Add Floor Plan</h3>
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">UPLOAD UNIT LAYOUTS & SIZES</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="max-w-xs space-y-2">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Total No of Units</label>
-                                                    <input 
-                                                        type="number"
-                                                        value={formData.totalUnits}
-                                                        onChange={(e) => setFormData({...formData, totalUnits: e.target.value})}
-                                                        placeholder="0"
-                                                        className="w-full h-14 bg-gray-50 border border-gray-100 rounded-xl px-6 font-bold text-sm outline-none focus:border-emerald-500 shadow-sm"
-                                                    />
-                                                </div>
-
-                                                <div className="overflow-x-auto">
-                                                    <table className="w-full text-left border-separate border-spacing-y-3">
-                                                        <thead>
-                                                            <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                                <th className="px-6 py-2">S. No.</th>
-                                                                <th className="px-6 py-2">Unit Size</th>
-                                                                <th className="px-6 py-2">Unit</th>
-                                                                <th className="px-6 py-2">Accommodation</th>
-                                                                <th className="px-6 py-2">Add Floor Plans</th>
-                                                                <th className="px-6 py-2">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {formData.floorPlans.map((plan, idx) => (
-                                                                <tr key={plan.id} className="group">
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-l border-gray-100 rounded-l-2xl text-sm font-black text-[#1a1c21]">{idx + 1}</td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <input 
-                                                                            type="number"
-                                                                            value={plan.size}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.floorPlans];
-                                                                                newPlans[idx].size = e.target.value;
-                                                                                setFormData({ ...formData, floorPlans: newPlans });
-                                                                            }}
-                                                                            placeholder="250"
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-4 font-bold text-xs outline-none focus:border-emerald-500"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <select 
-                                                                            value={plan.unit}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.floorPlans];
-                                                                                newPlans[idx].unit = e.target.value;
-                                                                                setFormData({ ...formData, floorPlans: newPlans });
-                                                                            }}
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-3 font-bold text-xs outline-none focus:border-emerald-500"
-                                                                        >
-                                                                            <option value="Sqft">Sqft</option>
-                                                                            <option value="Sqm">Sqm</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <select 
-                                                                            value={plan.accommodation}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.floorPlans];
-                                                                                newPlans[idx].accommodation = e.target.value;
-                                                                                setFormData({ ...formData, floorPlans: newPlans });
-                                                                            }}
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-3 font-bold text-xs outline-none focus:border-emerald-500"
-                                                                        >
-                                                                            <option value="">Select Type</option>
-                                                                            <option value="Office Space">Office Space</option>
-                                                                            <option value="Mid Office space">Mid Office space</option>
-                                                                            <option value="Big Office space">Big Office space</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <button className="flex items-center gap-2 h-10 px-4 bg-white border border-dashed border-gray-200 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest hover:border-emerald-200 hover:text-emerald-500 transition-all">
-                                                                            <Upload size={14} /> .gif/.pdf
-                                                                        </button>
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-r border-gray-100 rounded-r-2xl">
-                                                                        <button 
-                                                                            onClick={() => {
-                                                                                const newPlans = formData.floorPlans.filter((_, i) => i !== idx);
-                                                                                setFormData({ ...formData, floorPlans: newPlans });
-                                                                            }}
-                                                                            className="p-2 text-gray-300 hover:text-red-500 transition-colors"
-                                                                        >
-                                                                            <Trash2 size={16} />
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                                <button 
-                                                    onClick={() => setFormData({ ...formData, floorPlans: [...formData.floorPlans, { id: Date.now(), size: '', unit: 'Sqft', accommodation: '', files: [] }] })}
-                                                    className="flex items-center gap-3 h-14 px-8 bg-emerald-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-lg shadow-emerald-500/20"
-                                                >
-                                                    <Plus size={18} /> Add Button
-                                                </button>
-                                            </div>
+                                        {/* Step 8: Add Block Plan (Screen 4) - Residential Only */}
+                                        {step === 8 && isResidential && (
+                                            <AddBlockPlan 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 9: Cluster Plans (Screen 5) */}
-                                        {step === 9 && (
-                                            <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                    <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center">
-                                                        <Star size={32} />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <h3 className="text-2xl font-black uppercase tracking-tight text-[#1a1c21]">Add Cluster Plan</h3>
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">ASSIGN CLUSTER PLANS TO TOWERS</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <label className="text-xs font-black text-[#1a1c21] uppercase tracking-widest ml-1 block">Do you have the cluster plan?</label>
-                                                    <div className="flex gap-4 max-w-sm">
-                                                        {[
-                                                            { value: true, label: 'Yes' },
-                                                            { value: false, label: 'No' },
-                                                        ].map((opt) => (
-                                                            <button
-                                                                key={opt.label}
-                                                                onClick={() => setFormData({ ...formData, hasClusterPlan: opt.value })}
-                                                                className={`flex-1 h-14 rounded-xl font-black text-xs uppercase tracking-widest transition-all border-2 ${formData.hasClusterPlan === opt.value
-                                                                    ? 'bg-blue-500 border-blue-500 text-white shadow-lg shadow-blue-500/20'
-                                                                    : 'bg-white border-gray-100 text-gray-400 hover:border-gray-200'
-                                                                    }`}
-                                                            >
-                                                                {opt.label}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {formData.hasClusterPlan === true && (
-                                                    <div className="animate-fade-in-up space-y-8">
-                                                        <div className="overflow-x-auto">
-                                                            <table className="w-full text-left border-separate border-spacing-y-3">
-                                                                <thead>
-                                                                    <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                                        <th className="px-6 py-2">S. No.</th>
-                                                                        <th className="px-6 py-2">Tower Name/ No.</th>
-                                                                        <th className="px-6 py-2">Cluster Plan</th>
-                                                                        <th className="px-6 py-2">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {formData.clusterPlans.map((plan, idx) => (
-                                                                        <tr key={plan.id} className="group">
-                                                                            <td className="px-6 h-16 bg-gray-50 border-y border-l border-gray-100 rounded-l-2xl text-sm font-black text-[#1a1c21]">{idx + 1}</td>
-                                                                            <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                                <select 
-                                                                                    value={plan.towerId}
-                                                                                    onChange={(e) => {
-                                                                                        const newPlans = [...formData.clusterPlans];
-                                                                                        newPlans[idx].towerId = e.target.value;
-                                                                                        setFormData({ ...formData, clusterPlans: newPlans });
-                                                                                    }}
-                                                                                    className="w-full h-10 bg-white border border-gray-100 rounded-lg px-3 font-bold text-xs outline-none focus:border-blue-500"
-                                                                                >
-                                                                                    <option value="">Select Tower</option>
-                                                                                    {formData.towerDetails.map(t => (
-                                                                                        <option key={t.id} value={t.id}>{t.name || `Tower ${t.id}`}</option>
-                                                                                    ))}
-                                                                                </select>
-                                                                            </td>
-                                                                            <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                                <button className="flex items-center gap-2 h-10 px-4 bg-white border border-dashed border-gray-200 rounded-lg text-[10px] font-black text-gray-400 uppercase tracking-widest hover:border-blue-200 hover:text-blue-500 transition-all">
-                                                                                    <Upload size={14} /> .gif/.pdf
-                                                                                </button>
-                                                                            </td>
-                                                                            <td className="px-6 h-16 bg-gray-50 border-y border-r border-gray-100 rounded-r-2xl">
-                                                                                <button 
-                                                                                    onClick={() => {
-                                                                                        const newPlans = formData.clusterPlans.filter((_, i) => i !== idx);
-                                                                                        setFormData({ ...formData, clusterPlans: newPlans });
-                                                                                    }}
-                                                                                    className="p-2 text-gray-300 hover:text-red-500 transition-colors"
-                                                                                >
-                                                                                    <Trash2 size={16} />
-                                                                                </button>
-                                                                            </td>
-                                                                        </tr>
-                                                                    ))}
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-
-                                                        <button 
-                                                            onClick={() => setFormData({ ...formData, clusterPlans: [...formData.clusterPlans, { id: Date.now(), towerId: '', files: [] }] })}
-                                                            className="flex items-center gap-3 h-14 px-8 bg-blue-500 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-500/20"
-                                                        >
-                                                            <Plus size={18} /> Add Button
-                                                        </button>
-                                                    </div>
-                                                )}
-
-                                                {formData.hasClusterPlan === false && (
-                                                    <div className="bg-blue-50/50 border border-blue-100 rounded-[28px] p-10 text-center space-y-4 animate-fade-in">
-                                                        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-blue-500 mx-auto shadow-sm">
-                                                            <ArrowRight size={28} />
-                                                        </div>
-                                                        <div className="space-y-1">
-                                                            <h4 className="text-lg font-black uppercase text-[#1a1c21]">No Cluster Plan?</h4>
-                                                            <p className="text-xs font-bold text-gray-400">That's okay! You can continue to the next step. You can always add them later.</p>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
+                                        {/* Step 9: Add Plot Dimensions (Screen 5) - Residential Only */}
+                                        {step === 9 && isResidential && (
+                                            <AddPlotDimensions 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 10: Site & Location (Screen 6) */}
-                                        {step === 10 && (
+
+                                        {/* Site & Location (Screen 8/10) */}
+                                        {((!isResidential && step === 8) || (isResidential && step === 10)) && (
                                             <div className="space-y-8 animate-fade-in">
                                                 <div className="space-y-4">
                                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Upload Site Plan</label>
@@ -1771,547 +1510,49 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 11: Inventory Details (Screen 7) */}
-                                        {step === 11 && (
-                                            <div className="space-y-8 animate-fade-in flex flex-col justify-center min-h-[400px] max-w-2xl mx-auto">
-                                                <div className="space-y-4 text-center pb-8 border-b border-gray-50">
-                                                    <h3 className="text-2xl font-black uppercase tracking-tight">Inventory Type</h3>
-                                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Select the type of space available in this project</p>
-                                                </div>
 
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-8">
-                                                    {[
-                                                        { label: 'Lockable Space', icon: ShieldCheck, value: true, desc: 'Individual ownership units with separate boundaries' },
-                                                        { label: 'Unlockable Space', icon: Layers, value: false, desc: 'Shared ownership or open concept commercial space' }
-                                                    ].map((item) => (
-                                                        <button 
-                                                            key={item.label}
-                                                            onClick={() => setFormData({ ...formData, lockableSpace: item.value })}
-                                                            className={`p-8 rounded-[40px] text-left transition-all relative border-4 flex flex-col gap-6 ${formData.lockableSpace === item.value ? 'bg-[#1a1c21] border-[#2FED9A] text-white' : 'bg-gray-50 border-white text-[#1a1c21] hover:bg-gray-100'}`}
-                                                        >
-                                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${formData.lockableSpace === item.value ? 'bg-[#2FED9A] text-[#1a1c21]' : 'bg-white text-gray-400'}`}>
-                                                                <item.icon size={28} />
-                                                            </div>
-                                                            <div className="space-y-1">
-                                                                <p className="text-lg font-black uppercase">{item.label}</p>
-                                                                <p className={`text-[10px] font-bold uppercase opacity-60`}>{item.desc}</p>
-                                                            </div>
-                                                            {formData.lockableSpace === item.value && (
-                                                                <div className="absolute top-6 right-6">
-                                                                    <div className="w-8 h-8 bg-[#2FED9A] text-[#1a1c21] rounded-full flex items-center justify-center">
-                                                                        <Check size={16} />
-                                                                    </div>
-                                                                </div>
-                                                            )}
-                                                        </button>
-                                                    ))}
-                                                </div>
-
-                                                {formData.lockableSpace !== null && (
-                                                    <div className="pt-10 flex gap-4 items-center justify-center animate-fade-in-up">
-                                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Minimum Size:</span>
-                                                        <input 
-                                                            type="number"
-                                                            placeholder="0"
-                                                            value={formData.lockableSpace ? formData.lockableMinSize : formData.unlockableMinSize}
-                                                            onChange={(e) => {
-                                                                if (formData.lockableSpace) {
-                                                                    setFormData({ ...formData, lockableMinSize: e.target.value });
-                                                                } else {
-                                                                    setFormData({ ...formData, unlockableMinSize: e.target.value });
-                                                                }
-                                                            }}
-                                                            className="w-32 h-14 bg-gray-50 border border-gray-100 rounded-2xl px-6 font-bold text-center outline-none focus:border-teal-200"
-                                                        />
-                                                        <span className="text-xs font-black uppercase text-gray-400">Sqft</span>
-                                                    </div>
-                                                )}
-                                            </div>
+                                        {/* Pricing Overview (Screen 9/11) */}
+                                        {((!isResidential && step === 9) || (isResidential && step === 11)) && (
+                                            <AddPricingOverview 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 12: Price & Payment plans (Screen 8) */}
-                                        {step === 12 && (
-                                            <div className="space-y-12 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
-                                                    <div className="w-16 h-16 bg-emerald-50/50 text-emerald-500 rounded-2xl flex items-center justify-center">
-                                                        <DollarSign size={28} strokeWidth={2.5} />
-                                                    </div>
-                                                    <div className="space-y-0.5">
-                                                        <h3 className="text-xl font-black text-[#1a1c21] uppercase tracking-tighter">Pricing & Plans</h3>
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Configure your project rates</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14">
-                                                    <div className="space-y-3">
-                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Basic Sales Price (BSP)</label>
-                                                        <div className="relative group">
-                                                            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-xl font-black text-emerald-500 transition-colors">₹</div>
-                                                            <input 
-                                                                type="number"
-                                                                value={formData.bsp}
-                                                                onChange={(e) => setFormData({ ...formData, bsp: e.target.value })}
-                                                                placeholder="19000"
-                                                                className="w-full h-16 bg-gray-50 border border-transparent rounded-2xl px-12 font-black text-2xl text-[#1a1c21] outline-none focus:border-emerald-100 focus:bg-white transition-all"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="space-y-3">
-                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Unit Selection</label>
-                                                        <div className="flex gap-2 h-16 p-1.5 bg-gray-50 rounded-2xl border border-gray-100/50">
-                                                            {['SQFT', 'SQYD', 'SQM'].map((u) => (
-                                                                <button 
-                                                                    key={u}
-                                                                    onClick={() => setFormData({ ...formData, pricingUnit: u })}
-                                                                    className={`flex-1 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${formData.pricingUnit === u ? 'bg-emerald-500 text-white shadow-lg' : 'text-gray-400 hover:text-gray-600'}`}
-                                                                >
-                                                                    {u}
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6 pt-10 border-t border-gray-50/50">
-                                                    <div className="flex items-center justify-between">
-                                                        <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em]">Payment Plan Tiers</h4>
-                                                        <button 
-                                                            onClick={() => setFormData({
-                                                                ...formData,
-                                                                paymentPlans: [
-                                                                    ...formData.paymentPlans,
-                                                                    { id: Date.now(), type: 'CUSTOM', label: '', price: '', installments: [] }
-                                                                ]
-                                                            })}
-                                                            className="flex items-center gap-2.5 px-6 py-2.5 bg-gray-50 border border-emerald-100/50 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
-                                                        >
-                                                            <Plus size={14} /> Add Plan
-                                                        </button>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-                                                        {formData.paymentPlans.map((p, idx) => (
-                                                            <div key={p.id} className="relative group bg-white p-6 rounded-3xl border border-gray-100 hover:border-emerald-100 hover:shadow-xl hover:shadow-emerald-900/5 transition-all duration-300">
-                                                                <div className="flex flex-col gap-0.5 mb-4">
-                                                                    <span className="text-[9px] font-black uppercase text-emerald-500 tracking-widest">{p.type === 'CUSTOM' ? 'Custom' : p.type}</span>
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={p.label}
-                                                                        onChange={(e) => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            newPlans[idx].label = e.target.value;
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        placeholder="Plan Name"
-                                                                        className="text-[10px] font-black text-[#1a1c21] uppercase tracking-wide outline-none bg-transparent border-b border-transparent focus:border-emerald-100 pb-0.5 w-full"
-                                                                    />
-                                                                </div>
-                                                                <div className="flex items-baseline gap-1">
-                                                                    <span className="text-lg font-black text-emerald-500">₹</span>
-                                                                    <input 
-                                                                        type="number"
-                                                                        value={p.price}
-                                                                        onChange={(e) => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            newPlans[idx].price = e.target.value;
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        placeholder="0"
-                                                                        className="w-full bg-transparent font-black text-2xl text-[#1a1c21] outline-none placeholder:text-gray-100"
-                                                                    />
-                                                                    <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest">/{formData.pricingUnit}</span>
-                                                                </div>
-                                                                
-                                                                {p.type === 'CUSTOM' && (
-                                                                    <button 
-                                                                        onClick={() => setFormData({
-                                                                            ...formData,
-                                                                            paymentPlans: formData.paymentPlans.filter(item => item.id !== p.id)
-                                                                        })}
-                                                                        className="absolute top-4 right-4 text-gray-200 hover:text-red-500 transition-colors"
-                                                                    >
-                                                                        <Trash2 size={14} />
-                                                                    </button>
-                                                                )}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {/* Construction Linked Plan (CLP) (Screen 10/12) */}
+                                        {((!isResidential && step === 10) || (isResidential && step === 12)) && (
+                                            <AddCLP 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 13: Construction Link Plan (CLP) (Screen 9) */}
-                                        {step === 13 && (
-                                            <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
-                                                    <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
-                                                        <FileText size={28} />
-                                                    </div>
-                                                    <div className="space-y-0.5">
-                                                        <h3 className="text-xl font-black text-[#1a1c21] uppercase tracking-tighter">{formData.paymentPlans.find(p => p.type === 'CLP')?.label || 'Construction Link Plan'}</h3>
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Provide the installment details</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <div className="bg-[#1a1c21] rounded-full px-8 py-4 flex items-center justify-between shadow-lg">
-                                                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] w-20">S. No.</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] flex-1 ml-4">Demand State</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] w-48 text-right pr-4">Payment in (%)</span>
-                                                    </div>
-
-                                                    <div className="space-y-3">
-                                                        {(formData.paymentPlans.find(p => p.type === 'CLP')?.installments || [
-                                                            { milestone: 'At the time of booking', percentage: '10' },
-                                                            { milestone: 'With in 45 Days', percentage: '10' },
-                                                            { milestone: 'On Completion of Basement', percentage: '10' }
-                                                        ]).map((inst, idx) => (
-                                                            <div key={idx} className="flex items-center gap-4 bg-gray-50/50 p-2 rounded-2xl border border-gray-100/30 group hover:bg-white hover:border-emerald-100 hover:shadow-lg transition-all duration-300">
-                                                                <div className="w-12 text-center font-black text-[10px] text-gray-300 group-hover:text-emerald-500 transition-colors">{idx + 1}</div>
-                                                                <div className="flex-1">
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={inst.milestone}
-                                                                        onChange={(e) => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            const planIdx = newPlans.findIndex(p => p.type === 'CLP');
-                                                                            if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                            newPlans[planIdx].installments[idx].milestone = e.target.value;
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        placeholder="Enter Milestone"
-                                                                        className="w-full bg-transparent px-4 py-2.5 text-[11px] font-bold text-[#1a1c21] outline-none"
-                                                                    />
-                                                                </div>
-                                                                <div className="w-40 mr-2">
-                                                                    <div className="bg-white rounded-xl border border-gray-100 group-hover:border-emerald-100 transition-all flex items-center px-4">
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={inst.percentage}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.paymentPlans];
-                                                                                const planIdx = newPlans.findIndex(p => p.type === 'CLP');
-                                                                                if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                                newPlans[planIdx].installments[idx].percentage = e.target.value;
-                                                                                setFormData({ ...formData, paymentPlans: newPlans });
-                                                                            }}
-                                                                            placeholder="0"
-                                                                            className="w-full bg-transparent py-2.5 text-center text-xs font-black text-emerald-500 outline-none"
-                                                                        />
-                                                                        <span className="text-[10px] font-black text-gray-200">%</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-50/50">
-                                                    <button 
-                                                        onClick={() => {
-                                                            const newPlans = [...formData.paymentPlans];
-                                                            const planIdx = newPlans.findIndex(p => p.type === 'CLP');
-                                                            if (!newPlans[planIdx].installments) newPlans[planIdx].installments = [];
-                                                            newPlans[planIdx].installments.push({ milestone: '', percentage: '' });
-                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                        }}
-                                                        className="px-8 py-3 bg-[#1a1c21] text-white rounded-xl text-[9px] font-black uppercase tracking-[0.2em] hover:bg-emerald-500 transition-all shadow-lg flex items-center gap-3"
-                                                    >
-                                                        <Plus size={14} /> Add Installment
-                                                    </button>
-                                                    <div className="bg-orange-50/50 px-5 py-2.5 rounded-xl border border-orange-100/50">
-                                                        <p className="text-[8px] font-black text-orange-600/70 uppercase tracking-widest text-center">
-                                                            Note: Total installments must equal 100%
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {/* Flexi Payment Plan (FPP) (Screen 11/13) */}
+                                        {((!isResidential && step === 11) || (isResidential && step === 13)) && (
+                                            <AddFPP 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 14: Flexi Payment Plan (FPP) (Screen 10) */}
-                                        {step === 14 && (
-                                            <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
-                                                    <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
-                                                        <Layout size={28} />
-                                                    </div>
-                                                    <div className="space-y-0.5">
-                                                        <h3 className="text-xl font-black text-[#1a1c21] uppercase tracking-tighter">{formData.paymentPlans.find(p => p.type === 'FPP')?.label || 'Flexi Payment Plan'}</h3>
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Provide the installment details</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <div className="bg-[#1a1c21] rounded-full px-8 py-4 flex items-center justify-between shadow-lg">
-                                                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] w-20">S. No.</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] flex-1 ml-4">Demand State</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] w-48 text-right pr-4">Payment in (%)</span>
-                                                    </div>
-
-                                                    <div className="space-y-3">
-                                                        {(formData.paymentPlans.find(p => p.type === 'FPP')?.installments || [
-                                                            { milestone: 'At the time of booking', percentage: '10' },
-                                                            { milestone: 'With in 45 Days', percentage: '50' },
-                                                            { milestone: 'On Completion of 10th Floor', percentage: '7 & So on' }
-                                                        ]).map((inst, idx) => (
-                                                            <div key={idx} className="flex items-center gap-4 bg-gray-50/50 p-2 rounded-2xl border border-gray-100/30 group hover:bg-white hover:border-emerald-100 hover:shadow-lg transition-all duration-300">
-                                                                <div className="w-12 text-center font-black text-[10px] text-gray-300 group-hover:text-emerald-500 transition-colors">{idx + 1}</div>
-                                                                <div className="flex-1">
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={inst.milestone}
-                                                                        onChange={(e) => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            const planIdx = newPlans.findIndex(p => p.type === 'FPP');
-                                                                            if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                            newPlans[planIdx].installments[idx].milestone = e.target.value;
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        placeholder="Enter Milestone"
-                                                                        className="w-full bg-transparent px-4 py-2.5 text-[11px] font-bold text-[#1a1c21] outline-none"
-                                                                    />
-                                                                </div>
-                                                                <div className="w-40 mr-2">
-                                                                    <div className="bg-white rounded-xl border border-gray-100 group-hover:border-emerald-100 transition-all flex items-center px-4">
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={inst.percentage}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.paymentPlans];
-                                                                                const planIdx = newPlans.findIndex(p => p.type === 'FPP');
-                                                                                if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                                newPlans[planIdx].installments[idx].percentage = e.target.value;
-                                                                                setFormData({ ...formData, paymentPlans: newPlans });
-                                                                            }}
-                                                                            placeholder="0"
-                                                                            className="w-full bg-transparent py-2.5 text-center text-xs font-black text-emerald-500 outline-none"
-                                                                        />
-                                                                        <span className="text-[10px] font-black text-gray-200">%</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-50/50">
-                                                    <button 
-                                                        onClick={() => {
-                                                            const newPlans = [...formData.paymentPlans];
-                                                            const planIdx = newPlans.findIndex(p => p.type === 'FPP');
-                                                            if (!newPlans[planIdx].installments) newPlans[planIdx].installments = [];
-                                                            newPlans[planIdx].installments.push({ milestone: '', percentage: '' });
-                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                        }}
-                                                        className="px-8 py-3 bg-[#1a1c21] text-white rounded-xl text-[9px] font-black uppercase tracking-[0.2em] hover:bg-emerald-500 transition-all shadow-lg flex items-center gap-3"
-                                                    >
-                                                        <Plus size={14} /> Add Installment
-                                                    </button>
-                                                    <div className="bg-orange-50/50 px-5 py-2.5 rounded-xl border border-orange-100/50">
-                                                        <p className="text-[8px] font-black text-orange-600/70 uppercase tracking-widest text-center">
-                                                            Note: Total installments must equal 100%
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {/* Special Payment Plan (SPP) (Screen 12/14) */}
+                                        {((!isResidential && step === 12) || (isResidential && step === 14)) && (
+                                            <AddSPP 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 15: Special Payment Plan (SPP) (Screen 11) */}
-                                        {step === 15 && (
-                                            <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
-                                                    <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
-                                                        <Star size={28} />
-                                                    </div>
-                                                    <div className="space-y-0.5">
-                                                        <h3 className="text-xl font-black text-[#1a1c21] uppercase tracking-tighter">{formData.paymentPlans.find(p => p.type === 'SPP')?.label || 'Special Payment Plan'}</h3>
-                                                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Provide the installment details</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <div className="bg-[#1a1c21] rounded-full px-8 py-4 flex items-center justify-between shadow-lg">
-                                                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] w-20">S. No.</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] flex-1 ml-4">Demand State</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] w-48 text-right pr-4">Payment in (%)</span>
-                                                    </div>
-
-                                                    <div className="space-y-3">
-                                                        {(formData.paymentPlans.find(p => p.type === 'SPP')?.installments || [
-                                                            { milestone: 'At the time of booking', percentage: '10' },
-                                                            { milestone: 'With in 45 Days', percentage: '30' },
-                                                            { milestone: 'On Completion of 10th Floor', percentage: '20 & So on' }
-                                                        ]).map((inst, idx) => (
-                                                            <div key={idx} className="flex items-center gap-4 bg-gray-50/50 p-2 rounded-2xl border border-gray-100/30 group hover:bg-white hover:border-emerald-100 hover:shadow-lg transition-all duration-300">
-                                                                <div className="w-12 text-center font-black text-[10px] text-gray-300 group-hover:text-emerald-500 transition-colors">{idx + 1}</div>
-                                                                <div className="flex-1">
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={inst.milestone}
-                                                                        onChange={(e) => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            const planIdx = newPlans.findIndex(p => p.type === 'SPP');
-                                                                            if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                            newPlans[planIdx].installments[idx].milestone = e.target.value;
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        placeholder="Enter Milestone"
-                                                                        className="w-full bg-transparent px-4 py-2.5 text-[11px] font-bold text-[#1a1c21] outline-none"
-                                                                    />
-                                                                </div>
-                                                                <div className="w-40 mr-2">
-                                                                    <div className="bg-white rounded-xl border border-gray-100 group-hover:border-emerald-100 transition-all flex items-center px-4">
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={inst.percentage}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.paymentPlans];
-                                                                                const planIdx = newPlans.findIndex(p => p.type === 'SPP');
-                                                                                if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                                newPlans[planIdx].installments[idx].percentage = e.target.value;
-                                                                                setFormData({ ...formData, paymentPlans: newPlans });
-                                                                            }}
-                                                                            placeholder="0"
-                                                                            className="w-full bg-transparent py-2.5 text-center text-xs font-black text-emerald-500 outline-none"
-                                                                        />
-                                                                        <span className="text-[10px] font-black text-gray-200">%</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 border-t border-gray-50/50">
-                                                    <button 
-                                                        onClick={() => {
-                                                            const newPlans = [...formData.paymentPlans];
-                                                            const planIdx = newPlans.findIndex(p => p.type === 'SPP');
-                                                            if (!newPlans[planIdx].installments) newPlans[planIdx].installments = [];
-                                                            newPlans[planIdx].installments.push({ milestone: '', percentage: '' });
-                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                        }}
-                                                        className="px-8 py-3 bg-[#1a1c21] text-white rounded-xl text-[9px] font-black uppercase tracking-[0.2em] hover:bg-emerald-500 transition-all shadow-lg flex items-center gap-3"
-                                                    >
-                                                        <Plus size={14} /> Add Installment
-                                                    </button>
-                                                    <div className="bg-orange-50/50 px-5 py-2.5 rounded-xl border border-orange-100/50">
-                                                        <p className="text-[8px] font-black text-orange-600/70 uppercase tracking-widest text-center">
-                                                            Note: Total installments must equal 100%
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        {/* Down Payment Plan (DPP) (Screen 13/15) */}
+                                        {((!isResidential && step === 13) || (isResidential && step === 15)) && (
+                                            <AddDPP 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
                                         )}
 
-                                        {/* Step 16: Down Payment Plan (DPP) (Screen 12) */}
-                                        {step === 16 && (
-                                            <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                    <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
-                                                        <DollarSign size={32} />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <h3 className="text-2xl font-black uppercase tracking-tight text-[#1a1c21]">{formData.paymentPlans.find(p => p.type === 'DPP')?.label || 'Down Payment Plan'}</h3>
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">PROVIDE THE INSTALLMENT DETAILS</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    <div className="bg-[#1a1c21] rounded-full px-8 py-4 flex items-center justify-between shadow-lg">
-                                                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] w-20">S. No.</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] flex-1 ml-4">Demand State / Milestone</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] w-48 text-right pr-4">Payment in (%)</span>
-                                                        <span className="text-[9px] font-black text-white uppercase tracking-[0.2em] w-20 text-right pr-4">Action</span>
-                                                    </div>
-                                                    <div className="space-y-3">
-                                                        {(formData.paymentPlans.find(p => p.type === 'DPP')?.installments || [
-                                                            { milestone: 'At the time of booking', percentage: '10' },
-                                                            { milestone: 'With in 45 Days', percentage: '85' },
-                                                            { milestone: 'On Possession', percentage: '5' }
-                                                        ]).map((inst, idx) => (
-                                                            <div key={idx} className="flex items-center gap-4 bg-gray-50/50 p-2 rounded-2xl border border-gray-100/30 group hover:bg-white hover:border-emerald-100 hover:shadow-lg transition-all duration-300">
-                                                                <div className="w-12 text-center font-black text-[10px] text-gray-300 group-hover:text-emerald-500 transition-colors">{idx + 1}</div>
-                                                                <div className="flex-1">
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={inst.milestone}
-                                                                        onChange={(e) => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            const planIdx = newPlans.findIndex(p => p.type === 'DPP');
-                                                                            if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                            newPlans[planIdx].installments[idx].milestone = e.target.value;
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        placeholder="Enter Milestone"
-                                                                        className="w-full bg-transparent px-4 py-2.5 text-[11px] font-bold text-[#1a1c21] outline-none"
-                                                                    />
-                                                                </div>
-                                                                <div className="w-40 mr-2">
-                                                                    <div className="bg-white rounded-xl border border-gray-100 group-hover:border-emerald-100 transition-all flex items-center px-4">
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={inst.percentage}
-                                                                            onChange={(e) => {
-                                                                                const newPlans = [...formData.paymentPlans];
-                                                                                const planIdx = newPlans.findIndex(p => p.type === 'DPP');
-                                                                                if (!newPlans[planIdx].installments[idx]) newPlans[planIdx].installments[idx] = { milestone: '', percentage: '' };
-                                                                                newPlans[planIdx].installments[idx].percentage = e.target.value;
-                                                                                setFormData({ ...formData, paymentPlans: newPlans });
-                                                                            }}
-                                                                            placeholder="0"
-                                                                            className="w-full bg-transparent py-2.5 text-center text-xs font-black text-emerald-500 outline-none"
-                                                                        />
-                                                                        <span className="text-[10px] font-black text-gray-200">%</span>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="w-12 text-center">
-                                                                    <button 
-                                                                        onClick={() => {
-                                                                            const newPlans = [...formData.paymentPlans];
-                                                                            const planIdx = newPlans.findIndex(p => p.type === 'DPP');
-                                                                            newPlans[planIdx].installments.splice(idx, 1);
-                                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                                        }}
-                                                                        className="p-2 text-gray-200 hover:text-red-500 transition-colors"
-                                                                    >
-                                                                        <Trash2 size={16} />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6 ">
-                                                    <button 
-                                                        onClick={() => {
-                                                            const newPlans = [...formData.paymentPlans];
-                                                            const planIdx = newPlans.findIndex(p => p.type === 'DPP');
-                                                            if (!newPlans[planIdx].installments) newPlans[planIdx].installments = [];
-                                                            newPlans[planIdx].installments.push({ milestone: '', percentage: '' });
-                                                            setFormData({ ...formData, paymentPlans: newPlans });
-                                                        }}
-                                                        className="px-8 py-4 bg-[#1a1c21] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/20 transition-all flex items-center gap-3"
-                                                    >
-                                                        <Plus size={16} /> Add Installment
-                                                    </button>
-                                                    <div className="bg-emerald-50 px-6 py-4 rounded-2xl border border-emerald-100 flex items-center gap-3">
-                                                        <div className="w-8 h-8 bg-emerald-500 text-white rounded-lg flex items-center justify-center">
-                                                            <Percent size={14} strokeWidth={3} />
-                                                        </div>
-                                                        <div className="space-y-0.5">
-                                                            <p className="text-[10px] font-black text-[#1a1c21] uppercase tracking-widest">Total Percentage</p>
-                                                            <p className="text-[8px] font-bold text-emerald-600 uppercase">Must equal exactly 100%</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Step 17: Assured Return (Screen 13) */}
-                                        {step === 17 && (
+                                        {/* Assured Return (Screen 14) */}
+                                        {step === 14 && !isResidential && (
                                             <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
                                                     <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
@@ -2407,8 +1648,8 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 18: Assured Rental (Screen 14) */}
-                                        {step === 18 && (
+                                        {/* Assured Rental (Screen 15) */}
+                                        {step === 15 && !isResidential && (
                                             <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
                                                     <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
@@ -2500,8 +1741,9 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 19: Other Charges (Screen 15) */}
-                                        {step === 19 && (
+
+                                        {/* Other Charges (Step 16) */}
+                                        {step === 16 && (
                                             <div className="space-y-10 animate-fade-in">
                                                 <div className="bg-gray-50 p-10 rounded-[48px] border border-white shadow-inner">
                                                     <div className="flex items-center gap-4 mb-10">
@@ -2585,8 +1827,8 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                                 </div>
                                             </div>
                                         )}
-                                        {/* Step 20: Facing/View PLC (Screen 16) */}
-                                        {step === 20 && (
+                                        {/* Facing PLC (Step 17) */}
+                                        {step === 17 && (
                                             <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
                                                     <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
@@ -2669,92 +1911,9 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 21: Floor PLC (Screen 17) */}
-                                        {step === 21 && (
-                                            <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
-                                                <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                    <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
-                                                        <Layers size={32} />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <h3 className="text-2xl font-black uppercase tracking-tight text-[#1a1c21]">Floor PLC</h3>
-                                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">PREFERRED LOCATION CHARGES BY FLOOR</p>
-                                                    </div>
-                                                </div>
 
-                                                <div className="overflow-x-auto">
-                                                    <table className="w-full text-left border-separate border-spacing-y-3">
-                                                        <thead>
-                                                            <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                                <th className="px-6 py-2 w-20">S. No.</th>
-                                                                <th className="px-6 py-2">Charges Name</th>
-                                                                <th className="px-6 py-2 w-48 text-center">Amount (Per Sqft)</th>
-                                                                <th className="px-6 py-2 w-20 text-center">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {formData.floorPlc.map((plc, idx) => (
-                                                                <tr key={idx} className="group">
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-l border-gray-100 rounded-l-2xl text-sm font-black text-[#1a1c21]">{idx + 1}</td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <input 
-                                                                            type="text"
-                                                                            value={plc.label}
-                                                                            onChange={(e) => {
-                                                                                const newPlc = [...formData.floorPlc];
-                                                                                newPlc[idx].label = e.target.value;
-                                                                                setFormData({ ...formData, floorPlc: newPlc });
-                                                                            }}
-                                                                            placeholder="Charges Name"
-                                                                            className="w-full h-10 bg-white border border-gray-100 rounded-lg px-4 font-bold text-xs outline-none focus:border-emerald-500"
-                                                                        />
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-gray-100">
-                                                                        <div className="flex items-center justify-center bg-white border border-gray-100 rounded-lg h-10 px-3 max-w-[140px] mx-auto group-focus-within:border-emerald-500">
-                                                                            <span className="text-[10px] font-black text-gray-200 mr-2">₹</span>
-                                                                            <input 
-                                                                                type="text"
-                                                                                value={plc.value}
-                                                                                onChange={(e) => {
-                                                                                    const newPlc = [...formData.floorPlc];
-                                                                                    newPlc[idx].value = e.target.value;
-                                                                                    setFormData({ ...formData, floorPlc: newPlc });
-                                                                                }}
-                                                                                placeholder="0"
-                                                                                className="w-full bg-transparent text-center text-xs font-black text-emerald-500 outline-none"
-                                                                            />
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className="px-6 h-16 bg-gray-50 border-y border-r border-gray-100 rounded-r-2xl text-center">
-                                                                        <button 
-                                                                            onClick={() => {
-                                                                                const newPlc = formData.floorPlc.filter((_, i) => i !== idx);
-                                                                                setFormData({ ...formData, floorPlc: newPlc });
-                                                                            }}
-                                                                            className="p-2 text-gray-200 hover:text-red-500 transition-colors"
-                                                                        >
-                                                                            <Trash2 size={16} />
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                                <div className="pt-6">
-                                                    <button 
-                                                        onClick={() => setFormData({ ...formData, floorPlc: [...formData.floorPlc, { label: "", value: "" }] })}
-                                                        className="px-8 py-4 bg-[#1a1c21] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/20 transition-all flex items-center gap-3"
-                                                    >
-                                                        <Plus size={16} /> Add PLC Item
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Step 22: Location Advantage (Screen 18) */}
-                                        {step === 22 && (
+                                        {/* Location Advantage (Step 18) */}
+                                        {step === 18 && (
                                             <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
                                                     <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
@@ -2820,137 +1979,9 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 23: Specifications & Features (Screen 19-20) */}
-                                        {step === 23 && (
-                                            <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 animate-fade-in">
-                                                {/* Left Column: Specifications */}
-                                                <div className="space-y-8 bg-white rounded-[40px] p-10 border border-gray-100 shadow-sm min-h-[500px]">
-                                                    <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                        <div className="w-14 h-14 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center">
-                                                            <Layers size={28} />
-                                                        </div>
-                                                        <div className="space-y-1">
-                                                            <h3 className="text-xl font-black uppercase tracking-tight text-[#1a1c21]">Specifications</h3>
-                                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">TECHNICAL & BUILD DETAILS</p>
-                                                        </div>
-                                                    </div>
 
-                                                    <div className="overflow-x-auto">
-                                                        <table className="w-full text-left border-separate border-spacing-y-3">
-                                                            <thead>
-                                                                <tr className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
-                                                                    <th className="px-4 py-2 w-16">S. No.</th>
-                                                                    <th className="px-4 py-2">Description of Specs.</th>
-                                                                    <th className="px-4 py-2 w-16 text-center">Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {formData.specifications.map((spec, idx) => (
-                                                                    <tr key={idx} className="group">
-                                                                        <td className="px-4 h-14 bg-gray-50 border-y border-l border-gray-100 rounded-l-2xl text-xs font-black text-[#1a1c21]">{idx + 1}</td>
-                                                                        <td className="px-4 h-14 bg-gray-50 border-y border-gray-100">
-                                                                            <input 
-                                                                                type="text"
-                                                                                value={spec.label}
-                                                                                onChange={(e) => {
-                                                                                    const newSpecs = [...formData.specifications];
-                                                                                    newSpecs[idx].label = e.target.value;
-                                                                                    setFormData({ ...formData, specifications: newSpecs });
-                                                                                }}
-                                                                                placeholder="Enter specification"
-                                                                                className="w-full h-9 bg-white border border-gray-100 rounded-lg px-3 font-bold text-[11px] outline-none focus:border-indigo-500"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="px-4 h-14 bg-gray-50 border-y border-r border-gray-100 rounded-r-2xl text-center">
-                                                                            <button 
-                                                                                onClick={() => {
-                                                                                    const newSpecs = formData.specifications.filter((_, i) => i !== idx);
-                                                                                    setFormData({ ...formData, specifications: newSpecs });
-                                                                                }}
-                                                                                className="p-2 text-gray-200 hover:text-red-500 transition-colors"
-                                                                            >
-                                                                                <Trash2 size={14} />
-                                                                            </button>
-                                                                        </td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <button 
-                                                        onClick={() => setFormData({ ...formData, specifications: [...formData.specifications, { label: "", value: "" }] })}
-                                                        className="px-6 py-3 bg-[#1a1c21] text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-indigo-500 transition-all flex items-center gap-2"
-                                                    >
-                                                        <Plus size={14} /> Add Button
-                                                    </button>
-                                                </div>
-
-                                                {/* Right Column: Features */}
-                                                <div className="space-y-8 bg-white rounded-[40px] p-10 border border-gray-100 shadow-sm min-h-[500px]">
-                                                    <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
-                                                        <div className="w-14 h-14 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center">
-                                                            <Star size={28} />
-                                                        </div>
-                                                        <div className="space-y-1">
-                                                            <h3 className="text-xl font-black uppercase tracking-tight text-[#1a1c21]">Features</h3>
-                                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">PROJECT HIGHLIGHTS & AMENITIES</p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="overflow-x-auto">
-                                                        <table className="w-full text-left border-separate border-spacing-y-3">
-                                                            <thead>
-                                                                <tr className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
-                                                                    <th className="px-4 py-2 w-16">S. No.</th>
-                                                                    <th className="px-4 py-2">Description of Features</th>
-                                                                    <th className="px-4 py-2 w-16 text-center">Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {formData.features.map((feat, idx) => (
-                                                                    <tr key={idx} className="group">
-                                                                        <td className="px-4 h-14 bg-gray-50 border-y border-l border-gray-100 rounded-l-2xl text-xs font-black text-[#1a1c21]">{idx + 1}</td>
-                                                                        <td className="px-4 h-14 bg-gray-50 border-y border-gray-100">
-                                                                            <input 
-                                                                                type="text"
-                                                                                value={feat.label}
-                                                                                onChange={(e) => {
-                                                                                    const newFeats = [...formData.features];
-                                                                                    newFeats[idx].label = e.target.value;
-                                                                                    setFormData({ ...formData, features: newFeats });
-                                                                                }}
-                                                                                placeholder="Enter feature"
-                                                                                className="w-full h-9 bg-white border border-gray-100 rounded-lg px-3 font-bold text-[11px] outline-none focus:border-teal-500"
-                                                                            />
-                                                                        </td>
-                                                                        <td className="px-4 h-14 bg-gray-50 border-y border-r border-gray-100 rounded-r-2xl text-center">
-                                                                            <button 
-                                                                                onClick={() => {
-                                                                                    const newFeats = formData.features.filter((_, i) => i !== idx);
-                                                                                    setFormData({ ...formData, features: newFeats });
-                                                                                }}
-                                                                                className="p-2 text-gray-200 hover:text-red-500 transition-colors"
-                                                                            >
-                                                                                <Trash2 size={14} />
-                                                                            </button>
-                                                                        </td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                    <button 
-                                                        onClick={() => setFormData({ ...formData, features: [...formData.features, { label: "" }] })}
-                                                        className="px-6 py-3 bg-[#1a1c21] text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-teal-500 transition-all flex items-center gap-2"
-                                                    >
-                                                        <Plus size={14} /> Add Button
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Step 24: Amenities (Screen 20-21) */}
-                                        {step === 24 && (
+                                        {/* Amenities (Step 19) */}
+                                        {step === 19 && (
                                             <div className="space-y-12 animate-fade-in">
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                                                     {[
@@ -3057,8 +2088,8 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 25: Project Media Center (Screen 22-23) */}
-                                        {step === 25 && (
+                                        {/* Project Media Center (Step 20) */}
+                                        {step === 20 && (
                                             <div className="max-w-4xl mx-auto space-y-12 animate-fade-in pb-10">
                                                 {/* Card 1: Actual Site Photographs (Screen 22) */}
                                                 <div className="space-y-10 bg-white rounded-[40px] p-12 border border-gray-100 shadow-sm">
@@ -3131,101 +2162,11 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                                     </div>
                                                 </div>
 
-                                                {/* Card 2: Sample Office / Showroom (Screen 23) */}
-                                                <div className="space-y-10 bg-white rounded-[40px] p-12 border border-gray-100 shadow-sm">
-                                                    <div className="flex items-center gap-6">
-                                                        <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-3xl flex items-center justify-center">
-                                                            <Layout size={32} />
-                                                        </div>
-                                                        <div className="space-y-1">
-                                                            <h3 className="text-2xl font-black uppercase tracking-tight text-[#1a1c21]">Sample Office Photos</h3>
-                                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">SHOWROOM & OFFICE INTERIORS</p>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-2 gap-8 pb-4">
-                                                        <div className="space-y-3">
-                                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Flat Size</label>
-                                                            <input 
-                                                                type="text"
-                                                                value={formData.photos.flatSize}
-                                                                onChange={(e) => setFormData({ ...formData, photos: { ...formData.photos, flatSize: e.target.value } })}
-                                                                className="w-full h-14 bg-gray-50/50 border border-gray-100 rounded-2xl px-6 font-bold text-sm text-[#1a1c21] outline-none focus:border-[#2FED9A] focus:bg-white transition-all"
-                                                                placeholder="e.g. 3250"
-                                                            />
-                                                        </div>
-                                                        <div className="space-y-3">
-                                                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest pl-1">Accommodation</label>
-                                                            <input 
-                                                                type="text"
-                                                                value={formData.photos.accommodation}
-                                                                onChange={(e) => setFormData({ ...formData, photos: { ...formData.photos, accommodation: e.target.value } })}
-                                                                className="w-full h-14 bg-gray-50/50 border border-gray-100 rounded-2xl px-6 font-bold text-sm text-[#1a1c21] outline-none focus:border-[#2FED9A] focus:bg-white transition-all"
-                                                                placeholder="e.g. 4 BHK"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="space-y-4">
-                                                        <div className="grid grid-cols-[80px_1fr_180px_80px] gap-4 px-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                            <span>S. No.</span>
-                                                            <span>Details.</span>
-                                                            <span className="text-center">Attach Images</span>
-                                                            <span className="text-center">Action</span>
-                                                        </div>
-
-                                                        {formData.photos.samplePhotos.map((cat, idx) => (
-                                                            <div key={idx} className="grid grid-cols-[80px_1fr_180px_80px] gap-4 items-center bg-gray-50/50 p-4 rounded-[24px] border border-gray-100/50 hover:bg-white hover:border-emerald-100 transition-all group">
-                                                                <div className="text-sm font-black text-[#1a1c21] pl-4">{idx + 1}</div>
-                                                                <div>
-                                                                    <input 
-                                                                        type="text"
-                                                                        value={cat.label}
-                                                                        onChange={(e) => {
-                                                                            const newSample = [...formData.photos.samplePhotos];
-                                                                            newSample[idx].label = e.target.value;
-                                                                            setFormData({ ...formData, photos: { ...formData.photos, samplePhotos: newSample } });
-                                                                        }}
-                                                                        placeholder="Interior Details"
-                                                                        className="w-full bg-white border border-gray-100 rounded-2xl px-5 py-3 text-xs font-bold text-[#1a1c21] outline-none focus:border-emerald-500 focus:shadow-sm transition-all"
-                                                                    />
-                                                                </div>
-                                                                <div className="flex justify-center">
-                                                                    <label className="cursor-pointer group/upload w-full max-w-[140px]">
-                                                                        <div className="py-3 border-2 border-dashed border-gray-200 rounded-2xl flex items-center justify-center gap-2 group-hover/upload:border-emerald-400 bg-white transition-all">
-                                                                            <Upload size={14} className="text-gray-300 group-hover/upload:text-emerald-500" />
-                                                                            <span className="text-[10px] font-bold text-gray-300 group-hover/upload:text-emerald-500">.gif/.pdf</span>
-                                                                        </div>
-                                                                        <input type="file" className="hidden" />
-                                                                    </label>
-                                                                </div>
-                                                                <div className="flex justify-center">
-                                                                    <button 
-                                                                        onClick={() => {
-                                                                            const newSample = formData.photos.samplePhotos.filter((_, i) => i !== idx);
-                                                                            setFormData({ ...formData, photos: { ...formData.photos, samplePhotos: newSample } });
-                                                                        }}
-                                                                        className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-200 hover:text-red-500 hover:border-red-100 transition-all"
-                                                                    >
-                                                                        <Trash2 size={16} />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    
-                                                    <button 
-                                                        onClick={() => setFormData({ ...formData, photos: { ...formData.photos, samplePhotos: [...formData.photos.samplePhotos, { label: "", files: [] }] } })}
-                                                        className="w-fit px-8 py-4 bg-[#1a1c21] text-white rounded-[20px] text-[11px] font-black uppercase tracking-widest hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all flex items-center gap-3 shadow-lg shadow-gray-200 active:scale-95"
-                                                    >
-                                                        <Plus size={18} /> ADD BUTTON
-                                                    </button>
-                                                </div>
                                             </div>
                                         )}
 
-                                        {/* Step 26: Submission (Screen 24) */}
-                                        {step === 26 && (
+                                        {/* Submission (Step 21) */}
+                                        {step === 21 && (
                                             <div className="max-w-2xl mx-auto space-y-12 py-10 animate-fade-in-up">
                                                 <div className="text-center space-y-4">
                                                     <div className="w-20 h-20 bg-teal-50 text-teal-500 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
@@ -3285,7 +2226,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             disabled={(step === 2 && formData.isReraRegistered === null)}
                                             className="bg-[#2FED9A] text-[#1a1c21] px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 group disabled:opacity-20"
                                         >
-                                            {step === 26 ? 'SUBMIT PROJECT' : 'NEXT STEP'}
+                                            {step === totalSteps ? 'SUBMIT PROJECT' : 'NEXT STEP'}
                                             <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                         </button>
                                     </div>
