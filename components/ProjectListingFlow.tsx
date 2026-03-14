@@ -18,6 +18,22 @@ import AddCLP from './ProjectListing/Steps/AddCLP';
 import AddFPP from './ProjectListing/Steps/AddFPP';
 import AddSPP from './ProjectListing/Steps/AddSPP';
 import AddDPP from './ProjectListing/Steps/AddDPP';
+import AddAgriculturalDetails from './ProjectListing/Steps/AddAgriculturalDetails';
+import AddLandLocationDetails from './ProjectListing/Steps/AddLandLocationDetails';
+import AddAgriPlotDimensions from './ProjectListing/Steps/AddAgriPlotDimensions';
+import AddAgriSitePlan from './ProjectListing/Steps/AddAgriSitePlan';
+import AddLandPossession5 from './ProjectListing/Steps/AddLandPossession5';
+import AddLandPossession6 from './ProjectListing/Steps/AddLandPossession6';
+import AddLandPossession7 from './ProjectListing/Steps/AddLandPossession7';
+import AddLandPossession8 from './ProjectListing/Steps/AddLandPossession8';
+import AddLandPossession9 from './ProjectListing/Steps/AddLandPossession9';
+import AddLandPossession10 from './ProjectListing/Steps/AddLandPossession10';
+import AddLandPossession11 from './ProjectListing/Steps/AddLandPossession11';
+import AddLandPossession11A from './ProjectListing/Steps/AddLandPossession11A';
+import AddLandPossession11B from './ProjectListing/Steps/AddLandPossession11B';
+import AddLandPossession11C from './ProjectListing/Steps/AddLandPossession11C';
+import AddLandPossession12 from './ProjectListing/Steps/AddLandPossession12';
+import AddAgriPricing from './ProjectListing/Steps/AddAgriPricing';
 
 interface ProjectListingFlowProps {
     onCancel: () => void;
@@ -213,60 +229,184 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
         hasBlockPlan: true,
         blockPlans: [] as { blockId: number; blockName: string; file: File | null }[],
         bankApprovals: [] as string[],
-        confirmed: false
+        confirmed: false,
+        // Agricultural specific
+            agriDetails: {
+            possessionType: 'Immediate' as 'Immediate' | 'Calendar',
+            expectedPossession: '',
+            landSizeUnit: 'Acres' as 'Acres' | 'Meters' | 'Begha',
+            beghaSizeUnit: 'Sqyds' as 'Sqyds' | 'Meters',
+            totalLandArea: '',
+            beghaSize: '',
+            agriculturalProjectType: 'Agriculture',
+            siteAddress: '',
+            villageName: '',
+            tehsilName: '',
+            khasaraNumber: '',
+            state: '',
+            googleLocation: '',
+            sitePlanFile: null as File | null,
+            sitePlanFileName: ''
+        },
+        agriPlotDimensions: [] as { id: number; landSize: string; unit: 'Sqmtrs' | 'Sqyds'; dimensions: string; attachedFile: File | null; fileName: string }[],
+        agriLand: {
+            underOwnerPossession: null as boolean | null,
+            fencingDone: null as boolean | null,
+            fencingTypes: [] as string[],
+            singleOwner: null as boolean | null,
+            numberOfOwners: '',
+            owners: [] as { id: number; name: string; share: string; khasaraNo: string; villageName: string; tehsil: string }[],
+            mutationUpdated: null as boolean | null,
+            membersAlive: null as boolean | null,
+            mutationConfirmed: false,
+            landCategory: '',
+            landCategoryOther: '',
+            // Screen 9
+            landOnLease: null as boolean | null,
+            cropGrowing: null as boolean | null,
+            hasMutation: null as boolean | null,
+            underAcquisition: null as boolean | null,
+            compensationReceived: null as boolean | null,
+            structureExisting: null as boolean | null,
+            structureSize: '',
+            // Screen 10
+            waterBody: null as boolean | null,
+            highTensionWire: null as boolean | null,
+            cremationGround: null as boolean | null,
+            sewerLine: null as boolean | null,
+            boucherHouse: null as boolean | null,
+            factoryNearby: null as boolean | null,
+            factoryName: '',
+            factoryType: '',
+            // Screen 11
+            templeOnLand: null as boolean | null,
+            templeNearby: null as boolean | null,
+            mosqueOnLand: null as boolean | null,
+            mosqueNearby: null as boolean | null,
+            distMainRoad: '',
+            distSchool: '',
+            distHospital: '',
+            distPoliceStation: '',
+            // Screen 11A
+            highwayNearby: null as boolean | null,
+            highwayBrief: '',
+            // Screen 11B
+            familySoldLand: null as boolean | null,
+            familySoldBrief: '',
+            // Screen 11C
+            garbageDumping: null as boolean | null,
+            hasOwnershipDocs: null as boolean | null,
+            ownershipDocs: [] as { id: number; name: string }[],
+            // Screen 12
+            loanOnLand: null as boolean | null,
+            bankLoans: [] as { id: number; bankName: string; bankBranch: string; bankAddress: string; dateOfLoan: string; emiAmount: string; paidEmi: string }[],
+            // Pricing Details
+            pricePerUnit: '',
+            totalLand: '',
+            totalDemand: '',
+            pricingConfirmed: false
+        }
     });
 
     const isResidential = projectType === 'residential';
+    const isAgricultural = projectType === 'agricultural';
 
-    const steps = isResidential ? [
-        "Builder Details",
-        "RERA Registration",
-        "Compliance Check",
-        "Basic Project Details",
-        "About Builder",
-        "Project Overview",
-        "Block Details",
-        "Plot Floor Plan & PLC",
-        "Plot Dimensions",
-        "Site & Location",
-        "Pricing Overview",
-        "Construction Link Plan (CLP)",
-        "Flexi Payment Plan (FPP)",
-        "Special Payment Plan (SPP)",
-        "Down Payment Plan (DPP)",
-        "Other Charges",
-        "Facing/View PLC",
-        "Location Advantage",
-        "Amenities",
-        "Project Media Center",
-        "Submission"
-    ] : [
-        "Builder Details",
-        "RERA Registration",
-        "Compliance Check",
-        "Basic Project Details",
-        "About Builder",
-        "Project Overview",
-        "Tower Details",
-        "Site & Location",
-        "Pricing Overview",
-        "Construction Link Plan (CLP)",
-        "Flexi Payment Plan (FPP)",
-        "Special Payment Plan (SPP)",
-        "Down Payment Plan (DPP)",
-        "Assured Return",
-        "Assured Rental",
-        "Other Charges",
-        "Facing/View PLC",
-        "Location Advantage",
-        "Amenities",
-        "Project Media Center",
-        "Submission"
-    ];
+    const getSteps = () => {
+        if (isAgricultural) {
+            return [
+                "Builder Details",
+                "Basic Project Details",
+                "Land Location Details",
+                "Plot Dimensions",
+                "Site Plan & Location",
+                "Land Possession",
+                "Ownership Details",
+                "Mutation & Status",
+                "Land Category",
+                "Lease & Crop Details",
+                "Land Surroundings",
+                "Temple & Distances",
+                "Highway & Roads",
+                "Previous Sale",
+                "Documents & Waste",
+                "Bank Loan Details",
+                "Pricing Details",
+                "Submission"
+            ];
+        }
+
+        if (isResidential) {
+            return [
+                "Builder Details",
+                "RERA Registration",
+                "Compliance Check",
+                "Basic Project Details",
+                "About Builder",
+                "Project Overview",
+                "Block Details",
+                "Plot Floor Plan & PLC",
+                "Plot Dimensions",
+                "Site & Location",
+                "Pricing Overview",
+                "Construction Link Plan (CLP)",
+                "Flexi Payment Plan (FPP)",
+                "Special Payment Plan (SPP)",
+                "Down Payment Plan (DPP)",
+                "Other Charges",
+                "Facing/View PLC",
+                "Location Advantage",
+                "Amenities",
+                "Project Media Center",
+                "Submission"
+            ];
+        }
+
+        return [
+            "Builder Details",
+            "RERA Registration",
+            "Compliance Check",
+            "Basic Project Details",
+            "About Builder",
+            "Project Overview",
+            "Tower Details",
+            "Site & Location",
+            "Pricing Overview",
+            "Construction Link Plan (CLP)",
+            "Flexi Payment Plan (FPP)",
+            "Special Payment Plan (SPP)",
+            "Down Payment Plan (DPP)",
+            "Assured Return",
+            "Assured Rental",
+            "Other Charges",
+            "Facing/View PLC",
+            "Location Advantage",
+            "Amenities",
+            "Project Media Center",
+            "Submission"
+        ];
+    };
+
+    const steps = getSteps();
 
     const totalSteps = steps.length;
 
     const nextStep = () => {
+        if (isAgricultural) {
+            if (step === 1) {
+                // Pre-fill site address from builder address if not set
+                const builderFullAddress = `${formData.builderAddress}${formData.builderAddressLine ? ', ' + formData.builderAddressLine : ''}${formData.builderCity ? ', ' + formData.builderCity : ''}`;
+                setFormData(prev => ({
+                    ...prev,
+                    agriDetails: {
+                        ...prev.agriDetails,
+                        siteAddress: prev.agriDetails.siteAddress || builderFullAddress
+                    }
+                }));
+            }
+            setStep(prev => prev + 1);
+            return;
+        }
+
         if (step === 2) {
             setStep(3);
             setNonReraStep(1);
@@ -424,23 +564,35 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                             </div>
                         </div>
                     ) : step === totalSteps + 1 ? (
-                        <div className="min-h-[600px] flex flex-col items-center justify-center space-y-12 py-20 animate-fade-in">
+                        <div className="min-h-[600px] flex flex-col items-center justify-center space-y-10 py-20 animate-fade-in">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-[#2FED9A]/20 blur-[100px] rounded-full animate-pulse" />
-                                <div className="relative w-32 h-32 bg-[#2FED9A] text-[#1a1c21] rounded-[40px] flex items-center justify-center shadow-2xl shadow-teal-500/40 animate-bounce">
-                                    <Check size={64} strokeWidth={3} />
+                                <div className="relative w-28 h-28 bg-[#2FED9A] text-[#1a1c21] rounded-[36px] flex items-center justify-center shadow-2xl shadow-teal-500/40">
+                                    <Check size={56} strokeWidth={3} />
                                 </div>
                             </div>
 
-                            <div className="text-center space-y-6">
-                                <div className="space-y-2">
+                            {isAgricultural ? (
+                                <div className="text-center space-y-5 max-w-2xl">
+                                    <h2 className="text-4xl font-black text-[#1a1c21] leading-tight">
+                                        Thank You to submit the details of your project. Your project listing will get active soon.
+                                    </h2>
+                                    <p className="text-gray-400 font-bold text-sm leading-relaxed">
+                                        At the same time the developer will get the confirmation for submission on his registered mail id and mobile number.
+                                    </p>
+                                    <p className="text-gray-400 font-bold text-sm leading-relaxed">
+                                        Now in his dashboard he will get the option to boost his project for getting maximum visibility and leads he can opt for our various packages.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="text-center space-y-5">
                                     <h2 className="text-5xl font-black text-[#1a1c21] uppercase tracking-tighter">Congratulations!</h2>
                                     <h3 className="text-xl font-bold text-emerald-500 uppercase tracking-widest">Project Submitted Successfully</h3>
+                                    <p className="text-gray-400 font-bold text-sm max-w-md mx-auto leading-relaxed">
+                                        Your project listing has been sent for review. Our team will verify the details and it will be live within 24-48 hours.
+                                    </p>
                                 </div>
-                                <p className="text-gray-400 font-bold text-sm max-w-md mx-auto leading-relaxed">
-                                    Your project listing has been sent for review. Our team will verify the details and it will be live within 24-48 hours.
-                                </p>
-                            </div>
+                            )}
 
                             <div className="flex flex-col sm:flex-row gap-6 w-full max-w-xl">
                                 <button 
@@ -607,7 +759,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Step 2: RERA Registration (Screen 1-A1 / 1-B1) */}
-                                        {step === 2 && (
+                                        {step === 2 && !isAgricultural && (
                                             <div className="space-y-12 animate-fade-in">
                                                 <div className="space-y-6">
                                                     <label className="text-xs font-black text-[#1a1c21] uppercase tracking-widest ml-1 text-center block w-full">Do you have the Builder RERA?</label>
@@ -697,7 +849,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             )}
 
                                         {/* Step 3: Compliance Check */}
-                                        {step === 3 && (
+                                        {step === 3 && !isAgricultural && (
                                             <div className="space-y-8 animate-fade-in max-w-4xl mx-auto">
                                                 {formData.isReraRegistered ? (
                                                     /* RERA Flow: Authorized Signatory Details */
@@ -1193,7 +1345,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                     </div>
                                 )}
                                         {/* Step 4: Basic Project Details (Screen 2) */}
-                                        {step === 4 && (
+                                        {step === 4 && (projectType === 'residential' || projectType === 'commercial') && (
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
                                                 <div className="space-y-2">
                                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Project RERA Number</label>
@@ -1289,7 +1441,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Step 5: About Builder (Screen 2A) */}
-                                        {step === 5 && (
+                                        {step === 5 && (projectType === 'residential' || projectType === 'commercial') && (
                                             <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px] flex flex-col">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
                                                     <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center shadow-inner">
@@ -1343,8 +1495,8 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
 
-                                        {/* Step 6: Project Overview (Screen 2B - Minimal White Editor) */}
-                                        {step === 6 && (
+                                        {/* Step 6: Project Overview - Non-Agricultural only */}
+                                        {(!isAgricultural && step === 6) && (
                                             <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px] flex flex-col">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
                                                     <div className="w-16 h-16 bg-[#FF8A00]/10 text-[#FF8A00] rounded-2xl flex items-center justify-center shadow-inner">
@@ -1386,7 +1538,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Step 7: Tower Details / Block Details (Screen 3) */}
-                                        {step === 7 && (
+                                        {step === 7 && !isAgricultural && (
                                             isResidential ? (
                                                 <AddPlotsDetails 
                                                     formData={formData} 
@@ -1416,9 +1568,129 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             />
                                         )}
 
+                                        {/* Agricultural Details Step */}
+                                        {isAgricultural && step === 2 && (
+                                            <AddAgriculturalDetails 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
+                                        )}
 
-                                        {/* Site & Location (Screen 8/10) */}
-                                        {((!isResidential && step === 8) || (isResidential && step === 10)) && (
+                                        {/* Agricultural Land Location Details Step */}
+                                        {isAgricultural && step === 3 && (
+                                            <AddLandLocationDetails 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
+                                        )}
+
+                                        {/* Agricultural Plot Dimensions Step (Screen 3) */}
+                                        {isAgricultural && step === 4 && (
+                                            <AddAgriPlotDimensions 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
+                                        )}
+
+                                        {/* Agricultural Site Plan & Location Step (Screen 4) */}
+                                        {isAgricultural && step === 5 && (
+                                            <AddAgriSitePlan 
+                                                formData={formData} 
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 5 */}
+                                        {isAgricultural && step === 6 && (
+                                            <AddLandPossession5
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 6 */}
+                                        {isAgricultural && step === 7 && (
+                                            <AddLandPossession6
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 7 */}
+                                        {isAgricultural && step === 8 && (
+                                            <AddLandPossession7
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 8 */}
+                                        {isAgricultural && step === 9 && (
+                                            <AddLandPossession8
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 9 */}
+                                        {isAgricultural && step === 10 && (
+                                            <AddLandPossession9
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 10 */}
+                                        {isAgricultural && step === 11 && (
+                                            <AddLandPossession10
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 11 */}
+                                        {isAgricultural && step === 12 && (
+                                            <AddLandPossession11
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 11A */}
+                                        {isAgricultural && step === 13 && (
+                                            <AddLandPossession11A
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 11B */}
+                                        {isAgricultural && step === 14 && (
+                                            <AddLandPossession11B
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 11C */}
+                                        {isAgricultural && step === 15 && (
+                                            <AddLandPossession11C
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+                                        {/* Land Possession - Screen 12 */}
+                                        {isAgricultural && step === 16 && (
+                                            <AddLandPossession12
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                            />
+                                        )}
+
+
+                                        {/* Site & Location (Screen 8/10) - non-agricultural only */}
+                                        {((isResidential && step === 10) || (!isResidential && !isAgricultural && step === 8)) && (
                                             <div className="space-y-8 animate-fade-in">
                                                 <div className="space-y-4">
                                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Upload Site Plan</label>
@@ -1511,8 +1783,8 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
 
-                                        {/* Pricing Overview (Screen 9/11) */}
-                                        {((!isResidential && step === 9) || (isResidential && step === 11)) && (
+                                        {/* Pricing Overview (Screen 9/11) - non-agricultural only */}
+                                        {((isResidential && step === 11) || (!isResidential && !isAgricultural && step === 9)) && (
                                             <AddPricingOverview 
                                                 formData={formData} 
                                                 updateFormData={(data) => setFormData({ ...formData, ...data })} 
@@ -1520,7 +1792,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Construction Linked Plan (CLP) (Screen 10/12) */}
-                                        {((!isResidential && step === 10) || (isResidential && step === 12)) && (
+                                        {((isResidential && step === 12) || (!isResidential && !isAgricultural && step === 10)) && (
                                             <AddCLP 
                                                 formData={formData} 
                                                 updateFormData={(data) => setFormData({ ...formData, ...data })} 
@@ -1528,7 +1800,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Flexi Payment Plan (FPP) (Screen 11/13) */}
-                                        {((!isResidential && step === 11) || (isResidential && step === 13)) && (
+                                        {((isResidential && step === 13) || (!isResidential && !isAgricultural && step === 11)) && (
                                             <AddFPP 
                                                 formData={formData} 
                                                 updateFormData={(data) => setFormData({ ...formData, ...data })} 
@@ -1536,23 +1808,16 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Special Payment Plan (SPP) (Screen 12/14) */}
-                                        {((!isResidential && step === 12) || (isResidential && step === 14)) && (
+                                        {((isResidential && step === 14) || (!isResidential && !isAgricultural && step === 12)) && (
                                             <AddSPP 
                                                 formData={formData} 
                                                 updateFormData={(data) => setFormData({ ...formData, ...data })} 
                                             />
                                         )}
 
-                                        {/* Down Payment Plan (DPP) (Screen 13/15) */}
-                                        {((!isResidential && step === 13) || (isResidential && step === 15)) && (
-                                            <AddDPP 
-                                                formData={formData} 
-                                                updateFormData={(data) => setFormData({ ...formData, ...data })} 
-                                            />
-                                        )}
 
                                         {/* Assured Return (Screen 14) */}
-                                        {step === 14 && !isResidential && (
+                                        {step === 14 && !isResidential && !isAgricultural && (
                                             <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
                                                     <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
@@ -1649,7 +1914,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Assured Rental (Screen 15) */}
-                                        {step === 15 && !isResidential && (
+                                        {step === 15 && !isResidential && !isAgricultural && (
                                             <div className="space-y-10 animate-fade-in bg-white rounded-[40px] p-8 md:p-12 border border-gray-100 shadow-sm">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50/50">
                                                     <div className="w-16 h-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center">
@@ -1743,7 +2008,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
 
 
                                         {/* Other Charges (Step 16) */}
-                                        {step === 16 && (
+                                        {step === 16 && !isAgricultural && (
                                             <div className="space-y-10 animate-fade-in">
                                                 <div className="bg-gray-50 p-10 rounded-[48px] border border-white shadow-inner">
                                                     <div className="flex items-center gap-4 mb-10">
@@ -1828,7 +2093,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                             </div>
                                         )}
                                         {/* Facing PLC (Step 17) */}
-                                        {step === 17 && (
+                                        {step === 17 && !isAgricultural && (
                                             <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
                                                     <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
@@ -1913,7 +2178,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
 
 
                                         {/* Location Advantage (Step 18) */}
-                                        {step === 18 && (
+                                        {step === 18 && !isAgricultural && (
                                             <div className="space-y-8 animate-fade-in bg-white rounded-[40px] p-10 md:p-14 border border-gray-100 shadow-sm min-h-[500px]">
                                                 <div className="flex items-center gap-6 pb-6 border-b border-gray-50">
                                                     <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center">
@@ -1980,8 +2245,17 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
 
+                                        {/* Pricing Details (Agricultural Step 17) */}
+                                        {isAgricultural && step === 17 && (
+                                            <AddAgriPricing
+                                                formData={formData}
+                                                updateFormData={(data) => setFormData({ ...formData, ...data })}
+                                                onSubmit={() => setStep(step + 1)}
+                                            />
+                                        )}
+
                                         {/* Amenities (Step 19) */}
-                                        {step === 19 && (
+                                        {(!isAgricultural && step === 19) && (
                                             <div className="space-y-12 animate-fade-in">
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                                                     {[
@@ -2089,7 +2363,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Project Media Center (Step 20) */}
-                                        {step === 20 && (
+                                        {(!isAgricultural && step === 20) && (
                                             <div className="max-w-4xl mx-auto space-y-12 animate-fade-in pb-10">
                                                 {/* Card 1: Actual Site Photographs (Screen 22) */}
                                                 <div className="space-y-10 bg-white rounded-[40px] p-12 border border-gray-100 shadow-sm">
@@ -2166,7 +2440,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
                                         )}
 
                                         {/* Submission (Step 21) */}
-                                        {step === 21 && (
+                                        {((!isAgricultural && step === 21) || (isAgricultural && step === 18)) && (
                                             <div className="max-w-2xl mx-auto space-y-12 py-10 animate-fade-in-up">
                                                 <div className="text-center space-y-4">
                                                     <div className="w-20 h-20 bg-teal-50 text-teal-500 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
@@ -2223,7 +2497,7 @@ const ProjectListingFlow: React.FC<ProjectListingFlowProps> = ({ onCancel }) => 
 
                                         <button
                                             onClick={nextStep}
-                                            disabled={(step === 2 && formData.isReraRegistered === null)}
+                                            disabled={(!isAgricultural && step === 2 && formData.isReraRegistered === null)}
                                             className="bg-[#2FED9A] text-[#1a1c21] px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-3 group disabled:opacity-20"
                                         >
                                             {step === totalSteps ? 'SUBMIT PROJECT' : 'NEXT STEP'}

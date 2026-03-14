@@ -51,7 +51,7 @@ const AddPricingOverview: React.FC<AddPricingOverviewProps> = ({ formData, updat
                 <div className="space-y-3">
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] ml-1">Unit Selection</label>
                     <div className="flex gap-2 h-16 p-1.5 bg-gray-50 rounded-2xl border border-gray-100/50">
-                        {['SQFT', 'SQYD', 'SQM'].map((u) => (
+                        {['SQFT', 'SQYD', 'SQM', 'ACRE', 'BEGHA'].map((u) => (
                             <button 
                                 key={u}
                                 onClick={() => setFormData({ pricingUnit: u })}
