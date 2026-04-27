@@ -93,6 +93,11 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
         { id: 'add-kyc', label: 'Add KYC', icon: Plus },
     ];
 
+    const projectsSidebarItems = [
+        { id: 'manage-projects', label: 'View Projects', icon: Building2 },
+        { id: 'add-project', label: 'Add New Project', icon: Plus },
+    ];
+
     const stats = [
         { label: 'Total Active Properties', value: 'N/A' },
         { label: 'Total Search Views', value: 'N/A' },
@@ -211,10 +216,10 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                     <aside className="w-full md:w-80 border-r border-gray-100 bg-gray-50/30 p-8 space-y-10">
                         <div className="space-y-6">
                             <h3 className="text-[11px] font-black text-gray-300 uppercase tracking-[0.3em] px-4">
-                                {activeTab === 'properties' ? 'Manage Properties' : activeTab === 'profile' ? 'Profile Details' : activeTab === 'subscriptions' ? 'Manage Subscriptions' : activeTab === 'bookings' ? 'Manage Bookings' : 'Contact/Responses'}
+                                {activeTab === 'properties' ? 'Manage Properties' : activeTab === 'profile' ? 'Profile Details' : activeTab === 'subscriptions' ? 'Manage Subscriptions' : activeTab === 'bookings' ? 'Manage Bookings' : activeTab === 'projects' ? 'Manage Projects' : 'Contact/Responses'}
                             </h3>
                             <nav className="space-y-3">
-                                {(activeTab === 'properties' ? propertiesSidebarItems : activeTab === 'profile' ? profileSidebarItems : activeTab === 'subscriptions' ? subscriptionsSidebarItems : activeTab === 'bookings' ? bookingsSidebarItems : sidebarItems).map((item) => {
+                                {(activeTab === 'properties' ? propertiesSidebarItems : activeTab === 'profile' ? profileSidebarItems : activeTab === 'subscriptions' ? subscriptionsSidebarItems : activeTab === 'bookings' ? bookingsSidebarItems : activeTab === 'projects' ? projectsSidebarItems : sidebarItems).map((item) => {
                                     const isActive = activeSidebarItem === item.id;
                                     return (
                                         <button
@@ -1444,6 +1449,53 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                         <div className="text-center space-y-2">
                                             <h3 className="text-2xl font-black uppercase tracking-tight">Section Coming Soon</h3>
                                             <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Booking Management in Progress</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : activeTab === 'projects' ? (
+                            <div className="space-y-12 animate-fade-in-up">
+                                <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+                                    <div className="space-y-1">
+                                        <h2 className="text-3xl font-black text-[#1a1c21] uppercase tracking-tight">Projects</h2>
+                                        <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Manage Your Projects</p>
+                                    </div>
+                                </div>
+
+                                {activeSidebarItem === 'manage-projects' ? (
+                                    <div className="space-y-8 animate-fade-in-up">
+                                        <div className="bg-white border border-gray-100 rounded-[30px] overflow-hidden shadow-sm">
+                                            <table className="w-full text-left border-collapse">
+                                                <thead>
+                                                    <tr className="bg-gray-50/50 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
+                                                        <th className="px-8 py-5 border-r border-gray-50">Sr. no.</th>
+                                                        <th className="px-8 py-5 border-r border-gray-50">Project Name</th>
+                                                        <th className="px-8 py-5 border-r border-gray-50">Builder Name</th>
+                                                        <th className="px-8 py-5 border-r border-gray-50">Project Type</th>
+                                                        <th className="px-8 py-5 border-r border-gray-50">Status</th>
+                                                        <th className="px-8 py-5 border-r border-gray-50">View Site</th>
+                                                        <th className="px-8 py-5">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colSpan={7} className="px-8 py-20 text-center">
+                                                            <div className="flex flex-col items-center gap-4 opacity-40">
+                                                                <Building2 size={40} className="text-gray-200" />
+                                                                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">No Projects Found</p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="h-full flex flex-col items-center justify-center space-y-6 opacity-40">
+                                        <LayoutDashboard size={80} className="text-gray-200" />
+                                        <div className="text-center space-y-2">
+                                            <h3 className="text-2xl font-black uppercase tracking-tight">Section Coming Soon</h3>
+                                            <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Project Addition in Progress</p>
                                         </div>
                                     </div>
                                 )}
