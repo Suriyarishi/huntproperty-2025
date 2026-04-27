@@ -21,6 +21,7 @@ interface DeveloperDashboardViewProps {
 const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavigate, userName = 'rishi1', image }) => {
     const [activeTab, setActiveTab] = useState('responses');
     const [activeSidebarItem, setActiveSidebarItem] = useState('view-responses');
+    const [selectedPropertyType, setSelectedPropertyType] = useState('residential');
 
     const handleTabChange = (tabId: string) => {
         setActiveTab(tabId);
@@ -226,15 +227,15 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                 }
                                             }}
                                             className={`w-full flex items-center justify-between px-6 py-4 rounded-2xl transition-all group ${isActive
-                                                ? activeTab === 'properties' ? 'bg-[#e3002f] shadow-xl text-white relative' : 'bg-[#2FED9A] shadow-xl text-[#1a1c21] relative'
-                                                : activeTab === 'properties' ? 'text-gray-500 hover:text-[#e3002f]' : 'text-gray-500 hover:text-teal-500'
+                                                ? 'bg-[#2FED9A] shadow-xl text-[#1a1c21] relative'
+                                                : 'text-gray-500 hover:text-teal-500'
                                                 }`}
                                         >
                                             <div className="flex items-center gap-4">
-                                                <item.icon size={18} className={isActive ? (activeTab === 'properties' ? 'text-white' : 'text-[#1a1c21]') : (activeTab === 'properties' ? 'text-gray-400 group-hover:text-[#e3002f]' : 'text-gray-400 group-hover:text-teal-500')} />
+                                                <item.icon size={18} className={isActive ? 'text-[#1a1c21]' : 'text-gray-400 group-hover:text-teal-500'} />
                                                 <span className="text-[14px] font-bold">{item.label}</span>
                                             </div>
-                                            <ChevronRight size={16} className={isActive ? (activeTab === 'properties' ? 'text-white' : 'text-[#1a1c21]') : 'text-gray-300'} />
+                                            <ChevronRight size={16} className={isActive ? 'text-[#1a1c21]' : 'text-gray-300'} />
                                         </button>
                                     );
                                 })}
@@ -262,7 +263,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                 <div className="flex items-center justify-between">
                                                     <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
                                                         Manage Properties
-                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#e3002f]"></div>
+                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
                                                     </h3>
                                                     <div className="flex items-center gap-2">
                                                         <div className="relative">
@@ -272,7 +273,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                                 className="h-10 border border-gray-200 rounded-lg px-4 text-sm outline-none w-40"
                                                             />
                                                         </div>
-                                                        <button className="h-10 bg-[#e3002f] text-white px-4 rounded-lg font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all">
+                                                        <button className="h-10 bg-[#2FED9A] text-[#1a1c21] px-4 rounded-lg font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all">
                                                             Go
                                                         </button>
                                                     </div>
@@ -307,7 +308,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                         <input type="text" placeholder="₹ Min" className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none" />
                                                         <input type="text" placeholder="₹ Max" className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none" />
                                                     </div>
-                                                    <button className="h-12 bg-[#e3002f] text-white flex items-center justify-center rounded-lg hover:shadow-lg transition-all">
+                                                    <button className="h-12 bg-[#2FED9A] text-[#1a1c21] flex items-center justify-center rounded-lg hover:shadow-lg transition-all">
                                                         <Search size={24} />
                                                     </button>
                                                 </div>
@@ -320,9 +321,9 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
 
                                                 <div className="pt-10 space-y-8">
                                                     <div className="flex items-center justify-between">
-                                                        <h3 className="text-sm font-black text-[#e3002f] uppercase tracking-wider relative inline-block pb-1">
+                                                        <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
                                                             Properties
-                                                            <div className="absolute bottom-0 left-0 w-2/3 h-0.5 bg-[#e3002f]"></div>
+                                                            <div className="absolute bottom-0 left-0 w-2/3 h-0.5 bg-[#2FED9A]"></div>
                                                         </h3>
                                                         <div className="flex items-center gap-4">
                                                             <span className="text-[12px] font-bold text-gray-400">Filter by</span>
@@ -345,7 +346,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                 <div className="border-b border-gray-100 pb-2">
                                                     <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
                                                         Bulk Edit
-                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#e3002f]"></div>
+                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
                                                     </h3>
                                                 </div>
 
@@ -359,10 +360,10 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                         </button>
                                                     </div>
                                                     <div className="flex items-center gap-3">
-                                                        <button className="bg-[#1a1c21] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#e3002f] hover:text-white transition-all">
+                                                        <button className="bg-[#ff3d3d] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#ff3d3d]/90 transition-all">
                                                             Clear all
                                                         </button>
-                                                        <button className="bg-[#e3002f] text-white px-8 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:shadow-lg transition-all">
+                                                        <button className="bg-[#2FED9A] text-[#1a1c21] px-8 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:shadow-lg transition-all">
                                                             Submit
                                                         </button>
                                                     </div>
@@ -494,15 +495,15 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Name</span>
-                                                    <span className="text-[15px] font-bold text-[#1a1c21]">vinay rathore</span>
+                                                    <span className="text-[15px] font-bold text-[#1a1c21]">rishi1</span>
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Company Name</span>
-                                                    <span className="text-[15px] font-bold text-[#1a1c21]">hunt property</span>
+                                                    <span className="text-[15px] font-bold text-gray-400 italic">N/A</span>
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Registered As</span>
-                                                    <span className="text-[15px] font-bold text-[#1a1c21]">Agent</span>
+                                                    <span className="text-[15px] font-bold text-[#1a1c21]">Builder</span>
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">City</span>
@@ -510,19 +511,19 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Email</span>
-                                                    <span className="text-[15px] font-bold text-[#1a1c21]">vinay@gmail.com</span>
+                                                    <span className="text-[15px] font-bold text-[#1a1c21]">rishi1@gmail.com</span>
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Mobile</span>
-                                                    <span className="text-[15px] font-bold text-[#1a1c21]">0000000000</span>
+                                                    <span className="text-[15px] font-bold text-[#1a1c21]">0987654321</span>
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">RERA Number</span>
-                                                    <span className="text-[15px] font-bold text-gray-300 italic">Not Provided</span>
+                                                    <span className="text-[15px] font-bold text-[#1a1c21]">P52000012345</span>
                                                 </div>
                                                 <div className="flex items-center justify-between border-b border-gray-50 pb-4">
                                                     <span className="text-[13px] font-black text-gray-400 uppercase tracking-widest">Aadhar Number</span>
-                                                    <span className="text-[15px] font-bold text-[#1a1c21]">N/A</span>
+                                                    <span className="text-[15px] font-bold text-gray-400 italic">N/A</span>
                                                 </div>
                                             </div>
 
@@ -564,10 +565,16 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                             <div className="space-y-4">
                                                 <h4 className="text-[13px] font-black text-[#1a1c21] uppercase tracking-widest">Property Type</h4>
                                                 <div className="flex gap-4">
-                                                    <button className="flex items-center gap-3 px-8 py-3 bg-[#2FED9A] text-[#1a1c21] rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-teal-100">
+                                                    <button 
+                                                        onClick={() => setSelectedPropertyType('residential')}
+                                                        className={`flex items-center gap-3 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${selectedPropertyType === 'residential' ? 'bg-[#2FED9A] text-[#1a1c21] shadow-lg shadow-teal-100' : 'bg-white border border-gray-100 text-gray-400 hover:border-teal-200'}`}
+                                                    >
                                                         <Home size={16} /> Residential
                                                     </button>
-                                                    <button className="flex items-center gap-3 px-8 py-3 bg-[#2FED9A] text-[#1a1c21] rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-teal-100">
+                                                    <button 
+                                                        onClick={() => setSelectedPropertyType('commercial')}
+                                                        className={`flex items-center gap-3 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${selectedPropertyType === 'commercial' ? 'bg-[#2FED9A] text-[#1a1c21] shadow-lg shadow-teal-100' : 'bg-white border border-gray-100 text-gray-400 hover:border-teal-200'}`}
+                                                    >
                                                         <Building size={16} /> Commercial
                                                     </button>
                                                 </div>
@@ -590,89 +597,57 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
                                                     </div>
                                                 </div>
+                                                <p className="text-[#e3002f] text-sm font-semibold">Please choose at least 1 item(s)</p>
                                             </div>
 
-                                            {/* Residential Categories */}
-                                            <div className="space-y-4">
-                                                <h4 className="text-[13px] font-black text-[#1a1c21] uppercase tracking-widest">Type of Residential Properties</h4>
-                                                <div className="flex flex-wrap gap-3">
-                                                    {[
-                                                        { label: 'Residential Plot', icon: Building2 },
-                                                        { label: 'Residential House', icon: Home },
-                                                        { label: 'Multi-storey Apartments', icon: Building },
-                                                        { label: 'Builder Floor Apartment', icon: Building }
-                                                    ].map((cat, idx) => (
-                                                        <button key={idx} className={`flex items-center gap-3 px-6 py-3 rounded-xl font-bold text-[12px] transition-all border bg-white border-gray-100 text-gray-500 hover:border-teal-100`}>
-                                                            <cat.icon size={16} className="text-gray-300" />
-                                                            {cat.label}
-                                                        </button>
-                                                    ))}
-                                                    <div className="relative">
-                                                        <select className="h-[46px] bg-white border border-gray-100 rounded-xl px-4 pr-10 text-[12px] font-bold text-gray-400 outline-none appearance-none min-w-[120px]">
-                                                            <option>Others</option>
-                                                        </select>
-                                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                            {/* Conditional Categories */}
+                                            {selectedPropertyType === 'residential' ? (
+                                                <div className="space-y-4 animate-fade-in-up">
+                                                    <h4 className="text-[13px] font-black text-[#1a1c21] uppercase tracking-widest">Type of Residential Properties</h4>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        {[
+                                                            { label: 'Residential Plot', icon: Building2 },
+                                                            { label: 'Residential House', icon: Home },
+                                                            { label: 'Multi-storey Apartments', icon: Building },
+                                                            { label: 'Builder Floor Apartment', icon: Building }
+                                                        ].map((cat, idx) => (
+                                                            <button key={idx} className="flex items-center gap-3 px-6 py-3 rounded-xl font-bold text-[12px] transition-all border bg-white border-gray-100 text-gray-500 hover:border-teal-100">
+                                                                <cat.icon size={16} className="text-gray-300" />
+                                                                {cat.label}
+                                                            </button>
+                                                        ))}
+                                                        <div className="relative">
+                                                            <select className="h-[46px] bg-white border border-gray-100 rounded-xl px-4 pr-10 text-[12px] font-bold text-gray-400 outline-none appearance-none min-w-[120px]">
+                                                                <option>Others</option>
+                                                            </select>
+                                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            {/* Commercial Categories */}
-                                            <div className="space-y-4">
-                                                <h4 className="text-[13px] font-black text-[#1a1c21] uppercase tracking-widest">Type of Commercial Properties</h4>
-                                                <div className="flex flex-wrap gap-3">
-                                                    {[
-                                                        { label: 'Commercial Land', icon: MapPin },
-                                                        { label: 'Commercial Office Space', icon: Briefcase },
-                                                        { label: 'Commercial Shop', icon: Home },
-                                                        { label: 'Commercial Showroom', icon: Building2 }
-                                                    ].map((cat, idx) => (
-                                                        <button key={idx} className={`flex items-center gap-3 px-6 py-3 rounded-xl font-bold text-[12px] transition-all border bg-white border-gray-100 text-gray-500 hover:border-teal-100`}>
-                                                            <cat.icon size={16} className="text-gray-300" />
-                                                            {cat.label}
-                                                        </button>
-                                                    ))}
-                                                    <div className="relative">
-                                                        <select className="h-[46px] bg-white border border-gray-100 rounded-xl px-4 pr-10 text-[12px] font-bold text-gray-400 outline-none appearance-none min-w-[120px]">
-                                                            <option>Others</option>
-                                                        </select>
-                                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                            ) : (
+                                                <div className="space-y-4 animate-fade-in-up">
+                                                    <h4 className="text-[13px] font-black text-[#1a1c21] uppercase tracking-widest">Type of Commercial Properties</h4>
+                                                    <div className="flex flex-wrap gap-3">
+                                                        {[
+                                                            { label: 'Commercial Land', icon: MapPin },
+                                                            { label: 'Commercial Office Space', icon: Briefcase },
+                                                            { label: 'Commercial Shop', icon: Home },
+                                                            { label: 'Commercial Showroom', icon: Building2 }
+                                                        ].map((cat, idx) => (
+                                                            <button key={idx} className="flex items-center gap-3 px-6 py-3 rounded-xl font-bold text-[12px] transition-all border bg-white border-gray-100 text-gray-500 hover:border-teal-100">
+                                                                <cat.icon size={16} className="text-gray-300" />
+                                                                {cat.label}
+                                                            </button>
+                                                        ))}
+                                                        <div className="relative">
+                                                            <select className="h-[46px] bg-white border border-gray-100 rounded-xl px-4 pr-10 text-[12px] font-bold text-gray-400 outline-none appearance-none min-w-[120px]">
+                                                                <option>Others</option>
+                                                            </select>
+                                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            {/* Operating Location */}
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                <div className="space-y-3">
-                                                    <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest">Operating State</label>
-                                                    <div className="relative">
-                                                        <select className="w-full h-12 bg-white border border-gray-100 rounded-xl px-6 pr-10 font-bold text-sm outline-none appearance-none">
-                                                            <option>Uttar Pradesh</option>
-                                                            <option>Delhi</option>
-                                                            <option>Haryana</option>
-                                                            <option>Maharashtra</option>
-                                                            <option>Karnataka</option>
-                                                        </select>
-                                                        <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-3">
-                                                    <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest">Operating City</label>
-                                                    <div className="relative">
-                                                        <select className="w-full h-12 bg-white border border-gray-100 rounded-xl px-6 pr-10 font-bold text-sm outline-none appearance-none">
-                                                            <option>Noida</option>
-                                                            <option>Gurugram</option>
-                                                            <option>New Delhi</option>
-                                                            <option>Mumbai</option>
-                                                            <option>Bengaluru</option>
-                                                        </select>
-                                                        <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-300" size={16} />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-3 md:col-span-2">
-                                                    <label className="text-[12px] font-black text-gray-400 uppercase tracking-widest">Locality</label>
-                                                    <input type="text" placeholder="Enter locality (e.g. Sector 150)" className="w-full h-12 bg-white border border-gray-100 rounded-xl px-6 font-bold text-sm outline-none border-gray-100 focus:border-teal-200 transition-all" />
-                                                </div>
-                                            </div>
+                                            )}
 
                                             {/* Dropdowns */}
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -764,7 +739,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
 
                                             {/* Action */}
                                             <div className="pt-10 flex justify-center">
-                                                <button className="bg-[#1a1c21] text-white px-12 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all shadow-2xl hover:scale-[1.05] active:scale-95 group flex items-center gap-3">
+                                                <button className="bg-[#2FED9A] text-[#1a1c21] px-12 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:bg-[#1a1c21] hover:text-white transition-all shadow-2xl hover:scale-[1.05] active:scale-95 group flex items-center gap-3">
                                                     Save and Exit <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                                 </button>
                                             </div>
@@ -797,7 +772,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                                 <label className="w-32 text-[12px] font-black text-gray-400 uppercase tracking-widest">State</label>
                                                                 <div className="relative flex-1">
                                                                     <select className="w-full h-11 bg-white border border-gray-100 rounded-lg px-6 pr-10 font-bold text-sm outline-none appearance-none text-gray-400">
-                                                                        <option>Uttar Pradesh</option>
+                                                                        <option>Select State</option>
                                                                     </select>
                                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300" size={14} />
                                                                 </div>
@@ -806,20 +781,20 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                                 <label className="w-32 text-[12px] font-black text-gray-400 uppercase tracking-widest">City</label>
                                                                 <div className="relative flex-1">
                                                                     <select className="w-full h-11 bg-white border border-gray-100 rounded-lg px-6 pr-10 font-bold text-sm outline-none appearance-none text-gray-400">
-                                                                        <option>Gautam Buddh Nagar</option>
+                                                                        <option>Select City</option>
                                                                     </select>
                                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300" size={14} />
                                                                 </div>
                                                             </div>
                                                             <div className="flex items-center gap-6">
                                                                 <label className="w-32 text-[12px] font-black text-gray-400 uppercase tracking-widest">Locality</label>
-                                                                <input type="text" defaultValue="noida" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-400" />
+                                                                <input type="text" placeholder="Enter Locality" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-400 placeholder-gray-300" />
                                                             </div>
                                                             <div className="flex items-start gap-6">
                                                                 <label className="w-32 text-[12px] font-black text-gray-400 uppercase tracking-widest mt-4">Address</label>
                                                                 <textarea
-                                                                    defaultValue="Home Stop @104, 3rd Floor, Opposite Pathways School, Sector 104, Noida, Noida, Uttar Pradesh 201304"
-                                                                    className="flex-1 h-32 bg-white border border-gray-100 rounded-xl p-6 text-sm outline-none focus:border-teal-200 transition-all resize-none text-gray-400 font-medium"
+                                                                    placeholder="Office Address"
+                                                                    className="flex-1 h-32 bg-white border border-gray-100 rounded-xl p-6 text-sm outline-none focus:border-teal-200 transition-all resize-none text-gray-400 font-medium placeholder-gray-300"
                                                                 />
                                                             </div>
                                                         </div>
@@ -858,21 +833,21 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                             <div className="space-y-6 pt-6 border-t border-gray-50">
                                                 <div className="flex items-center gap-6">
                                                     <label className="w-48 text-[12px] font-black text-gray-400 uppercase tracking-widest">Name</label>
-                                                    <input type="text" defaultValue="vinay rathore" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-500" />
+                                                    <input type="text" placeholder="Enter Contact Person Name" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-500 placeholder-gray-300" />
                                                 </div>
                                                 <div className="flex items-center gap-6">
                                                     <label className="w-48 text-[12px] font-black text-gray-400 uppercase tracking-widest">Agency/Company Name</label>
-                                                    <input type="text" defaultValue="hunt property" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-500" />
+                                                    <input type="text" placeholder="Enter Agency/Company Name" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-500 placeholder-gray-300" />
                                                 </div>
                                                 <div className="flex items-center gap-6">
                                                     <label className="w-48 text-[12px] font-black text-gray-400 uppercase tracking-widest">Company Website</label>
-                                                    <input type="text" defaultValue="https://vinayrathore.store/" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-blue-400 underline decoration-dotted underline-offset-4" />
+                                                    <input type="text" placeholder="Enter Agency/Company Website" className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none text-gray-500 placeholder-gray-300" />
                                                 </div>
                                             </div>
 
                                             {/* Action Button */}
                                             <div className="flex justify-center pt-4">
-                                                <button className="bg-[#1a1c21] text-white px-10 py-3 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all shadow-xl hover:scale-105 active:scale-95">
+                                                <button className="bg-[#2FED9A] text-[#1a1c21] px-10 py-3 rounded-xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#1a1c21] hover:text-white transition-all shadow-xl hover:scale-105 active:scale-95">
                                                     Save
                                                 </button>
                                             </div>
@@ -919,7 +894,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                             {/* Email ID (Readonly) */}
                                             <div className="flex items-center gap-10">
                                                 <label className="w-40 text-right text-[13px] font-bold text-gray-500">Email ID :</label>
-                                                <div className="flex-1 font-bold text-gray-800">vinay@gmail.com</div>
+                                                <div className="flex-1 font-bold text-gray-800">{userName}@gmail.com</div>
                                             </div>
 
                                             {/* Name */}
@@ -927,7 +902,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                                 <label className="w-40 text-right text-[13px] font-bold text-gray-500">Name* :</label>
                                                 <input
                                                     type="text"
-                                                    defaultValue="vinay rathore"
+                                                    defaultValue={userName}
                                                     className="flex-1 h-11 bg-white border border-gray-100 rounded-lg px-6 font-bold text-sm outline-none focus:border-teal-200 transition-all text-gray-600"
                                                 />
                                             </div>
@@ -994,7 +969,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                             {/* Email ID (Readonly) */}
                                             <div className="flex items-center gap-10">
                                                 <label className="w-40 text-right text-[13px] font-bold text-gray-500">Email ID :</label>
-                                                <div className="flex-1 font-bold text-gray-800 italic">vinay@gmail.com</div>
+                                                <div className="flex-1 font-bold text-gray-800 italic">{userName}@gmail.com</div>
                                             </div>
 
                                             {/* Old Password */}
@@ -1026,7 +1001,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
 
                                             {/* Action Button */}
                                             <div className="flex justify-center pt-10">
-                                                <button className="bg-[#1a1c21] text-white px-12 py-3 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all transform hover:scale-105 active:scale-95 shadow-xl">
+                                                <button className="bg-[#2FED9A] text-[#1a1c21] px-12 py-3 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#1a1c21] hover:text-white transition-all transform hover:scale-105 active:scale-95 shadow-xl">
                                                     Save
                                                 </button>
                                             </div>
