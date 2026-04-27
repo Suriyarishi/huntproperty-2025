@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-    Compass, Sparkles, Upload, ShieldCheck, 
-    LayoutGrid, Plus, Info, CheckCircle2, 
-    ArrowRight, MousePointer2, FileSearch, 
-    Scan, Map as MapIcon, ChevronRight, 
+import {
+    Compass, Sparkles, Upload, ShieldCheck,
+    LayoutGrid, Plus, Info, CheckCircle2,
+    ArrowRight, MousePointer2, FileSearch,
+    Scan, Map as MapIcon, ChevronRight,
     Layers, Download, Zap, Eye, BarChart3,
     Clock, Shield, Building2, Search,
     X, Loader2, Landmark, Home, Utensils, Bed, Bath, Baby, Sofa,
     Activity, UserCheck, TrendingUp, Award, Cpu, ChevronLeft,
-    AlertCircle, AlertTriangle, Flame, Droplets, Wind, Mountain, 
+    AlertCircle, AlertTriangle, Flame, Droplets, Wind, Mountain,
     DoorOpen, Ban, CheckCircle, Send, MessageSquare, Camera,
     FileText, ArrowUp, ChevronUp, MoveUp, MoveDown, MoveLeft, MoveRight,
     ShieldAlert, FileDown
@@ -64,22 +64,22 @@ const VastuView = () => {
         setTimeout(() => {
             setLoading(false);
             setViewState('chat-flow');
-            setChatStep(1); 
+            setChatStep(1);
         }, 1500);
     };
 
     const handleOrientationSelect = (dir: string) => {
         setSelectedOrientation(dir);
-        setChatStep(2); 
+        setChatStep(2);
     };
 
     const handleCompassSelect = (dir: string) => {
         setSelectedCompassDirection(dir);
-        setChatStep(3); 
+        setChatStep(3);
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
-            setChatStep(4); 
+            setChatStep(4);
         }, 3000);
     };
 
@@ -93,9 +93,9 @@ const VastuView = () => {
 
     const AIAvatar = () => (
         <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 shadow-sm overflow-hidden group">
-            <img 
-                src="https://huntproperty.com/assets/images/vastu_icon.png" 
-                className="w-7 h-7 object-contain transition-transform group-hover:scale-110" 
+            <img
+                src="https://huntproperty.com/assets/images/vastu_icon.png"
+                className="w-7 h-7 object-contain transition-transform group-hover:scale-110"
                 alt="AI"
                 onError={(e) => {
                     (e.target as HTMLImageElement).src = "https://cdn-icons-png.flaticon.com/512/2103/2103811.png";
@@ -111,14 +111,14 @@ const VastuView = () => {
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 text-primary text-[10px] font-black uppercase tracking-[0.3em] shadow-2xl">
                         <Sparkles size={12} /> Neural Architecture Hub
                     </div>
-                    
+
                     <h1 className="text-5xl md:text-7xl font-display font-black text-slate-950 leading-tight tracking-tighter">
-                        Ai Vaastu Analysis <br/>
+                        Ai Vaastu Analysis <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-800 italic">2025 Edition</span>
                     </h1>
 
                     <div id="method-selector" className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8 pt-12">
-                        <div 
+                        <div
                             onClick={() => document.getElementById('vastu-file-upload')?.click()}
                             className="bg-white rounded-[3.5rem] p-12 shadow-xl border-2 border-slate-50 hover:border-primary transition-all cursor-pointer group hover:-translate-y-2 duration-500"
                         >
@@ -129,7 +129,7 @@ const VastuView = () => {
                             <h3 className="text-2xl font-display font-black text-slate-900 uppercase tracking-tight">Scan AI</h3>
                             <p className="text-slate-400 text-sm mt-3 font-medium px-4">Instant neural analysis of floor plan images.</p>
                         </div>
-                        <div 
+                        <div
                             onClick={() => setViewState('manual-map')}
                             className="bg-white rounded-[3.5rem] p-12 shadow-xl border-2 border-slate-50 hover:border-blue-500 transition-all cursor-pointer group hover:-translate-y-2 duration-500"
                         >
@@ -151,8 +151,8 @@ const VastuView = () => {
                 {/* Fixed Top Header - Optimized spacing */}
                 <div className="fixed top-0 left-0 right-0 z-[60] bg-white/95 backdrop-blur-xl border-b border-slate-100 py-6 px-6 shadow-sm">
                     <div className="max-w-3xl mx-auto flex items-center relative h-10">
-                        <button 
-                            onClick={goBack} 
+                        <button
+                            onClick={goBack}
                             className="absolute left-0 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-sm"
                         >
                             <ChevronLeft size={20} />
@@ -163,7 +163,7 @@ const VastuView = () => {
 
                 {/* Content Area - Added significant top padding to fix overlap */}
                 <div className="flex-1 max-w-3xl mx-auto w-full pt-40 pb-48 px-6 space-y-10">
-                    
+
                     {/* Welcome Message */}
                     <div className="flex gap-4 animate-fade-in-up">
                         <AIAvatar />
@@ -223,7 +223,7 @@ const VastuView = () => {
                                             { id: 'Bottom', icon: MoveDown },
                                             { id: 'Left', icon: MoveLeft }
                                         ].map(dir => (
-                                            <button 
+                                            <button
                                                 key={dir.id}
                                                 onClick={() => handleOrientationSelect(dir.id)}
                                                 className="flex items-center gap-4 p-5 bg-white border border-slate-100 rounded-2xl hover:border-emerald-500 hover:shadow-xl transition-all group active:scale-95 shadow-sm"
@@ -261,8 +261,8 @@ const VastuView = () => {
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {DIRECTION_NODES.map(d => (
-                                    <button 
-                                        key={d} 
+                                    <button
+                                        key={d}
                                         onClick={() => handleCompassSelect(d)}
                                         className="flex flex-col items-center gap-4 p-5 bg-slate-50 border border-slate-100 rounded-2xl hover:bg-white hover:border-emerald-400 hover:shadow-lg transition-all group active:scale-95 shadow-sm"
                                     >
@@ -391,7 +391,7 @@ const VastuView = () => {
                                                     ))}
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="pt-16 text-center border-t border-slate-100 opacity-40">
                                                 <p className="text-[11px] font-bold text-slate-400 italic max-w-lg mx-auto leading-relaxed">
                                                     "By following these Vastu principles, the energy in the house can be optimized for better harmony and prosperity."
@@ -411,8 +411,8 @@ const VastuView = () => {
                     <div className="max-w-3xl mx-auto flex gap-4">
                         {chatStep >= 4 ? (
                             <>
-                                <button 
-                                    onClick={() => setViewState('report')} 
+                                <button
+                                    onClick={() => setViewState('report')}
                                     className="flex-1 py-5 bg-white border-2 border-slate-950 text-slate-950 rounded-[2.5rem] font-black text-[11px] uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-slate-950 hover:text-white transition-all shadow-xl active:scale-95 group"
                                 >
                                     <FileDown size={22} className="group-hover:animate-bounce" /> Report
@@ -423,10 +423,10 @@ const VastuView = () => {
                             </>
                         ) : (
                             <div className="w-full flex items-center gap-4 bg-slate-50 border-2 border-slate-100 rounded-[2.5rem] p-2.5 pl-10 shadow-inner">
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     disabled={loading}
-                                    placeholder="Ask about remedial measures or specific rooms..." 
+                                    placeholder="Ask about remedial measures or specific rooms..."
                                     className="flex-1 bg-transparent border-none outline-none text-[15px] font-bold text-slate-900 placeholder-slate-300"
                                 />
                                 <button className="w-14 h-14 bg-slate-950 text-primary rounded-[1.8rem] flex items-center justify-center shadow-lg active:scale-90 transition-all hover:bg-slate-800">
@@ -484,7 +484,7 @@ const VastuView = () => {
                                         "Assign unit nodes to cardinal points to compute property harmony."
                                     </p>
                                 </div>
-                                <button 
+                                <button
                                     className="w-full py-8 bg-blue-600 text-white rounded-[2rem] font-black text-sm uppercase tracking-[0.3em] hover:bg-blue-700 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-4"
                                 >
                                     <Activity size={22} /> Run Diagnostics
@@ -502,7 +502,7 @@ const VastuView = () => {
 
 // Re-defining missing helper
 const InfoIcon = ({ size, className }: { size: number, className?: string }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
 );
 
 export default VastuView;

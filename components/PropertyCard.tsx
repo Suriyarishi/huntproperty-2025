@@ -7,9 +7,12 @@ interface Props {
   property: Property;
   onClick: () => void;
   variant?: 'primary' | 'emerald';
+  isBoosted?: boolean;
 }
 
-const PropertyCard: React.FC<Props> = ({ property, onClick, variant = 'primary' }) => {
+const PropertyCard: React.FC<Props> = ({ property, onClick, variant = 'primary', isBoosted = false }) => {
+  const boosted = isBoosted || property.activeBoost;
+  
   // Action button is strictly green (#2FED9A)
   const buttonStyles = 'bg-primary text-slate-900 shadow-lg shadow-primary/20 hover:bg-[#25D488] hover:shadow-primary/40 hover:-translate-y-0.5 transition-all duration-300';
 
@@ -25,8 +28,15 @@ const PropertyCard: React.FC<Props> = ({ property, onClick, variant = 'primary' 
 
   return (
     <div 
-      className="group relative bg-white/70 backdrop-blur-xl border border-white/60 rounded-[2rem] overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full"
+      className={`group relative bg-white/70 backdrop-blur-xl border rounded-[2rem] overflow-hidden transition-all duration-500 flex flex-col h-full ${
+        boosted 
+          ? 'border-primary/50 shadow-[0_0_30px_rgba(47,237,154,0.15)] hover:shadow-[0_0_50px_rgba(47,237,154,0.3)] hover:-translate-y-3' 
+          : 'border-white/60 shadow-lg hover:shadow-2xl hover:-translate-y-2'
+      }`}
     >
+      {boosted && (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+      )}
       {/* Image Section */}
       <div className="relative h-72 w-full overflow-hidden">
         <img 
@@ -37,12 +47,27 @@ const PropertyCard: React.FC<Props> = ({ property, onClick, variant = 'primary' 
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
 
         {/* Top Badges */}
-        <div className="absolute top-4 left-4 flex gap-2">
-            {property.tags.slice(0, 2).map((tag, i) => (
-                <span key={tag} className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide backdrop-blur-md border ${i === 0 ? tagColors[variant] : 'bg-black/40 text-white border-white/20'}`}>
-                    {tag}
-                </span>
-            ))}
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+            {boosted && (
+                <div className="flex items-center gap-1.5 px-3 py-1.5 hot-badge-fire shadow-2xl">
+                    {/* 3-Layer Animated Flame SVG */}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                        <path className="flame-outer" d="M12 2C12 2 19 7 19 13C19 16.866 15.866 20 12 20C8.13401 20 5 16.866 5 13C5 7 12 2 12 2Z" fill="#FF9800" fillOpacity="0.8" />
+                        <path className="flame-middle" d="M12 7C12 7 16 10.5 16 14C16 16.2091 14.2091 18 12 18C9.79086 18 8 16.2091 8 14C8 10.5 12 7 12 7Z" fill="#FF5722" />
+                        <path className="flame-inner" d="M12 11C12 11 14 13 14 15C14 16.1046 13.1046 17 12 17C10.8954 17 10 16.1046 10 15C10 13 12 11 12 11Z" fill="#FFF176" />
+                    </svg>
+                    <span className="text-shimmer text-[9px] font-black uppercase tracking-[0.15em] whitespace-nowrap">
+                        TODAY'S HOT {property.price.toLowerCase().includes('/mo') || property.tags.some(t => t.toLowerCase() === 'rent') ? 'RENT' : 'SALE'}
+                    </span>
+                </div>
+            )}
+            <div className="flex gap-2">
+                {property.tags.slice(0, 2).map((tag, i) => (
+                    <span key={tag} className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide backdrop-blur-md border ${i === 0 ? tagColors[variant] : 'bg-black/40 text-white border-white/20'}`}>
+                        {tag}
+                    </span>
+                ))}
+            </div>
         </div>
 
         {/* Wishlist Button */}

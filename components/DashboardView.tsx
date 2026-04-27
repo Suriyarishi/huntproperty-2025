@@ -13,11 +13,13 @@ import {
     TrendingUp, Activity, Smartphone, Monitor, ShieldPlus,
     Camera, Shield, Globe2, Network, BarChart3, ArrowRight, Cpu,
     Heart, Lock, Fingerprint, Map as MapIcon, ChevronDown, List, X, Download,
-    History, Package, Check, Minus, MessageSquarePlus, Share2, MousePointer2
+    History, Package, Check, Minus, MessageSquarePlus, Share2, MousePointer2, Rocket, BarChart2
 } from 'lucide-react';
+import BoostModal from './BoostModal';
+import PropertyBoostReportModal from './PropertyBoostReportModal';
 
 type DashboardTab = 'home' | 'services' | 'responses' | 'subscriptions' | 'advice';
-type HomeSubTab = 'manage' | 'post' | 'favorite' | 'profile' | 'edit' | 'password';
+type HomeSubTab = 'manage' | 'post' | 'favorite' | 'profile' | 'edit' | 'password' | 'boost-analytics';
 type SubscriptionSubTab = 'subscribed' | 'history' | 'view';
 type ViewServicesSubTab = 'listing-packages' | 'more-services';
 
@@ -30,15 +32,26 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
     const [activeHomeSubTab, setActiveHomeSubTab] = useState<HomeSubTab>('manage');
     const [activeSubSubTab, setActiveSubSubTab] = useState<SubscriptionSubTab>('subscribed');
     const [activeViewServicesTab, setActiveViewServicesTab] = useState<ViewServicesSubTab>('listing-packages');
+    const [isBoostModalOpen, setIsBoostModalOpen] = useState(false);
+    const [isBoostActive, setIsBoostActive] = useState(true); // Default to true for demo
+    const [hasPurchasedBoost, setHasPurchasedBoost] = useState(true); // Default to true for demo
+    const [selectedPropertyForBoost, setSelectedPropertyForBoost] = useState<any>(null);
+    const [selectedPropertyForReport, setSelectedPropertyForReport] = useState<any>(null);
+    const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+    const boostedProperties = [
+        { id: 'MHSA', title: 'SRINAGAR, JAMMU & KASHMIR NODE', price: '₹ 555', area: '1524 SQ-FT', date: '10 Jan, 2026', views: 1240, saves: 85, inquiries: 12, status: 'ACTIVE', daysLeft: 12, package: 'Platinum - 30 Days', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop' },
+        { id: 'MHSB', title: 'INDORE METRO HUB RESIDENCE', price: '₹ 2.4 Cr', area: '2400 SQ-FT', date: '12 Jan, 2026', views: 850, saves: 42, inquiries: 5, status: 'ACTIVE', daysLeft: 5, package: 'Gold - 15 Days', image: 'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?q=80&w=800&auto=format&fit=crop' },
+    ];
 
     const userInfo = {
         name: 'RISHI KESAVAN S K',
-        email: 'klnmca6@gmail.com',
-        mobile: '9003486509',
-        aadhar: 'N/A',
+        email: 'ebc.gjmail.com',
+        mobile: '99999 99999',
+        aadhar: '25252 25252 2523',
         userType: 'Owner',
         verified: 'No',
-        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop'
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop'
     };
 
     const topTabs = [
@@ -52,200 +65,301 @@ const DashboardView: React.FC<DashboardViewProps> = ({ onNavigate }) => {
     const homeSubTabs = [
         { id: 'manage', label: 'Manage Properties', icon: List },
         { id: 'post', label: 'Post New Property', icon: Plus },
-        { id: 'favorite', label: 'Favorite Property', icon: Heart },
-        { id: 'profile', label: 'Profile Details', icon: User },
-        { id: 'edit', label: 'Edit Details', icon: Edit3 },
+        { id: 'favorite', label: 'Favourite Property', icon: Heart },
+        { id: 'profile', label: 'Profile Detail', icon: User },
+        { id: 'edit', label: 'Edit Detail', icon: Edit3 },
         { id: 'password', label: 'Change Password', icon: Lock },
-    ];
-
-    const subscriptionSubTabs = [
-        { id: 'subscribed', label: 'Subscribed Services', icon: Package },
-        { id: 'history', label: 'Order History', icon: History },
-        { id: 'view', label: 'View Services', icon: Eye },
+        { id: 'boost-analytics', label: 'Boost Analytics', icon: Rocket },
     ];
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-20 font-sans selection:bg-primary selection:text-[#1A1A1A]">
-            {/* 1. Profile Header Hub */}
-            <div className="max-w-[100rem] mx-auto px-6 mb-10">
-                <div className="bg-white rounded-[4rem] p-6 md:p-10 border border-slate-200 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.04)] relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-12 opacity-[0.05] pointer-events-none select-none group-hover:scale-110 transition-transform duration-[8000ms]">
-                        <Network size={500} className="text-[#1A1A1A]" />
-                    </div>
-                    <div className="flex flex-col lg:flex-row items-center gap-10 md:gap-14 relative z-10">
-                        <div className="relative shrink-0">
-                            <div className="w-36 h-36 rounded-[3rem] overflow-hidden border-[6px] border-white shadow-2xl relative transition-transform duration-700 group-hover:scale-105 ring-1 ring-slate-100">
+        <div className="min-h-screen bg-[#F1F5F9] pt-28 pb-20 font-sans">
+            {/* 1. Profile Header */}
+            <div className="max-w-[95rem] mx-auto px-4 sm:px-6 mb-8">
+                <div className="bg-white rounded-[2.5rem] p-6 md:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.03)] border border-slate-100">
+                    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-10">
+                        <div className="relative">
+                            <div className="w-24 h-24 rounded-3xl overflow-hidden shadow-lg border-2 border-slate-50">
                                 <img src={userInfo.avatar} alt="Profile" className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-[#1A1A1A]/60 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
-                                    <Camera size={28} className="text-primary" />
-                                </div>
                             </div>
-                            <div className="absolute -bottom-2 -right-2 bg-red-600 text-white p-3 rounded-2xl border-4 border-white shadow-xl animate-bounce-slow">
-                                <ShieldCheck size={20} />
+                            <div className="absolute -bottom-1 -right-1 bg-primary text-[#1A1A1A] p-2 rounded-xl border-2 border-white shadow-md">
+                                <ShieldCheck size={14} />
                             </div>
                         </div>
 
-                        <div className="flex-1 space-y-10 text-center lg:text-left">
-                            <div className="space-y-2">
-                                <h1 className="text-4xl md:text-5xl font-black text-[#1A1A1A] uppercase tracking-tighter leading-none">Welcome, {userInfo.name}</h1>
-                                <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.6em] pt-1">Neural Management Interface Hub v.2025</p>
+                        <div className="flex-1 text-center md:text-left">
+                            <div className="mb-6">
+                                <h1 className="text-2xl md:text-3xl font-black text-[#1A1A1A] uppercase tracking-tight">WELCOME, {userInfo.name}</h1>
+                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mt-1">Dashboard Management</p>
                             </div>
-                            <div className="grid grid-cols-2 xl:grid-cols-4 gap-y-8 gap-x-10">
+                            <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 md:gap-10">
                                 {[
-                                    { label: 'Neural ID', val: userInfo.email, icon: Mail },
-                                    { label: 'Secure Line', val: userInfo.mobile, icon: Phone },
-                                    { label: 'Role Node', val: userInfo.userType, icon: User },
-                                    { label: 'Sync Status', val: 'Verified Listing', icon: Activity, color: 'text-primary' }
+                                    { label: 'MAIL ID', val: userInfo.email, icon: Mail },
+                                    { label: 'PHONE NUMBER', val: userInfo.mobile, icon: Phone },
+                                    { label: 'AADHAR NUMBER', val: userInfo.aadhar, icon: FileText },
+                                    { label: 'USER TYPE', val: userInfo.userType, icon: User },
+                                    { label: 'VERIFIED', val: userInfo.verified, icon: ShieldCheck }
                                 ].map((item, i) => (
-                                    <div key={i} className="space-y-2 group/item">
-                                        <div className="flex items-center justify-center lg:justify-start gap-2.5 text-slate-400">
-                                            <item.icon size={13} className={item.color || "text-slate-300"} />
-                                            <span className="text-[10px] font-black uppercase tracking-widest leading-none">{item.label}</span>
+                                    <div key={i} className="space-y-1">
+                                        <div className="flex items-center justify-center md:justify-start gap-2 text-slate-400">
+                                            <item.icon size={12} className="text-slate-300" />
+                                            <span className="text-[9px] font-black uppercase tracking-widest">{item.label}</span>
                                         </div>
-                                        <p className="text-sm font-black text-[#1A1A1A] uppercase truncate tracking-tight group-hover/item:text-primary transition-colors">{item.val}</p>
+                                        <p className="text-[12px] font-bold text-[#1A1A1A] truncate">{item.val}</p>
                                     </div>
                                 ))}
                             </div>
-                        </div>
-
-                        <div className="flex flex-col gap-4 min-w-[280px] w-full lg:w-auto">
-                            <button className="w-full px-10 py-5 bg-[#1A1A1A] text-white rounded-[1.8rem] font-black text-[11px] uppercase tracking-[0.3em] hover:bg-primary hover:text-[#1A1A1A] transition-all duration-500 shadow-xl active:scale-95 border border-white/5">Edit Intelligence Profile</button>
-                            <button className="w-full px-10 py-5 bg-white border-2 border-slate-100 text-[#1A1A1A] rounded-[1.8rem] font-black text-[11px] uppercase tracking-[0.3em] hover:border-primary hover:text-primary transition-all duration-500 shadow-lg active:scale-95">Cloud Sync Protocol</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* 2. Unified Navigation Dock */}
-            <div className="max-w-[100rem] mx-auto px-6 mb-10 sticky top-24 z-50">
-                <div className="bg-[#1A1A1A]/95 backdrop-blur-2xl rounded-[3rem] p-2 border border-white/10 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] flex flex-wrap lg:flex-nowrap gap-1">
+            {/* 2. Navigation Dock */}
+            <div className="max-w-[95rem] mx-auto px-4 sm:px-6 mb-10">
+                <div className="bg-[#1A1A1A] rounded-[2rem] p-1.5 flex flex-wrap lg:flex-nowrap gap-1 shadow-2xl">
                     {topTabs.map(tab => {
                         const isActive = activeTab === tab.id;
                         return (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as DashboardTab)}
-                                className={`flex-1 flex items-center justify-center gap-4 p-5 rounded-[2.5rem] transition-all duration-700 group relative overflow-hidden ${isActive ? 'bg-primary text-[#1A1A1A] shadow-[0_0_40px_rgba(47,237,154,0.3)] scale-[1.02] z-10' : 'text-slate-500 hover:text-white'}`}
+                                className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-3 p-4 rounded-[1.8rem] transition-all duration-300 ${isActive ? 'bg-primary text-[#1A1A1A]' : 'text-slate-400 hover:text-white'}`}
                             >
-                                <tab.icon size={20} strokeWidth={isActive ? 3 : 1.5} className={isActive ? 'animate-pulse' : 'group-hover:scale-125 transition-transform duration-500'} />
-                                <span className="text-[11px] font-black uppercase tracking-[0.2em] whitespace-nowrap">{tab.label}</span>
-                                {!isActive && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-primary rounded-full group-hover:w-8 transition-all duration-500"></div>}
+                                <tab.icon size={18} strokeWidth={isActive ? 3 : 2} />
+                                <span className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap">{tab.label}</span>
                             </button>
                         );
                     })}
                 </div>
             </div>
 
-            {/* 3. Main Dashboard Terminal */}
-            <div className="max-w-[100rem] mx-auto px-6">
-                <div className="bg-white rounded-[4rem] border border-slate-200 shadow-2xl min-h-[850px] overflow-hidden flex flex-col">
-                    <div className="flex-1 flex flex-col lg:flex-row relative">
-                        {/* Sub-Sidebar */}
-                        {(activeTab === 'home' || activeTab === 'subscriptions') && (
-                            <aside className="lg:w-96 bg-slate-50/50 border-r border-slate-100 p-10 md:p-14 space-y-4 shrink-0">
-                                <div className="mb-14 px-2">
-                                    <h3 className="text-[#1A1A1A] font-black uppercase text-base tracking-tighter">Operational Nodes</h3>
-                                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mt-3">Registry Access Hub</p>
-                                </div>
-                                <div className="space-y-3">
-                                    {activeTab === 'home' ? (
-                                        homeSubTabs.map(sub => {
-                                            const isSubActive = activeHomeSubTab === sub.id;
-                                            return (
-                                                <button
-                                                    key={sub.id}
-                                                    onClick={() => sub.id === 'post' ? onNavigate('add-property') : setActiveHomeSubTab(sub.id as HomeSubTab)}
-                                                    className={`w-full flex items-center justify-between p-6 rounded-[2rem] transition-all duration-500 group ${isSubActive ? 'bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] text-red-600 scale-[1.05] border-l-8 border-red-600' : 'text-slate-400 hover:bg-white/80 hover:text-[#1A1A1A]'}`}
-                                                >
-                                                    <div className="flex items-center gap-5">
-                                                        <sub.icon size={22} strokeWidth={isSubActive ? 3 : 1.5} className={isSubActive ? 'text-red-600' : 'text-slate-300'} />
-                                                        <span className="text-[13px] font-black uppercase tracking-[0.15em] pt-0.5">{sub.label}</span>
-                                                    </div>
-                                                    <ChevronRight size={20} className={`transition-transform duration-700 ${isSubActive ? 'translate-x-2 text-red-600' : 'opacity-0 group-hover:opacity-100'}`} />
-                                                </button>
-                                            );
-                                        })
-                                    ) : (
-                                        subscriptionSubTabs.map(sub => {
-                                            const isSubActive = activeSubSubTab === sub.id;
-                                            return (
-                                                <button
-                                                    key={sub.id}
-                                                    onClick={() => setActiveSubSubTab(sub.id as SubscriptionSubTab)}
-                                                    className={`w-full flex items-center justify-between p-6 rounded-[2rem] transition-all duration-500 group ${isSubActive ? 'bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] text-red-600 scale-[1.05] border-l-8 border-red-600' : 'text-slate-400 hover:bg-white/80 hover:text-[#1A1A1A]'}`}
-                                                >
-                                                    <div className="flex items-center gap-5">
-                                                        <sub.icon size={22} strokeWidth={isSubActive ? 3 : 1.5} className={isSubActive ? 'text-red-600' : 'text-slate-300'} />
-                                                        <span className="text-[13px] font-black uppercase tracking-[0.15em] pt-0.5">{sub.label}</span>
-                                                    </div>
-                                                    <ChevronRight size={20} className={`transition-transform duration-700 ${isSubActive ? 'translate-x-2 text-red-600' : 'opacity-0 group-hover:opacity-100'}`} />
-                                                </button>
-                                            );
-                                        })
-                                    )}
-                                </div>
-                            </aside>
-                        )}
-
-                        {/* Console Viewport */}
-                        <main className="flex-1 p-10 md:p-20 relative overflow-hidden bg-white">
-                            <div className="max-w-6xl mx-auto h-full animate-fade-in-up">
-                                {activeTab === 'home' && (
-                                    <>
-                                        {activeHomeSubTab === 'manage' && <ManagePropertiesNode />}
-                                        {activeHomeSubTab === 'favorite' && <FavoritePropertiesNode />}
-                                        {activeHomeSubTab === 'profile' && <ProfileDetailsNode userInfo={userInfo} />}
-                                        {activeHomeSubTab === 'edit' && <EditProfileNode userInfo={userInfo} />}
-                                        {activeHomeSubTab === 'password' && <ChangePasswordNode userInfo={userInfo} />}
-                                    </>
-                                )}
-                                {activeTab === 'services' && <ServicesNode onNavigate={onNavigate} />}
-                                {activeTab === 'responses' && <ResponsesNode />}
-                                {activeTab === 'subscriptions' && (
-                                    <SubscriptionsNode
-                                        activeSubTab={activeSubSubTab}
-                                        activeViewServicesTab={activeViewServicesTab}
-                                        onViewServicesTabChange={setActiveViewServicesTab}
-                                    />
-                                )}
-                                {activeTab === 'advice' && <AdviceNode />}
+            {/* 3. Main Dashboard */}
+            <div className="max-w-[95rem] mx-auto px-4 sm:px-6">
+                <div className="bg-white rounded-[3rem] shadow-[0_20px_60px_rgba(0,0,0,0.02)] min-h-[700px] overflow-hidden flex flex-col lg:flex-row border border-slate-100">
+                    {/* Sidebar */}
+                    {(activeTab === 'home' || activeTab === 'subscriptions') && (
+                        <aside className="lg:w-80 bg-[#F8FAFC] border-r border-slate-100 p-8 flex flex-col gap-8 shrink-0">
+                            <div>
+                                <h3 className="text-[#1A1A1A] font-black uppercase text-sm tracking-widest px-4">Home Controls</h3>
+                                <div className="h-1 w-12 bg-primary mt-2 ml-4 rounded-full"></div>
                             </div>
-                        </main>
-                    </div>
+
+                            <div className="space-y-2">
+                                {(activeTab === 'home' ? homeSubTabs : [
+                                    { id: 'subscribed', label: 'Subscribed Services', icon: Package },
+                                    { id: 'history', label: 'Order History', icon: History },
+                                    { id: 'view', label: 'View Services', icon: Eye },
+                                ]).map(sub => {
+                                    const isSubActive = activeTab === 'home' ? activeHomeSubTab === sub.id : activeSubSubTab === sub.id;
+
+                                    // Only show boost analytics if purchased
+                                    if (sub.id === 'boost-analytics' && !hasPurchasedBoost) return null;
+
+                                    return (
+                                        <div key={sub.id} className="space-y-1">
+                                            <button
+                                                onClick={() => {
+                                                    if (activeTab === 'home') {
+                                                        if (sub.id === 'post') onNavigate('add-property');
+                                                        else setActiveHomeSubTab(sub.id as HomeSubTab);
+                                                    } else {
+                                                        setActiveSubSubTab(sub.id as SubscriptionSubTab);
+                                                    }
+                                                }}
+                                                className={`w-full flex items-center justify-between p-5 rounded-2xl transition-all duration-300 group ${isSubActive ? 'bg-white shadow-lg text-[#1A1A1A] border-l-4 border-primary' : 'text-slate-500 hover:bg-white/60 hover:text-[#1A1A1A]'}`}
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className="relative">
+                                                        <sub.icon size={20} className={isSubActive ? 'text-primary' : 'text-slate-300'} />
+                                                        {sub.id === 'boost-analytics' && isBoostActive && (
+                                                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#F8FAFC] animate-pulse"></span>
+                                                        )}
+                                                    </div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[13px] font-bold tracking-tight">{sub.label}</span>
+                                                        {sub.id === 'boost-analytics' && isBoostActive && (
+                                                            <span className="text-[8px] font-black text-green-500 tracking-tighter -mt-0.5 uppercase">LIVE ENGINE</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <ChevronRight size={16} className={`transition-transform duration-300 ${isSubActive ? 'translate-x-1 opacity-100 rotate-90' : 'opacity-0'}`} />
+                                            </button>
+
+                                            {/* Boost Analytics Sub-menu */}
+                                            {sub.id === 'boost-analytics' && isSubActive && hasPurchasedBoost && (
+                                                <div className="pl-14 pr-4 py-2 space-y-2 animate-in slide-in-from-top-2 duration-300">
+                                                    {boostedProperties.map(bp => (
+                                                        <button
+                                                            key={bp.id}
+                                                            onClick={() => {
+                                                                setSelectedPropertyForReport(bp);
+                                                                setIsReportModalOpen(true);
+                                                            }}
+                                                            className="w-full text-left text-[10px] font-bold text-slate-400 hover:text-primary transition-colors flex items-center gap-2 group/subitem truncate"
+                                                        >
+                                                            <div className="w-1 h-1 bg-slate-200 rounded-full group-hover/subitem:bg-primary" />
+                                                            <span className="truncate uppercase tracking-tighter">{bp.title}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </aside>
+                    )}
+
+                    {/* Main Content Area */}
+                    <main className="flex-1 p-8 md:p-12 relative bg-white">
+                        <div className="max-w-5xl mx-auto h-full">
+                            {activeTab === 'home' && (
+                                <>
+                                    {activeHomeSubTab === 'manage' && (
+                                        <ManagePropertiesNode onBoost={(prop) => {
+                                            setSelectedPropertyForBoost(prop);
+                                            setIsBoostModalOpen(true);
+                                        }} />
+                                    )}
+                                    {activeHomeSubTab === 'favorite' && <FavoritePropertiesNode />}
+                                    {activeHomeSubTab === 'profile' && <ProfileDetailsNode userInfo={userInfo} />}
+                                    {activeHomeSubTab === 'edit' && <EditProfileNode userInfo={userInfo} />}
+                                    {activeHomeSubTab === 'password' && <ChangePasswordNode userInfo={userInfo} />}
+                                    {activeHomeSubTab === 'boost-analytics' && (
+                                        <BoostAnalyticsNode
+                                            isBoostActive={isBoostActive}
+                                            properties={boostedProperties}
+                                            onViewReport={(prop) => {
+                                                setSelectedPropertyForReport(prop);
+                                                setIsReportModalOpen(true);
+                                            }}
+                                        />
+                                    )}
+                                </>
+                            )}
+                            {activeTab === 'services' && <ServicesNode onNavigate={onNavigate} />}
+                            {activeTab === 'responses' && <ResponsesNode />}
+                            {activeTab === 'subscriptions' && (
+                                <SubscriptionsNode
+                                    activeSubTab={activeSubSubTab}
+                                    activeViewServicesTab={activeViewServicesTab}
+                                    onViewServicesTabChange={setActiveViewServicesTab}
+                                />
+                            )}
+                            {activeTab === 'advice' && <AdviceNode />}
+                        </div>
+                    </main>
                 </div>
             </div>
+
+            <BoostModal
+                isOpen={isBoostModalOpen}
+                onClose={() => setIsBoostModalOpen(false)}
+                property={selectedPropertyForBoost}
+                onComplete={() => {
+                    setIsBoostActive(true);
+                    setHasPurchasedBoost(true);
+                    setActiveHomeSubTab('boost-analytics');
+                }}
+            />
+
+            {isReportModalOpen && selectedPropertyForReport && (
+                <PropertyBoostReportModal
+                    isOpen={isReportModalOpen}
+                    onClose={() => setIsReportModalOpen(false)}
+                    property={selectedPropertyForReport}
+                />
+            )}
         </div>
     );
 };
 
 // --- DATA MODULES ---
 
-const ManagePropertiesNode = () => {
+const ManagePropertiesNode = ({ onBoost }: { onBoost?: (prop: any) => void }) => {
     const userProperties = [
-        { id: '1136', type: 'Sell', title: 'SRINAGAR, J&K PRIME NODE', price: '₹ 5.2 Cr', area: '5,500 Sq-ft', date: '05 Jan, 2026', views: 742, status: 'Active' },
-        { id: '1135', type: 'Sell', title: 'ROJA STREET, HP RESIDENCE', price: '₹ 4.2 Cr', area: '2,400 Sq-ft', date: '05 Jan, 2026', views: 102, status: 'Active' },
+        { id: 'MHSA', type: 'Residential', title: 'SRINAGAR, JAMMU & KASHMIR NODE', price: '₹ 5.5 Cr', area: '1524 SQ-FT', date: '10 Jan, 2026', views: 1240, saves: 142, status: 'ACTIVE', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop' },
+        { id: 'MHSB', type: 'Commercial', title: 'INDORE METRO HUB OFFICE', price: '₹ 1.2 Cr', area: '850 SQ-FT', date: '12 Jan, 2026', views: 850, saves: 65, status: 'ACTIVE', image: 'https://images.unsplash.com/photo-1464938050520-ef2270bb8ce8?q=80&w=800&auto=format&fit=crop' },
+        { id: 'MHSC', type: 'Plot', title: 'CHANDIGARH SMART PLOT', price: '₹ 85 L', area: '200 SQ-YD', date: '14 Jan, 2026', views: 420, saves: 28, status: 'ACTIVE', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop' },
     ];
     return (
-        <div className="space-y-12">
-            <h2 className="text-4xl font-black text-[#1A1A1A] uppercase tracking-tighter">Property Matrix</h2>
-            <div className="grid gap-8">
+        <div className="space-y-8 animate-fade-in-up">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-50 pb-6">
+                <div>
+                    <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">MANAGE PROPERTIES</h2>
+                    <div className="inline-flex items-center gap-2 mt-1 px-3 py-1 bg-[#20F29E]/10 rounded-full border border-[#20F29E]/20">
+                        <span className="text-[10px] font-black text-[#20F29E] uppercase tracking-widest leading-none">LISTING QUOTA : 60 LEFT</span>
+                    </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search Vault..."
+                            className="w-full md:w-64 pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:border-[#20F29E] transition-all shadow-inner"
+                        />
+                        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid gap-6">
                 {userProperties.map(prop => (
-                    <div key={prop.id} className="bg-white border-2 border-slate-100 rounded-[3rem] p-8 flex flex-col md:flex-row gap-10 hover:shadow-2xl transition-all group relative overflow-hidden">
-                        <div className="w-48 h-32 bg-slate-50 rounded-2xl flex items-center justify-center shrink-0 border border-slate-100 group-hover:border-primary/20 transition-all"><Building size={48} className="text-slate-200 group-hover:text-primary transition-all" /></div>
-                        <div className="flex-1 space-y-4">
-                            <div className="flex justify-between">
-                                <h3 className="text-2xl font-black text-[#1A1A1A] uppercase">{prop.title}</h3>
-                                <div className="text-xl font-black text-red-600">{prop.price}</div>
+                    <div key={prop.id} className="bg-white border border-slate-50 rounded-3xl p-6 flex flex-col md:flex-row gap-8 hover:shadow-2xl transition-all group overflow-hidden relative">
+                        {/* Status Badge */}
+                        <div className="absolute top-6 left-6 z-10">
+                            <div className="px-3 py-1 bg-white/90 backdrop-blur-md text-[#1A1A1A] text-[8px] font-black rounded-full uppercase shadow-sm border border-slate-100">{prop.type}</div>
+                        </div>
+
+                        <div className="w-full md:w-56 h-40 rounded-2xl overflow-hidden shrink-0 relative shadow-inner">
+                            <img src={prop.image} alt={prop.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-between py-1">
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Asset ID: {prop.id}</span>
+                                    <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-full">
+                                        <div className="w-1.5 h-1.5 bg-[#20F29E] rounded-full animate-pulse" />
+                                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{prop.status}</span>
+                                    </div>
+                                </div>
+                                <h3 className="text-lg font-black text-[#1A1A1A] uppercase tracking-tight group-hover:text-[#20F29E] transition-colors leading-snug">{prop.title}</h3>
+                                <div className="flex items-center gap-4 mt-3">
+                                    <div className="px-3 py-1.5 bg-slate-50 rounded-xl flex items-center gap-2">
+                                        <Eye size={12} className="text-slate-400" />
+                                        <span className="text-[10px] font-black text-[#1A1A1A]">{prop.views} <span className="text-slate-400 ml-1">VIEWS</span></span>
+                                    </div>
+                                    <div className="px-3 py-1.5 bg-slate-50 rounded-xl flex items-center gap-2">
+                                        <Heart size={12} className="text-slate-400" />
+                                        <span className="text-[10px] font-black text-[#1A1A1A]">{prop.saves} <span className="text-slate-400 ml-1">SAVES</span></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex gap-8 text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                <span>ID: #{prop.id}</span>
-                                <span>Area: {prop.area}</span>
-                                <span>Sync: {prop.date}</span>
+
+                            <div className="flex flex-wrap items-center gap-2 mt-6 pt-6 border-t border-slate-50">
+                                <button
+                                    onClick={() => onBoost?.(prop)}
+                                    className="px-6 py-2.5 bg-[#20F29E] text-[#1A1A1A] rounded-xl font-black text-[10px] uppercase tracking-widest hover:shadow-xl hover:shadow-[#20F29E]/20 transition-all flex items-center gap-2 group/boost shadow-md"
+                                >
+                                    <Rocket size={14} className="group-hover/boost:-translate-y-0.5 group-hover/boost:translate-x-0.5 transition-transform" />
+                                    BOOST PROPERTY
+                                </button>
+                                <button className="px-5 py-2.5 border border-slate-100 text-slate-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
+                                    <Edit3 size={12} /> EDIT
+                                </button>
+                                <button className="px-5 py-2.5 border border-slate-100 text-slate-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-2">
+                                    <Eye size={12} /> VIEW
+                                </button>
+                                <button className="p-2.5 text-slate-300 hover:text-red-500 transition-colors ml-auto">
+                                    <Trash2 size={16} />
+                                </button>
                             </div>
-                            <div className="flex justify-end gap-3 pt-4 border-t border-slate-50">
-                                <button className="px-6 py-2 bg-[#1A1A1A] text-primary rounded-xl font-black text-[10px] uppercase tracking-widest">Reconfigure</button>
-                                <button className="px-4 py-2 border border-slate-100 text-slate-300 rounded-xl font-black text-[10px] uppercase hover:text-red-600 transition-all active:scale-95"><Trash2 size={14} /></button>
-                            </div>
+                        </div>
+
+                        <div className="hidden lg:flex flex-col justify-center items-end border-l border-slate-50 pl-8 min-w-[140px]">
+                            <div className="text-2xl font-black text-[#1A1A1A] tracking-tighter">{prop.price}</div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{prop.area}</p>
                         </div>
                     </div>
                 ))}
@@ -257,47 +371,51 @@ const ManagePropertiesNode = () => {
 const FavoritePropertiesNode = () => {
     const favorites = [{ id: '101', title: 'PRINCESS ESTATE, INDORE HUB', price: '₹ 2.4 Cr', location: 'INDORE CITY METRO, M.P.', imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop', date: '14 JAN, 2026' }];
     return (
-        <div className="space-y-12">
-            <h2 className="text-4xl font-black text-[#1A1A1A] uppercase tracking-tighter">Curation Hub</h2>
-            {favorites.map(fav => (
-                <div key={fav.id} className="bg-white border-2 border-slate-100 rounded-[4rem] p-8 flex flex-col md:flex-row gap-10 hover:shadow-2xl transition-all group overflow-hidden relative">
-                    <div className="w-80 h-56 rounded-[2.5rem] overflow-hidden shrink-0 shadow-inner">
-                        <img src={fav.imageUrl} alt={fav.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                    </div>
-                    <div className="flex-1 py-4 flex flex-col justify-between">
-                        <div className="space-y-4">
-                            <h3 className="text-3xl font-black text-[#1A1A1A] uppercase leading-tight tracking-tight">{fav.title}</h3>
-                            <div className="flex items-center gap-2 text-slate-500 text-sm font-bold"><MapPin size={16} className="text-red-600" /> {fav.location}</div>
-                            <div className="text-4xl font-black text-primary tracking-tighter">{fav.price}</div>
+        <div className="space-y-8 animate-fade-in-up">
+            <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">FAVOURITE PROPERTIES</h2>
+            <div className="grid gap-6">
+                {favorites.map(fav => (
+                    <div key={fav.id} className="bg-white border border-slate-100 rounded-2xl p-6 flex flex-col md:flex-row gap-8 hover:shadow-xl transition-all group overflow-hidden">
+                        <div className="w-full md:w-64 h-44 rounded-xl overflow-hidden shrink-0 shadow-sm relative">
+                            <img src={fav.imageUrl} alt={fav.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                            <div className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-md rounded-full text-red-600 shadow-md">
+                                <Heart size={16} fill="currentColor" />
+                            </div>
                         </div>
-                        <div className="flex justify-between items-center pt-6 border-t border-slate-100">
-                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Added: {fav.date}</span>
-                            <button className="px-10 py-4 bg-[#1A1A1A] text-white rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-primary hover:text-[#1A1A1A] transition-all shadow-lg active:scale-95">View Node</button>
+                        <div className="flex-1 flex flex-col justify-between py-1">
+                            <div className="space-y-3">
+                                <h3 className="text-xl font-black text-[#1A1A1A] uppercase tracking-tight group-hover:text-red-600 transition-colors leading-tight">{fav.title}</h3>
+                                <div className="flex items-center gap-2 text-slate-500 text-xs font-bold leading-none"><MapPin size={14} className="text-red-600" /> {fav.location}</div>
+                                <div className="text-2xl font-black text-[#1A1A1A] tracking-tighter pt-2">{fav.price}</div>
+                            </div>
+                            <div className="flex justify-between items-center pt-6 border-t border-slate-50">
+                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Added: {fav.date}</span>
+                                <button className="px-8 py-3 bg-[#1A1A1A] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-primary hover:text-[#1A1A1A] transition-all active:scale-95 shadow-lg">VIEW PROPERTY</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 };
 
 const ProfileDetailsNode = ({ userInfo }: { userInfo: any }) => (
-    <div className="space-y-16">
-        <h2 className="text-5xl font-black text-[#1A1A1A] uppercase tracking-tighter leading-none">Identity Profile</h2>
-        <div className="grid md:grid-cols-2 gap-x-16 gap-y-16 bg-slate-50/50 p-20 rounded-[5rem] border-2 border-slate-100 shadow-inner relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-16 opacity-[0.05] pointer-events-none group-hover:scale-125 transition-transform duration-[5000ms]"><User size={450} className="text-[#1A1A1A]" /></div>
+    <div className="space-y-8 animate-fade-in-up">
+        <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">PROFILE DETAILS</h2>
+        <div className="bg-[#F8FAFC] p-10 md:p-14 rounded-3xl border border-slate-100 shadow-inner grid sm:grid-cols-2 gap-10">
             {[
-                { label: 'Neural Key', val: userInfo.name, icon: User },
-                { label: 'Registry Role', val: userInfo.userType, icon: Building },
-                { label: 'Uplink Coordinate', val: userInfo.email, icon: Mail },
-                { label: 'Direct Secure Line', val: userInfo.mobile, icon: Phone },
+                { label: 'NAME', val: userInfo.name, icon: User },
+                { label: 'USER TYPE', val: userInfo.userType, icon: Building },
+                { label: 'MAIL ID', val: userInfo.email, icon: Mail },
+                { label: 'PHONE NUMBER', val: userInfo.mobile, icon: Phone },
             ].map((field, i) => (
-                <div key={i} className="space-y-4 border-b-2 border-slate-200 pb-6 group hover:border-primary transition-all relative z-10">
-                    <div className="flex items-center gap-4 text-slate-400">
-                        <field.icon size={18} />
-                        <span className="text-[11px] font-black uppercase tracking-[0.4em]">{field.label}</span>
+                <div key={i} className="space-y-2 border-b border-slate-200 pb-4 group hover:border-primary transition-colors">
+                    <div className="flex items-center gap-3 text-slate-400">
+                        <field.icon size={14} />
+                        <span className="text-[10px] font-black uppercase tracking-widest">{field.label}</span>
                     </div>
-                    <p className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight leading-none">{field.val}</p>
+                    <p className="text-sm font-black text-[#1A1A1A] uppercase truncate">{field.val}</p>
                 </div>
             ))}
         </div>
@@ -305,34 +423,32 @@ const ProfileDetailsNode = ({ userInfo }: { userInfo: any }) => (
 );
 
 const EditProfileNode = ({ userInfo }: { userInfo: any }) => (
-    <div className="space-y-12">
-        <h2 className="text-4xl font-black text-[#1A1A1A] uppercase tracking-tighter">Reconfigure Node</h2>
-        <form className="bg-white rounded-[4rem] p-16 shadow-2xl border-2 border-slate-100 space-y-10 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-[4000ms]"><Edit3 size={300} /></div>
-            <div className="grid md:grid-cols-2 gap-12 relative z-10">
-                <div className="space-y-3">
-                    <label className="text-[11px] font-black text-[#1A1A1A] uppercase tracking-widest ml-4">Full Identity Signature</label>
-                    <input type="text" defaultValue={userInfo.name} className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 text-lg font-black text-[#1A1A1A] outline-none focus:border-primary focus:bg-white transition-all shadow-inner" />
+    <div className="space-y-8 animate-fade-in-up">
+        <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">EDIT DETAIL</h2>
+        <form className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 space-y-8">
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Full Name</label>
+                    <input type="text" defaultValue={userInfo.name} className="w-full bg-slate-50 border border-slate-100 rounded-xl px-6 py-4 text-xs font-bold text-[#1A1A1A] outline-none focus:border-primary focus:bg-white transition-all shadow-inner" />
                 </div>
-                <div className="space-y-3">
-                    <label className="text-[11px] font-black text-[#1A1A1A] uppercase tracking-widest ml-4">Communication Line Hub</label>
-                    <input type="tel" defaultValue={userInfo.mobile} className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 py-5 text-lg font-black text-[#1A1A1A] outline-none focus:border-primary focus:bg-white transition-all shadow-inner" />
+                <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Phone Number</label>
+                    <input type="tel" defaultValue={userInfo.mobile} className="w-full bg-slate-50 border border-slate-100 rounded-xl px-6 py-4 text-xs font-bold text-[#1A1A1A] outline-none focus:border-primary focus:bg-white transition-all shadow-inner" />
                 </div>
             </div>
-            <button className="relative z-10 px-16 py-6 bg-red-600 text-white rounded-3xl font-black text-xs uppercase tracking-[0.5em] hover:bg-[#1A1A1A] hover:text-primary transition-all shadow-2xl shadow-red-600/20 active:scale-95">Upgrade Network Identity</button>
+            <button className="px-10 py-4 bg-primary text-[#1A1A1A] rounded-xl font-black text-[10px] uppercase tracking-widest hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95">UPDATE PROFILE</button>
         </form>
     </div>
 );
 
 const ChangePasswordNode = ({ userInfo }: { userInfo: any }) => (
-    <div className="space-y-12">
-        <h2 className="text-4xl font-black text-[#1A1A1A] uppercase tracking-tighter leading-none">Guard Protocol</h2>
-        <form className="max-w-2xl bg-white p-16 rounded-[4rem] shadow-2xl border-2 border-slate-100 space-y-10 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none group-hover:scale-110 transition-transform duration-[4000ms]"><Lock size={300} /></div>
-            <div className="space-y-8 relative z-10">
-                <input type="password" placeholder="CURRENT ACCESS KEY" className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-10 py-6 text-2xl font-black outline-none focus:border-primary focus:bg-white transition-all shadow-inner" />
-                <input type="password" placeholder="NEW REGEN HUB KEY" className="w-full bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-10 py-6 text-2xl font-black outline-none focus:border-primary focus:bg-white transition-all shadow-inner" />
-                <button className="w-full py-8 bg-secondary text-primary rounded-[2.5rem] font-black text-sm uppercase tracking-[0.6em] hover:shadow-[0_20px_50px_rgba(47,237,154,0.3)] transition-all active:scale-95 border border-white/5 shadow-xl">Authorize Key Regen</button>
+    <div className="space-y-8 animate-fade-in-up">
+        <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">CHANGE PASSWORD</h2>
+        <form className="max-w-xl bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-slate-100 space-y-6">
+            <div className="space-y-4">
+                <input type="password" placeholder="CURRENT PASSWORD" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-6 py-4 text-xs font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                <input type="password" placeholder="NEW PASSWORD" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-6 py-4 text-xs font-bold outline-none focus:border-primary transition-all shadow-inner" />
+                <button className="w-full py-5 bg-[#1A1A1A] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 transition-all active:scale-95 shadow-lg">UPDATE PASSWORD</button>
             </div>
         </form>
     </div>
@@ -340,34 +456,33 @@ const ChangePasswordNode = ({ userInfo }: { userInfo: any }) => (
 
 const ResponsesNode = () => {
     const responses = [
-        { name: 'ANANYA SHARMA', mobile: '+91 9884521000', email: 'ANANYA.S@NEURAL.NET', date: '08 JAN 2026', type: 'ACQUISITION' },
-        { name: 'RAHUL KAPOOR', mobile: '+91 9123456789', email: 'RAHUL.K@MATRIX.IO', date: '07 JAN 2026', type: 'RENTAL' },
+        { name: 'ANANYA SHARMA', mobile: '+91 9884521000', email: 'ananya.s@gmail.com', date: '08 JAN 2026', type: 'ACQUISITION' },
+        { name: 'RAHUL KAPOOR', mobile: '+91 9123456789', email: 'rahul.k@outlook.com', date: '07 JAN 2026', type: 'RENTAL' },
     ];
     return (
-        <div className="space-y-10">
-            <h2 className="text-4xl font-black text-[#1A1A1A] uppercase tracking-tighter">Neural Leads</h2>
-            <div className="grid gap-6">
+        <div className="space-y-8 animate-fade-in-up">
+            <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">RESPONSES</h2>
+            <div className="grid gap-4">
                 {responses.map((r, i) => (
-                    <div key={i} className="bg-white border border-slate-100 rounded-[2.5rem] p-6 flex flex-col md:flex-row items-center justify-between hover:shadow-xl hover:border-primary/20 transition-all shadow-sm group relative overflow-hidden">
-                        <div className="flex items-center gap-6 min-w-[280px] relative z-10">
-                            <div className="w-16 h-16 rounded-2xl bg-secondary text-primary flex items-center justify-center font-black text-xl shadow-lg ring-4 ring-primary/5 group-hover:scale-105 transition-transform">{r.name[0]}</div>
+                    <div key={i} className="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between hover:shadow-lg transition-all group overflow-hidden">
+                        <div className="flex items-center gap-5 min-w-[240px]">
+                            <div className="w-12 h-12 rounded-xl bg-slate-50 text-[#1A1A1A] flex items-center justify-center font-black text-lg border border-slate-100 group-hover:bg-primary group-hover:border-primary transition-all">{r.name[0]}</div>
                             <div>
-                                <h4 className="text-lg font-black uppercase text-[#1A1A1A] group-hover:text-primary transition-colors tracking-tight">{r.name}</h4>
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{r.type} PROTOCOL • {r.date}</p>
+                                <h4 className="text-sm font-black uppercase text-[#1A1A1A] group-hover:text-red-600 transition-colors">{r.name}</h4>
+                                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{r.type} • {r.date}</p>
                             </div>
                         </div>
-                        <div className="flex gap-16 px-10 border-x border-slate-50 hidden lg:flex relative z-10">
+                        <div className="flex gap-12 px-8 border-x border-slate-50 hidden lg:flex">
                             <div className="space-y-1">
-                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Mobile</p>
-                                <p className="text-slate-600 font-black text-[13px] tracking-tight">{r.mobile}</p>
+                                <p className="text-[8px] font-black text-slate-300 uppercase tracking-widest">Mobile</p>
+                                <p className="text-[#1A1A1A] font-bold text-xs">{r.mobile}</p>
                             </div>
                             <div className="space-y-1">
-                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Email Node</p>
-                                <p className="text-slate-600 font-black text-[13px] tracking-tight lowercase">{r.email}</p>
+                                <p className="text-[8px] font-black text-slate-300 uppercase tracking-widest">Email</p>
+                                <p className="text-[#1A1A1A] font-bold text-xs lowercase">{r.email}</p>
                             </div>
                         </div>
-                        <button className="relative z-10 px-8 py-4 bg-[#1A1A1A] text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-primary hover:text-[#1A1A1A] transition-all shadow-lg active:scale-95 border border-white/5 flex items-center gap-3">Handshake <ArrowRight size={14} /></button>
-                        <div className="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-full blur-3xl -mr-12 -mt-12 group-hover:bg-primary/10 transition-colors"></div>
+                        <button className="px-6 py-2.5 bg-[#1A1A1A] text-white rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-[#1A1A1A] transition-all active:scale-95 flex items-center gap-2">CONTACT <ArrowRight size={12} /></button>
                     </div>
                 ))}
             </div>
@@ -390,44 +505,42 @@ const SubscriptionsNode = ({
     ];
 
     const plans = [
-        { name: 'Metal', price: 'Free', color: 'bg-slate-500', duration: '30 Days', listings: 1, video: false, sms: false, email: false, verified: false, chat: false, contact: false },
-        { name: 'Bronze', price: '₹ 730', color: 'bg-orange-700', duration: '60 Days', listings: 3, video: false, sms: false, email: false, verified: false, chat: true, contact: true },
+        { name: 'Metal', price: 'Free', color: 'bg-slate-400', duration: '30 Days', listings: 1, video: false, sms: false, email: false, verified: false, chat: false, contact: false },
+        { name: 'Bronze', price: '₹ 730', color: 'bg-orange-600', duration: '60 Days', listings: 3, video: false, sms: false, email: false, verified: false, chat: true, contact: true },
         { name: 'Silver', price: '₹ 1400', color: 'bg-red-600', duration: '90 Days', listings: 5, video: false, sms: false, email: true, verified: false, chat: true, contact: true },
         { name: 'Gold', price: '₹ 3500', color: 'bg-amber-500', duration: '120 Days', listings: 7, video: true, sms: true, email: true, verified: true, chat: true, contact: true },
-        { name: 'Platinum', price: '₹ 5000', color: 'bg-slate-900', duration: '150 Days', listings: 9, video: true, sms: true, email: true, verified: true, chat: true, contact: true }
+        { name: 'Platinum', price: '₹ 5000', color: 'bg-[#1A1A1A]', duration: '150 Days', listings: 9, video: true, sms: true, email: true, verified: true, chat: true, contact: true }
     ];
 
     const moreServices = [
-        { title: 'Hunt Vastu Consultancy', desc: 'Neural AI scan for energy harmony and spatial optimization.', icon: Compass },
-        { title: 'Advice Legal Expert', desc: 'Secure legal framework validation and document verification.', icon: Gavel },
-        { title: 'Insta SMS Booster Pack', desc: 'High-velocity lead acquisition via targeted SMS broadcasts.', icon: Zap },
-        { title: 'Insta E Mail Booster Pack', desc: 'Digital marketing protocol for massive asset exposure.', icon: Mail },
-        { title: 'Property Page Design By Expert', desc: 'Bespoke UI/UX for your property node presentation.', icon: Layout },
-        { title: 'Digital Marketing Pack', desc: 'Full spectrum social and search engine synchronization.', icon: Share2 },
-        { title: 'Advertise with Us', desc: 'Mainframe priority listing for maximum node traffic.', icon: Newspaper },
-        { title: 'Property Showcase in top search', desc: 'Search engine dominance for your architectural assets.', icon: Search },
+        { title: 'Hunt Vastu Consultancy', desc: 'Expert Vastu analysis for energy harmony and spatial optimization.', icon: Compass },
+        { title: 'Legal Expert Advice', desc: 'Secure legal framework validation and document verification.', icon: Scale },
+        { title: 'SMS Booster Pack', desc: 'High-velocity lead acquisition via targeted SMS broadcasts.', icon: Zap },
+        { title: 'Email Booster Pack', desc: 'Digital marketing protocol for massive asset exposure.', icon: Mail },
+        { title: 'Expert Page Design', desc: 'Bespoke UI/UX for your property presentation.', icon: Layout },
+        { title: 'Digital Marketing', desc: 'Full spectrum social and search engine synchronization.', icon: Share2 },
     ];
 
     return (
-        <div className="space-y-12">
-            <div className="border-b border-slate-100 pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-10 animate-fade-in-up">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-50">
                 <div>
-                    <h2 className="text-4xl font-black text-[#1A1A1A] uppercase tracking-tighter leading-none">
-                        {activeSubTab === 'subscribed' ? 'Active Matrix' : activeSubTab === 'history' ? 'Order History' : 'Discovery Hub'}
+                    <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">
+                        {activeSubTab === 'subscribed' ? 'Subscribed Services' : activeSubTab === 'history' ? 'Order History' : 'Discovery Hub'}
                     </h2>
-                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mt-4">Registry License Node v.2025</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Registry Management</p>
                 </div>
                 {activeSubTab === 'view' && (
-                    <div className="flex gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit border border-slate-200 shadow-inner">
+                    <div className="flex gap-1 p-1 bg-slate-100 rounded-xl">
                         <button
                             onClick={() => onViewServicesTabChange('listing-packages')}
-                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeViewServicesTab === 'listing-packages' ? 'bg-[#1A1A1A] text-white shadow-xl' : 'text-slate-400 hover:text-slate-900'}`}
+                            className={`px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeViewServicesTab === 'listing-packages' ? 'bg-[#1A1A1A] text-white shadow-md' : 'text-slate-400 hover:text-slate-900'}`}
                         >
                             Listing Packages
                         </button>
                         <button
                             onClick={() => onViewServicesTabChange('more-services')}
-                            className={`px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeViewServicesTab === 'more-services' ? 'bg-[#1A1A1A] text-white shadow-xl' : 'text-slate-400 hover:text-slate-900'}`}
+                            className={`px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${activeViewServicesTab === 'more-services' ? 'bg-[#1A1A1A] text-white shadow-md' : 'text-slate-400 hover:text-slate-900'}`}
                         >
                             More Services
                         </button>
@@ -436,35 +549,35 @@ const SubscriptionsNode = ({
             </div>
 
             {activeSubTab === 'subscribed' && (
-                <div className="bg-white rounded-[3rem] border-2 border-slate-100 overflow-hidden shadow-2xl relative">
-                    <div className="bg-[#1A1A1A] p-6 flex justify-between items-center text-white">
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Managed Subscriptions (0)</span>
-                        <Package size={20} className="text-primary" />
+                <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                    <div className="bg-[#1A1A1A] p-4 flex justify-between items-center text-white">
+                        <span className="text-[9px] font-black uppercase tracking-widest">Active Plans</span>
+                        <Package size={16} className="text-primary" />
                     </div>
-                    <div className="px-8 py-24 text-center text-slate-300 italic font-black uppercase text-sm tracking-[0.1em] shadow-inner">No active nodes detected in the registry</div>
+                    <div className="py-20 text-center text-slate-300 font-bold uppercase text-[10px] tracking-widest">No active plans detected</div>
                 </div>
             )}
 
             {activeSubTab === 'history' && (
-                <div className="bg-white rounded-[3rem] border-2 border-slate-100 overflow-hidden shadow-2xl">
-                    <div className="bg-[#1A1A1A] p-6 flex justify-between items-center text-white">
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em]">Neural Order Log (4)</span>
-                        <History size={20} className="text-primary" />
-                    </div>
+                <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
-                            <thead className="bg-slate-50 border-b border-slate-100">
-                                <tr>{['Product Node', 'Sync Date', 'Status'].map(h => <th key={h} className="px-10 py-6 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">{h}</th>)}</tr>
+                            <thead className="bg-[#1A1A1A] text-white">
+                                <tr>{['Product', 'Date', 'Status'].map(h => <th key={h} className="px-8 py-4 text-[9px] font-black uppercase tracking-widest">{h}</th>)}</tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-slate-50">
                                 {historyData.map((order, i) => (
-                                    <tr key={i} className="hover:bg-slate-50 transition-all group">
-                                        <td className="px-10 py-8">
-                                            <p className="text-sm font-black text-secondary uppercase tracking-tight group-hover:text-primary transition-colors">{order.product}</p>
-                                            <p className="text-[10px] font-bold text-slate-300 tracking-widest">ID: {order.id}</p>
+                                    <tr key={i} className="hover:bg-slate-50 transition-all">
+                                        <td className="px-8 py-5">
+                                            <p className="text-xs font-black text-[#1A1A1A] uppercase">{order.product}</p>
+                                            <p className="text-[9px] font-bold text-slate-300">ID: {order.id}</p>
                                         </td>
-                                        <td className="px-10 py-8 flex items-center gap-3 text-slate-500 font-black text-[11px] pt-12"><Calendar size={14} className="text-primary" /> {order.date}</td>
-                                        <td className="px-10 py-8 text-right"><span className={`px-5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${order.status === 'Invalid' ? 'bg-red-50 text-red-600 border-red-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>{order.status}</span></td>
+                                        <td className="px-8 py-5 text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                                            {order.date}
+                                        </td>
+                                        <td className="px-8 py-5">
+                                            <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest ${order.status === 'Invalid' ? 'bg-red-50 text-red-600' : 'bg-amber-50 text-amber-600'}`}>{order.status}</span>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -476,17 +589,16 @@ const SubscriptionsNode = ({
             {activeSubTab === 'view' && (
                 <div className="animate-fade-in-up">
                     {activeViewServicesTab === 'listing-packages' ? (
-                        <div className="bg-white rounded-[4rem] border-2 border-slate-100 overflow-hidden shadow-2xl">
-                            <div className="overflow-x-auto no-scrollbar">
+                        <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-lg">
+                            <div className="overflow-x-auto">
                                 <table className="w-full text-center border-collapse">
                                     <thead>
                                         <tr className="bg-slate-50 border-b border-slate-100">
-                                            <th className="px-8 py-10 text-left text-[11px] font-black uppercase tracking-[0.4em] text-slate-400 bg-white">Feature Protocol</th>
+                                            <th className="px-6 py-8 text-left text-[10px] font-black uppercase tracking-widest text-slate-400 bg-white">Feature Protocol</th>
                                             {plans.map(p => (
-                                                <th key={p.name} className={`px-4 py-10 min-w-[140px] text-white ${p.color} border-x border-white/10 relative overflow-hidden group`}>
-                                                    <div className="absolute inset-0 bg-white/5 group-hover:translate-y-full transition-transform duration-700"></div>
-                                                    <h4 className="text-xl font-black uppercase tracking-tighter relative z-10">{p.name}</h4>
-                                                    <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mt-2 relative z-10">{p.price}</p>
+                                                <th key={p.name} className={`px-4 py-8 min-w-[120px] text-white ${p.color}`}>
+                                                    <h4 className="text-sm font-black uppercase tracking-tight">{p.name}</h4>
+                                                    <p className="text-[9px] font-black text-white/60 uppercase mt-1">{p.price}</p>
                                                 </th>
                                             ))}
                                         </tr>
@@ -496,82 +608,51 @@ const SubscriptionsNode = ({
                                             { label: 'Free Posting', key: 'free' },
                                             { label: 'Duration (Days)', key: 'duration' },
                                             { label: 'Total Listings', key: 'listings' },
-                                            { label: 'Video (5MB)', key: 'video' },
+                                            { label: 'Video Support', key: 'video' },
                                             { label: 'SMS Alerts', key: 'sms' },
                                             { label: 'Verified Badge', key: 'verified' },
                                             { label: 'Direct Chat', key: 'chat' },
                                             { label: 'Buyer Contact', key: 'contact' },
                                         ].map((row) => (
                                             <tr key={row.label} className="hover:bg-slate-50 transition-colors">
-                                                <td className="px-8 py-6 text-left border-r border-slate-100 bg-white sticky left-0 z-10 shadow-[5px_0_10px_rgba(0,0,0,0.01)]">
-                                                    <span className="text-[11px] font-black uppercase text-secondary tracking-tight">{row.label}</span>
+                                                <td className="px-6 py-4 text-left border-r border-slate-50 bg-white sticky left-0 z-10">
+                                                    <span className="text-[10px] font-black uppercase text-[#1A1A1A] tracking-tight">{row.label}</span>
                                                 </td>
                                                 {plans.map(p => {
                                                     const val = (p as any)[row.key];
                                                     const isBool = typeof val === 'boolean';
                                                     return (
-                                                        <td key={p.name} className="px-4 py-6 border-x border-slate-100">
+                                                        <td key={p.name} className="px-4 py-4 border-x border-slate-50">
                                                             {isBool ? (
-                                                                val ? <div className="flex justify-center"><CheckCircle2 size={18} className="text-primary" /></div> : <div className="flex justify-center"><Minus size={18} className="text-slate-100" /></div>
+                                                                val ? <div className="flex justify-center"><CheckCircle2 size={16} className="text-primary" /></div> : <div className="flex justify-center"><Minus size={16} className="text-slate-100" /></div>
                                                             ) : (
-                                                                <span className="text-[11px] font-black text-secondary uppercase">{row.key === 'free' ? 'Yes' : val}</span>
+                                                                <span className="text-[10px] font-bold text-[#1A1A1A] uppercase">{row.key === 'free' ? 'Yes' : val}</span>
                                                             )}
                                                         </td>
                                                     );
                                                 })}
                                             </tr>
                                         ))}
-                                        <tr className="bg-[#1A1A1A]">
-                                            <td className="px-8 py-10 text-left border-r border-white/5 bg-[#1A1A1A] sticky left-0 z-10">
-                                                <span className="text-[11px] font-black uppercase text-primary tracking-[0.2em]">Matrix Sync</span>
-                                            </td>
-                                            {plans.map(p => (
-                                                <td key={p.name} className="px-4 py-10 border-x border-white/5">
-                                                    <button className="px-8 py-2.5 bg-primary text-[#1A1A1A] rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-white hover:shadow-xl transition-all active:scale-95 shadow-lg">Proceed</button>
-                                                </td>
-                                            ))}
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     ) : (
-                        <div className="grid md:grid-cols-2 gap-8">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {moreServices.map(service => (
-                                <div key={service.title} className="bg-white border-2 border-slate-100 rounded-[3rem] p-10 hover:shadow-2xl hover:border-primary/20 transition-all duration-500 group relative overflow-hidden flex flex-col justify-between h-[360px] shadow-sm">
-                                    <div className="absolute -top-10 -right-10 w-56 h-56 bg-slate-50 rounded-full opacity-30 group-hover:opacity-100 group-hover:scale-125 transition-all duration-700 flex items-center justify-center"><service.icon size={100} className="text-slate-200 group-hover:text-primary transition-all opacity-10 group-hover:opacity-40" /></div>
-                                    <div className="space-y-6 relative z-10">
-                                        <div className="w-16 h-16 bg-[#1A1A1A] text-primary rounded-[1.2rem] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform"><service.icon size={28} /></div>
+                                <div key={service.title} className="bg-white border border-slate-100 rounded-2xl p-8 hover:shadow-xl transition-all group relative overflow-hidden flex flex-col justify-between">
+                                    <div className="space-y-6">
+                                        <div className="w-12 h-12 bg-slate-50 text-[#1A1A1A] rounded-xl flex items-center justify-center group-hover:bg-primary transition-all"><service.icon size={20} /></div>
                                         <div className="space-y-2">
-                                            <h3 className="text-2xl font-black uppercase tracking-tighter text-secondary leading-none pr-16">{service.title}</h3>
-                                            <div className="w-12 h-1 bg-primary/20 rounded-full group-hover:w-20 transition-all duration-500"></div>
+                                            <h3 className="text-lg font-black uppercase tracking-tight text-[#1A1A1A] leading-none">{service.title}</h3>
+                                            <p className="text-xs font-medium text-slate-500 leading-relaxed italic pr-4">{service.desc}</p>
                                         </div>
-                                        <p className="text-[14px] font-medium text-slate-500 leading-relaxed max-w-[280px] italic">"{service.desc}"</p>
                                     </div>
-                                    <button className="relative z-10 w-fit px-12 py-4 bg-white border-2 border-red-600 text-red-600 rounded-[1.8rem] font-black text-[10px] uppercase tracking-[0.4em] hover:bg-red-600 hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-4 group/btn">Proceed <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" /></button>
+                                    <button className="mt-8 px-8 py-3 bg-[#1A1A1A] text-white rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-primary hover:text-[#1A1A1A] transition-all flex items-center justify-center gap-3">Proceed <ArrowRight size={14} /></button>
                                 </div>
                             ))}
                         </div>
                     )}
-
-                    {/* Integrated Support Hub */}
-                    <div className="mt-16 bg-[#1A1A1A] rounded-[4rem] p-12 flex flex-col md:flex-row items-center justify-center gap-16 text-white shadow-2xl relative overflow-hidden ring-4 ring-primary/5">
-                        <div className="absolute top-0 right-0 p-20 opacity-[0.05] pointer-events-none group-hover:scale-110 transition-transform duration-[8000ms]"><Network size={400} /></div>
-                        <div className="flex items-center gap-8 group cursor-pointer relative z-10">
-                            <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-primary border border-white/10 shadow-2xl group-hover:scale-110 group-hover:bg-primary/20 transition-all"><Phone size={28} /></div>
-                            <div className="space-y-1">
-                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Direct Uplink</p>
-                                <p className="text-2xl font-black tracking-tighter">8588 002009</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-8 group cursor-pointer relative z-10">
-                            <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-red-500 border border-white/10 shadow-2xl group-hover:scale-110 group-hover:bg-red-600/20 transition-all"><Mail size={28} /></div>
-                            <div className="space-y-1">
-                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Mail Vector</p>
-                                <p className="text-2xl font-black tracking-tighter uppercase">INFO@HUNTPROPERTY.COM</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             )}
         </div>
@@ -580,32 +661,23 @@ const SubscriptionsNode = ({
 
 const ServicesNode = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
     const services = [
-        { label: 'Home Loan', icon: IndianRupee, color: 'text-emerald-500', bg: 'bg-emerald-50', view: 'home-loans', sub: 'Capital Matrix' },
-        { label: 'Vastu AI', icon: Compass, color: 'text-amber-500', bg: 'bg-amber-50', view: 'vastu', sub: 'Spatial Harmony' },
-        { label: 'Interior Node', icon: Layout, color: 'text-indigo-500', bg: 'bg-indigo-50', view: 'home', sub: 'Visual Logic' },
-        { label: 'Market Pulse', icon: Newspaper, color: 'text-blue-500', bg: 'bg-blue-50', view: 'insights', sub: 'Neural Insights' },
-        { label: 'Legal Shield', icon: Scale, color: 'text-rose-500', bg: 'bg-rose-50', view: 'legal-advisory', sub: 'Regulatory Node' },
-        { label: 'Network Hub', icon: Users, color: 'text-purple-500', bg: 'bg-purple-50', view: 'channel-partner', sub: 'Global Partner' },
-        { label: 'RERA Guard', icon: ShieldPlus, color: 'text-orange-500', bg: 'bg-orange-50', view: 'rera', sub: 'Compliance Hub' },
-        { label: 'Talent Flow', icon: Briefcase, color: 'text-slate-600', bg: 'bg-slate-50', view: 'career', sub: 'Human Capital' }
+        { label: 'Home Loan', icon: IndianRupee, color: 'text-emerald-500', bg: 'bg-emerald-50', view: 'home-loans' },
+        { label: 'Vastu AI', icon: Compass, color: 'text-amber-500', bg: 'bg-amber-50', view: 'vastu' },
+        { label: 'Interior Node', icon: Layout, color: 'text-indigo-500', bg: 'bg-indigo-50', view: 'home' },
+        { label: 'Market Pulse', icon: Newspaper, color: 'text-blue-500', bg: 'bg-blue-50', view: 'insights' },
     ];
     return (
-        <div className="space-y-24">
-            <div className="text-center space-y-12 max-w-5xl mx-auto">
-                <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full bg-[#1A1A1A] text-primary border border-white/10 text-[11px] font-black uppercase tracking-[0.5em] shadow-2xl">
-                    <Repeat size={16} className="animate-spin-slow" /> Strategic Asset Matrix
-                </div>
-                <h3 className="text-7xl md:text-9xl font-black text-secondary tracking-tighter uppercase leading-[0.8]">Market Your <br /> <span className="text-primary italic">Sanctuary</span></h3>
-                <p className="text-slate-500 text-3xl font-medium italic opacity-90 leading-relaxed max-w-4xl mx-auto">"Accelerate transaction finality with high-fidelity intelligence services powered by Gemini Neural Engine."</p>
+        <div className="space-y-12 animate-fade-in-up">
+            <div className="text-center space-y-4 max-w-4xl mx-auto">
+                <h3 className="text-3xl md:text-4xl font-black text-[#1A1A1A] tracking-tight uppercase leading-none">STRATEGIC <span className="text-primary italic">SERVICES</span></h3>
+                <p className="text-slate-400 text-sm font-medium italic">"Premium real estate intelligence and advisory at your fingertips."</p>
             </div>
-            <div className="grid md:grid-cols-4 gap-10">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {services.map(service => (
-                    <div key={service.label} onClick={() => onNavigate(service.view)} className="p-12 rounded-[5rem] border-2 border-slate-100 text-center space-y-10 hover:shadow-2xl hover:border-primary/50 transition-all group cursor-pointer relative overflow-hidden bg-white shadow-xl">
-                        <div className="absolute top-0 right-0 p-8 opacity-[0.08] group-hover:scale-125 transition-transform duration-2000"><service.icon size={180} className="text-[#1A1A1A]" /></div>
-                        <div className={`w-28 h-28 mx-auto rounded-[3.5rem] ${service.bg} ${service.color} flex items-center justify-center shadow-inner border-2 border-white group-hover:bg-[#1A1A1A] group-hover:text-primary transition-all duration-700 ring-8 ring-slate-50`}><service.icon size={52} strokeWidth={1.5} /></div>
-                        <div className="space-y-2 relative z-10">
-                            <h4 className="text-3xl font-black uppercase text-secondary group-hover:text-primary transition-colors tracking-tighter leading-none">{service.label}</h4>
-                            <p className="text-[12px] font-black text-slate-500 uppercase tracking-[0.4em]">{service.sub}</p>
+                    <div key={service.label} onClick={() => onNavigate(service.view)} className="p-8 rounded-3xl border border-slate-100 text-center space-y-6 hover:shadow-xl hover:border-primary transition-all group cursor-pointer bg-white">
+                        <div className={`w-16 h-16 mx-auto rounded-2xl ${service.bg} ${service.color} flex items-center justify-center border-2 border-white group-hover:bg-[#1A1A1A] group-hover:text-primary transition-all duration-500`}><service.icon size={24} /></div>
+                        <div className="space-y-1">
+                            <h4 className="text-sm font-black uppercase text-[#1A1A1A] group-hover:text-primary transition-colors tracking-tight leading-none">{service.label}</h4>
                         </div>
                     </div>
                 ))}
@@ -616,27 +688,210 @@ const ServicesNode = ({ onNavigate }: { onNavigate: (v: any) => void }) => {
 
 const AdviceNode = () => {
     const advice = [
-        { title: "DO'S & DON'T'S FOR SELL", items: ["Verified Registry Protocol", "Infrastructure Archive Log", "Immersive Visual Staging", "Identity Synchronized Hub"], icon: Info },
-        { title: "RENTAL FRAMEWORKS", items: ["Residency Verification Node", "Digital Lease Matrix", "Security Deposit Token", "Utility Connectivity Base"], icon: FileText },
-        { title: "SALES DOCUMENTATION", items: ["Registry Chain Archive", "Tax Redressal Shield", "Final Transfer Protocol", "Ownership DNA Guard"], icon: Gavel }
+        { title: "DO'S & DON'T'S FOR SELL", items: ["Verified Registry Protocol", "Infrastructure Archive Log", "Immersive Visual Staging"], icon: Info },
+        { title: "RENTAL FRAMEWORKS", items: ["Residency Verification Node", "Digital Lease Matrix", "Security Deposit Token"], icon: FileText }
     ];
     return (
-        <div className="grid md:grid-cols-3 gap-14 pb-20">
+        <div className="grid md:grid-cols-2 gap-8 animate-fade-in-up">
             {advice.map(cat => (
-                <div key={cat.title} className="bg-white border-2 border-slate-100 rounded-[5rem] p-16 shadow-2xl hover:shadow-[0_60px_150px_-30px_rgba(0,0,0,0.15)] hover:-translate-y-6 transition-all duration-1000 flex flex-col group relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-16 opacity-[0.03] group-hover:scale-125 transition-transform duration-[6000ms]"><cat.icon size={450} className="text-[#1A1A1A]" /></div>
-                    <div className="flex items-center gap-10 mb-20 border-b border-slate-50 pb-16 relative z-10">
-                        <div className="w-20 h-20 bg-red-50 text-red-600 rounded-[2rem] flex items-center justify-center shadow-inner group-hover:bg-red-600 group-hover:text-white transition-all duration-1000 ring-12 ring-white"><cat.icon size={36} /></div>
-                        <h4 className="text-lg font-black uppercase text-secondary tracking-tighter leading-none max-w-[180px]">{cat.title}</h4>
+                <div key={cat.title} className="bg-white border border-slate-100 rounded-3xl p-10 hover:shadow-xl transition-all group overflow-hidden relative">
+                    <div className="flex items-center gap-6 mb-8 pb-6 border-b border-slate-50">
+                        <div className="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center group-hover:bg-[#1A1A1A] group-hover:text-primary transition-all duration-500"><cat.icon size={20} /></div>
+                        <h4 className="text-sm font-black uppercase text-[#1A1A1A] tracking-tight">{cat.title}</h4>
                     </div>
-                    <ul className="space-y-10 flex-1 relative z-10">
+                    <ul className="space-y-4">
                         {cat.items.map(item => (
-                            <li key={item} className="flex items-start gap-8 text-[14px] font-black text-slate-600 uppercase tracking-[0.25em] leading-relaxed"><CheckCircle2 size={24} className="text-primary shrink-0 mt-0.5 shadow-[0_0_15px_rgba(47,237,154,0.3)]" /> {item}</li>
+                            <li key={item} className="flex items-start gap-4 text-xs font-bold text-slate-500 uppercase tracking-widest"><CheckCircle2 size={16} className="text-primary shrink-0 mt-0.5" /> {item}</li>
                         ))}
                     </ul>
-                    <button className="mt-20 w-full py-10 bg-slate-50 border-2 border-slate-100 text-slate-500 rounded-[3.5rem] font-black text-[12px] uppercase tracking-[0.6em] hover:bg-[#1A1A1A] hover:text-primary hover:border-[#1A1A1A] transition-all active:scale-95 group/btn flex items-center justify-center gap-8 relative z-10">Expand Intel <ArrowUpRight size={28} className="group-hover/btn:rotate-45 transition-transform duration-1000" strokeWidth={3} /></button>
                 </div>
             ))}
+        </div>
+    );
+};
+
+const BoostAnalyticsNode = ({ isBoostActive, properties, onViewReport }: { isBoostActive: boolean, properties: any[], onViewReport: (prop: any) => void }) => {
+    if (!isBoostActive || properties.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-24 text-center space-y-6 animate-fade-in-up">
+                <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-200">
+                    <Rocket size={40} />
+                </div>
+                <div className="space-y-2">
+                    <h3 className="text-xl font-black text-[#1A1A1A] uppercase tracking-tight">No Active Boosts Detected</h3>
+                    <p className="text-slate-400 text-sm font-medium italic">"Ignite your property's visibility to see real-time performance analytics here."</p>
+                </div>
+                <button className="px-10 py-4 bg-[#1A1A1A] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#20F29E] hover:text-[#1A1A1A] transition-all active:scale-95 shadow-lg">BOOST A PROPERTY NOW</button>
+            </div>
+        );
+    }
+
+    const globalStats = {
+        totalViews: 14250,
+        totalLeads: 84,
+        avgROI: '3.4x',
+        activeBoosts: properties.length
+    };
+
+    return (
+        <div className="space-y-10 animate-fade-in-up pb-20">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-50">
+                <div>
+                    <h2 className="text-2xl font-black text-[#1A1A1A] uppercase tracking-tight">PRO-ANALYTICS ENGINE</h2>
+                    <div className="flex items-center gap-2 mt-1">
+                        <div className="w-2 h-2 bg-[#20F29E] rounded-full animate-pulse"></div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Real-time Lead Origin Synced</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-2">
+                        <TrendingUp size={12} className="text-[#20F29E]" />
+                        <span className="text-[10px] font-black uppercase text-[#1A1A1A]">ROI: {globalStats.avgROI}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* ROI Cards Grid */}
+            <div className="grid md:grid-cols-2 gap-6">
+                {properties.map((prop, i) => (
+                    <div key={i} className="bg-white border border-slate-100 rounded-[2rem] p-8 space-y-8 hover:shadow-2xl transition-all group overflow-hidden relative">
+                        <div className="flex items-start justify-between">
+                            <div className="space-y-1">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{prop.package}</span>
+                                <h4 className="text-lg font-black text-[#1A1A1A] uppercase tracking-tight truncate max-w-[200px]">{prop.title}</h4>
+                            </div>
+                            <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[#1A1A1A] group-hover:bg-[#20F29E] transition-all duration-500">
+                                <BarChart3 size={20} />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-8 py-6 border-y border-slate-50">
+                            <div className="space-y-1">
+                                <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Leads Generated</span>
+                                <p className="text-3xl font-black text-[#1A1A1A]">{prop.inquiries}</p>
+                            </div>
+                            <div className="space-y-1">
+                                <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Traffic Gain</span>
+                                <p className="text-3xl font-black text-[#20F29E]">+{Math.floor(prop.views / 10)}%</p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                    <Clock size={12} className="text-red-500" />
+                                    <span className="text-[10px] font-black text-red-500 uppercase">{prop.daysLeft} DAYS LEFT</span>
+                                </div>
+                                <p className="text-[8px] font-bold text-slate-400 uppercase italic">Expiry: 12 April 2026</p>
+                            </div>
+                            <button className="px-6 py-2.5 bg-[#1A1A1A] text-white rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-[#20F29E] hover:text-[#1A1A1A] transition-all shadow-lg">EXTEND BOOST</button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Map Overlay & Lead Origin */}
+            <div className="bg-[#1A1A1A] rounded-[2.5rem] p-10 relative overflow-hidden group min-h-[500px]">
+                <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-12">
+                        <div className="space-y-2">
+                            <h3 className="text-2xl font-black text-white uppercase tracking-tight">Lead Origin Heatmap</h3>
+                            <p className="text-slate-400 text-sm font-medium italic">Showing organic vs targeted traffic flow</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <div className="px-3 py-1.5 bg-white/5 rounded-full border border-white/10 flex items-center gap-2">
+                                <div className="w-2 h-2 bg-[#20F29E] rounded-full"></div>
+                                <span className="text-[9px] font-bold text-white uppercase">Inter-City</span>
+                            </div>
+                            <div className="px-3 py-1.5 bg-white/5 rounded-full border border-white/10 flex items-center gap-2">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span className="text-[9px] font-bold text-white uppercase">Local</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-1 grid md:grid-cols-3 gap-10">
+                        {/* Mock Map Representation */}
+                        <div className="md:col-span-2 bg-white/5 rounded-3xl border border-white/10 relative overflow-hidden min-h-[300px]">
+                            {/* Abstract Map Lines */}
+                            <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 100 100">
+                                <path d="M0,50 Q25,30 50,50 T100,50" fill="none" stroke="white" strokeWidth="0.5" />
+                                <path d="M20,0 Q40,50 20,100" fill="none" stroke="white" strokeWidth="0.5" />
+                                <path d="M80,0 Q60,50 80,100" fill="none" stroke="white" strokeWidth="0.5" />
+                            </svg>
+
+                            {/* Origin Points (Pulse) */}
+                            <div className="absolute top-1/4 left-1/3">
+                                <div className="w-4 h-4 bg-[#20F29E] rounded-full animate-pulse scale-150 opacity-20" />
+                                <div className="absolute top-0 w-4 h-4 bg-[#20F29E] rounded-full border-2 border-white shadow-[0_0_15px_#20F29E]" />
+                                <span className="absolute top-6 left-0 text-[8px] font-black text-[#20F29E] uppercase whitespace-nowrap">SRINAGAR (Local)</span>
+                            </div>
+
+                            <div className="absolute bottom-1/4 right-1/4">
+                                <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse scale-150 opacity-20" />
+                                <div className="absolute top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-[0_0_15px_blue]" />
+                                <span className="absolute top-6 left-0 text-[8px] font-black text-blue-400 uppercase whitespace-nowrap">CHENNAI (Targeted)</span>
+                            </div>
+
+                            <div className="absolute top-1/2 right-1/3">
+                                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse opacity-40" />
+                                <div className="absolute top-0 w-3 h-3 bg-blue-500 rounded-full border border-white" />
+                                <span className="absolute top-5 left-0 text-[7px] font-black text-slate-400 uppercase">NOIDA</span>
+                            </div>
+
+                            {/* Connection Lines */}
+                            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 300">
+                                <path
+                                    d="M133,75 Q200,150 300,225"
+                                    fill="none"
+                                    stroke="url(#lineGradient)"
+                                    strokeWidth="2"
+                                    strokeDasharray="5,5"
+                                    className="animate-[dash_10s_linear_infinite]"
+                                />
+                                <defs>
+                                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stopColor="#20F29E" />
+                                        <stop offset="100%" stopColor="#3b82f6" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+
+                        {/* Top Locations Stats */}
+                        <div className="space-y-6">
+                            <h4 className="text-[10px] font-black text-[#20F29E] uppercase tracking-widest">Geographical Intensity</h4>
+                            <div className="space-y-4">
+                                {[
+                                    { city: 'Chennai', percentage: 42, color: 'bg-blue-500' },
+                                    { city: 'Noida', percentage: 28, color: 'bg-blue-400' },
+                                    { city: 'Srinagar', percentage: 15, color: 'bg-[#20F29E]' },
+                                    { city: 'Indore', percentage: 10, color: 'bg-slate-700' },
+                                    { city: 'Others', percentage: 5, color: 'bg-slate-800' }
+                                ].map((loc, idx) => (
+                                    <div key={idx} className="space-y-1.5">
+                                        <div className="flex justify-between items-center text-[10px] font-bold text-white uppercase">
+                                            <span>{loc.city}</span>
+                                            <span className="text-slate-500">{loc.percentage}%</span>
+                                        </div>
+                                        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full ${loc.color} transition-all duration-1000 ease-out`}
+                                                style={{ width: `${loc.percentage}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="absolute bottom-0 right-0 p-12 opacity-5 scale-150 rotate-12">
+                    <MapIcon size={300} className="text-primary" />
+                </div>
+            </div>
         </div>
     );
 };

@@ -2,17 +2,7 @@
 import React from 'react';
 import { MapPin, Building2, Layers, TrendingUp, ArrowUpRight } from 'lucide-react';
 
-interface Project {
-  id: string;
-  title: string;
-  developer: string;
-  location: string;
-  priceRange: string;
-  units: number;
-  status: 'Launching Soon' | 'Under Construction' | 'Ready to Move';
-  imageUrl: string;
-  completionDate: string;
-}
+import { Project } from '../types';
 
 interface ProjectCardProps {
   project: Project;
@@ -39,9 +29,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 flex gap-2">
           <span className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md border ${statusColors[project.status]}`}>
             {project.status}
+          </span>
+          <span className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white border border-white/20 backdrop-blur-md">
+            {project.type}
           </span>
         </div>
 
