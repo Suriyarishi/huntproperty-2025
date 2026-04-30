@@ -18,6 +18,8 @@ import LoginView from './components/LoginView';
 import RegisterView from './components/RegisterView';
 import AgentDashboardView from './components/AgentDashboardView';
 import DeveloperDashboardView from './components/DeveloperDashboardView';
+import NotificationsView from './components/NotificationsView';
+import NotificationPopup, { PopupData } from './components/NotificationPopup';
 import ProjectListingFlow from './components/ProjectListingFlow';
 import SpinModule from './components/SpinModule';
 import HomeLoanView from './components/HomeLoanView';
@@ -1031,6 +1033,74 @@ function App() {
     const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
     const [userRole, setUserRole] = useState<'Owner' | 'Agent' | 'Developer' | null>(null);
     const [showSpinModal, setShowSpinModal] = useState(false);
+    const [isNotificationPopupOpen, setIsNotificationPopupOpen] = useState(false);
+    const [popupData, setPopupData] = useState<PopupData | null>(null);
+    const [hasShownPopup, setHasShownPopup] = useState(false);
+
+    // Smart Triggers for Notification Popup
+    useEffect(() => {
+        if (hasShownPopup || currentView !== 'home') return;
+
+        // 1. Inactivity Trigger (8 seconds)
+        let inactivityTimer: any;
+        const resetInactivity = () => {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                triggerPopup('price-drop');
+            }, 12000);
+        };
+
+        // 2. Scroll Trigger (50%)
+        const handleScroll = () => {
+            const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            if (scrollPercent > 50 && !hasShownPopup) {
+                triggerPopup('property');
+            }
+        };
+
+        const triggerPopup = (variant: 'property' | 'price-drop') => {
+            if (hasShownPopup) return;
+            
+            const data: PopupData = variant === 'price-drop' ? {
+                id: '1',
+                variant: 'price-drop',
+                title: 'Price Dropped by ₹5L',
+                description: 'The 3 BHK Luxury Apartment in Sector 146 Noida is now available at an unbeatable price.',
+                image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80',
+                price: '1.25 Cr',
+                size: '1850 sqft',
+                location: 'Sector 146, Noida',
+                ctaText: 'Grab This Deal',
+                timeLabel: '2 mins ago'
+            } : {
+                id: '2',
+                variant: 'property',
+                title: 'New Luxury Listing',
+                description: 'A stunning penthouse in M3M The Cullinan has just hit the market. Priority viewing now open.',
+                image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+                price: '8.5 Cr',
+                size: '4500 sqft',
+                location: 'Sector 94, Noida',
+                ctaText: 'Book a Visit'
+            };
+
+            setPopupData(data);
+            setIsNotificationPopupOpen(true);
+            setHasShownPopup(true);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('mousemove', resetInactivity);
+        window.addEventListener('keypress', resetInactivity);
+        resetInactivity();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('mousemove', resetInactivity);
+            window.removeEventListener('keypress', resetInactivity);
+            clearTimeout(inactivityTimer);
+        };
+    }, [hasShownPopup, currentView]);
 
     const handleNavigate = (view: ViewState) => {
         setCurrentView(view);
@@ -1331,6 +1401,7 @@ function App() {
             case 'articles': return <ArticlesView />;
             case 'nri-center': return <NRICenterView />;
             case 'covid': return <CovidView />;
+            case 'notifications': return <NotificationsView />;
             case 'home':
             default:
                 return (
@@ -1537,7 +1608,8 @@ function App() {
             case 'video-gallery':
             case 'articles':
             case 'nri-center':
-            case 'covid': return 'Back to Home';
+            case 'covid': 
+            case 'notifications': return 'Back to Home';
             default: return 'Back';
         }
     };
@@ -1567,6 +1639,12 @@ function App() {
             {!isAuthView && <Footer onNavigate={handleNavigate} />}
 
             <ChatAssistant />
+            
+            <NotificationPopup 
+                isOpen={isNotificationPopupOpen} 
+                onClose={() => setIsNotificationPopupOpen(false)} 
+                data={popupData} 
+            />
             
             <SpinModule 
                 isOpen={showSpinModal} 

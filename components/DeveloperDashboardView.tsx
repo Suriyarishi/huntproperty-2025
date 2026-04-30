@@ -12,15 +12,18 @@ import {
 import KYCFormView from './KYCFormView';
 import ManageProjectsView from './ManageProjectsView';
 
+
+
 interface DeveloperDashboardViewProps {
-    onNavigate: (view: any) => void;
+    onNavigate: (view: string) => void;
     userName?: string;
     image?: string;
 }
 
 const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavigate, userName = 'rishi1', image }) => {
-    const [activeTab, setActiveTab] = useState('responses');
-    const [activeSidebarItem, setActiveSidebarItem] = useState('view-responses');
+
+    const [activeTab, setActiveTab] = useState('projects');
+    const [activeSidebarItem, setActiveSidebarItem] = useState('manage-projects');
     const [selectedPropertyType, setSelectedPropertyType] = useState('residential');
 
     const handleTabChange = (tabId: string) => {
@@ -94,7 +97,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
     ];
 
     const projectsSidebarItems = [
-        { id: 'manage-projects', label: 'View Projects', icon: Building2 },
+        { id: 'manage-projects', label: 'Manage Project', icon: Building2 },
         { id: 'add-project', label: 'Add New Project', icon: Plus },
     ];
 
@@ -131,11 +134,30 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                     </div>
 
                     <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => {
+                                const isSystem = Math.random() > 0.5;
+                                addToast({
+                                    title: isSystem ? "System Update" : "Price Dropped by ₹5L",
+                                    description: isSystem ? "Your project listing has been approved and is now live." : "2 BHK in Mumbai now available at lower price",
+                                    variant: isSystem ? 'system' : 'property',
+                                    ctaText: "View Details",
+                                    imageUrl: isSystem ? undefined : "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80"
+                                });
+                            }}
+                            className="bg-purple-100 text-purple-700 px-4 py-2.5 rounded-full font-bold text-sm hover:bg-purple-200 transition-all shadow-md"
+                        >
+                            Demo Toast
+                        </button>
                         <button className="bg-[#1a1c21] text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-teal-500 transition-all shadow-md">
                             Post Your Property
                         </button>
-                        <div className="p-2 border border-gray-100 rounded-full cursor-pointer hover:bg-gray-50 transition-colors">
-                            <User size={20} className="text-gray-600" />
+                        <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-100 cursor-pointer hover:ring-2 hover:ring-teal-500 transition-all flex items-center justify-center bg-gray-50">
+                            {image ? (
+                                <img src={image} alt="User Profile" className="w-full h-full object-cover" />
+                            ) : (
+                                <User size={20} className="text-gray-600" />
+                            )}
                         </div>
                         <ChevronDown size={14} className="text-gray-400" />
                     </div>
@@ -252,231 +274,231 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                     <div className="flex-1 p-12">
                         {activeTab === 'properties' ? (
                             <div className="space-y-12 animate-fade-in-up">
-                                    <>
-                                        <div className="flex items-center justify-between mb-12 border-b border-gray-50 pb-8">
-                                            <div>
-                                                <h2 className="text-3xl font-black text-[#1a1c21] uppercase tracking-tight">Properties</h2>
-                                                <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Inventory Management</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-[15px] font-black text-[#1a1c21]">Listings Left: 50</p>
-                                            </div>
+                                <>
+                                    <div className="flex items-center justify-between mb-12 border-b border-gray-50 pb-8">
+                                        <div>
+                                            <h2 className="text-3xl font-black text-[#1a1c21] uppercase tracking-tight">Properties</h2>
+                                            <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Inventory Management</p>
                                         </div>
+                                        <div className="text-right">
+                                            <p className="text-[15px] font-black text-[#1a1c21]">Listings Left: 50</p>
+                                        </div>
+                                    </div>
 
-                                        {activeSidebarItem === 'manage-properties' ? (
-                                            <div className="space-y-8 contents-wrapper">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
-                                                        Manage Properties
-                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
-                                                    </h3>
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="relative">
-                                                            <input
-                                                                type="text"
-                                                                placeholder="Search by ID"
-                                                                className="h-10 border border-gray-200 rounded-lg px-4 text-sm outline-none w-40"
-                                                            />
-                                                        </div>
-                                                        <button className="h-10 bg-[#2FED9A] text-[#1a1c21] px-4 rounded-lg font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all">
-                                                            Go
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                                {/* Filter Section */}
-                                                <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                                                    <div className="space-y-2">
-                                                        <div className="relative">
-                                                            <select className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none appearance-none text-gray-400">
-                                                                <option>Property For</option>
-                                                            </select>
-                                                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
-                                                        </div>
-                                                    </div>
-                                                    <div className="md:col-span-1">
+                                    {activeSidebarItem === 'manage-properties' ? (
+                                        <div className="space-y-8 contents-wrapper">
+                                            <div className="flex items-center justify-between">
+                                                <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
+                                                    Manage Properties
+                                                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
+                                                </h3>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="relative">
                                                         <input
                                                             type="text"
-                                                            placeholder="Enter a Locality or Project"
-                                                            className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none"
+                                                            placeholder="Search by ID"
+                                                            className="h-10 border border-gray-200 rounded-lg px-4 text-sm outline-none w-40"
                                                         />
                                                     </div>
-                                                    <div>
+                                                    <button className="h-10 bg-[#2FED9A] text-[#1a1c21] px-4 rounded-lg font-black text-xs uppercase tracking-widest hover:shadow-lg transition-all">
+                                                        Go
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {/* Filter Section */}
+                                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                                                <div className="space-y-2">
+                                                    <div className="relative">
+                                                        <select className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none appearance-none text-gray-400">
+                                                            <option>Property For</option>
+                                                        </select>
+                                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                                    </div>
+                                                </div>
+                                                <div className="md:col-span-1">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Enter a Locality or Project"
+                                                        className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <div className="relative">
+                                                        <select className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none appearance-none text-gray-400">
+                                                            <option>Property Type</option>
+                                                        </select>
+                                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <input type="text" placeholder="₹ Min" className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none" />
+                                                    <input type="text" placeholder="₹ Max" className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none" />
+                                                </div>
+                                                <button className="h-12 bg-[#2FED9A] text-[#1a1c21] flex items-center justify-center rounded-lg hover:shadow-lg transition-all">
+                                                    <Search size={24} />
+                                                </button>
+                                            </div>
+
+                                            <div className="flex justify-end">
+                                                <button className="text-[12px] font-bold text-gray-400 hover:text-[#1a1c21] underline decoration-dotted">
+                                                    Reset Search
+                                                </button>
+                                            </div>
+
+                                            <div className="pt-10 space-y-8">
+                                                <div className="flex items-center justify-between">
+                                                    <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
+                                                        Properties
+                                                        <div className="absolute bottom-0 left-0 w-2/3 h-0.5 bg-[#2FED9A]"></div>
+                                                    </h3>
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="text-[12px] font-bold text-gray-400">Filter by</span>
                                                         <div className="relative">
-                                                            <select className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none appearance-none text-gray-400">
-                                                                <option>Property Type</option>
+                                                            <select className="h-10 bg-white border border-gray-200 rounded-lg px-6 pr-10 text-sm outline-none appearance-none min-w-[120px]">
+                                                                <option>All</option>
                                                             </select>
                                                             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
                                                         </div>
                                                     </div>
-                                                    <div className="flex gap-2">
-                                                        <input type="text" placeholder="₹ Min" className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none" />
-                                                        <input type="text" placeholder="₹ Max" className="w-full h-12 bg-white border border-gray-200 rounded-lg px-4 text-sm outline-none" />
-                                                    </div>
-                                                    <button className="h-12 bg-[#2FED9A] text-[#1a1c21] flex items-center justify-center rounded-lg hover:shadow-lg transition-all">
-                                                        <Search size={24} />
+                                                </div>
+                                                <div className="py-20 text-center space-y-2 opacity-50">
+                                                    <Building2 size={40} className="text-gray-200 mx-auto" />
+                                                    <p className="text-sm font-bold text-gray-400">No Records found</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : activeSidebarItem === 'bulk-edit' ? (
+                                        <div className="space-y-8 animate-fade-in-up">
+                                            <div className="border-b border-gray-100 pb-2">
+                                                <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
+                                                    Bulk Edit
+                                                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
+                                                </h3>
+                                            </div>
+
+                                            <div className="flex flex-wrap items-center justify-between gap-4">
+                                                <div className="flex flex-wrap items-center gap-3">
+                                                    <button className="bg-[#1a1c21] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all">
+                                                        Activate Selected Properties
+                                                    </button>
+                                                    <button className="bg-[#1a1c21] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all">
+                                                        Deactivate Selected Properties
                                                     </button>
                                                 </div>
-
-                                                <div className="flex justify-end">
-                                                    <button className="text-[12px] font-bold text-gray-400 hover:text-[#1a1c21] underline decoration-dotted">
-                                                        Reset Search
+                                                <div className="flex items-center gap-3">
+                                                    <button className="bg-[#ff3d3d] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#ff3d3d]/90 transition-all">
+                                                        Clear all
+                                                    </button>
+                                                    <button className="bg-[#2FED9A] text-[#1a1c21] px-8 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:shadow-lg transition-all">
+                                                        Submit
                                                     </button>
                                                 </div>
+                                            </div>
 
-                                                <div className="pt-10 space-y-8">
-                                                    <div className="flex items-center justify-between">
-                                                        <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
-                                                            Properties
-                                                            <div className="absolute bottom-0 left-0 w-2/3 h-0.5 bg-[#2FED9A]"></div>
-                                                        </h3>
-                                                        <div className="flex items-center gap-4">
-                                                            <span className="text-[12px] font-bold text-gray-400">Filter by</span>
-                                                            <div className="relative">
-                                                                <select className="h-10 bg-white border border-gray-200 rounded-lg px-6 pr-10 text-sm outline-none appearance-none min-w-[120px]">
-                                                                    <option>All</option>
-                                                                </select>
-                                                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" size={14} />
+                                            <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                                                <table className="w-full text-left border-collapse">
+                                                    <thead>
+                                                        <tr className="bg-gray-50 text-[11px] font-black text-gray-500 uppercase tracking-widest border-b border-gray-100">
+                                                            <th className="px-6 py-4 w-10">
+                                                                <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-teal-500 focus:ring-teal-500" />
+                                                            </th>
+                                                            <th className="px-6 py-4">Property ID</th>
+                                                            <th className="px-6 py-4">Description</th>
+                                                            <th className="px-6 py-4">Current Price</th>
+                                                            <th className="px-6 py-4">Recommended Price</th>
+                                                            <th className="px-6 py-4">Status</th>
+                                                            <th className="px-6 py-4">Set New Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colSpan={7} className="px-6 py-20 text-center">
+                                                                <p className="text-sm font-bold text-gray-300">No Records found</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    ) : activeSidebarItem === 'favorite-property' ? (
+                                        <div className="space-y-8 animate-fade-in-up">
+                                            <div className="border-b border-gray-100 pb-2">
+                                                <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
+                                                    Favorite Properties
+                                                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
+                                                </h3>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                                                {[
+                                                    {
+                                                        id: 'PROP-001',
+                                                        title: 'Elite Residency 2BHK',
+                                                        location: 'Sector 128, Noida',
+                                                        price: '₹1.25 Cr',
+                                                        type: 'Apartment',
+                                                        details: '2 BHK • 1250 sq.ft',
+                                                        image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'
+                                                    },
+                                                    {
+                                                        id: 'PROP-002',
+                                                        title: 'Luxury Villa Pine',
+                                                        location: 'Zeta 1, Greater Noida',
+                                                        price: '₹3.50 Cr',
+                                                        type: 'Villa',
+                                                        details: '4 BHK • 3500 sq.ft',
+                                                        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400'
+                                                    }
+                                                ].map((prop) => (
+                                                    <div key={prop.id} className="group relative bg-white rounded-[24px] border border-gray-100 overflow-hidden transition-all hover:shadow-xl hover:shadow-gray-200/40 hover:border-emerald-100/50">
+                                                        <div className="relative h-48 overflow-hidden">
+                                                            <img
+                                                                src={prop.image}
+                                                                alt={prop.title}
+                                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                            />
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                            <div className="absolute top-4 left-4 flex gap-2">
+                                                                <div className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-[#1a1c21] shadow-sm">
+                                                                    {prop.type}
+                                                                </div>
+                                                            </div>
+                                                            <button className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-md rounded-full text-red-500 shadow-sm hover:scale-110 transition-transform">
+                                                                <Heart size={14} fill="currentColor" />
+                                                            </button>
+                                                            <div className="absolute bottom-4 left-6 text-white opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
+                                                                <p className="text-sm font-black uppercase tracking-widest">{prop.price}</p>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="py-20 text-center space-y-2 opacity-50">
-                                                        <Building2 size={40} className="text-gray-200 mx-auto" />
-                                                        <p className="text-sm font-bold text-gray-400">No Records found</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : activeSidebarItem === 'bulk-edit' ? (
-                                            <div className="space-y-8 animate-fade-in-up">
-                                                <div className="border-b border-gray-100 pb-2">
-                                                    <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
-                                                        Bulk Edit
-                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
-                                                    </h3>
-                                                </div>
-
-                                                <div className="flex flex-wrap items-center justify-between gap-4">
-                                                    <div className="flex flex-wrap items-center gap-3">
-                                                        <button className="bg-[#1a1c21] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all">
-                                                            Activate Selected Properties
-                                                        </button>
-                                                        <button className="bg-[#1a1c21] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#2FED9A] hover:text-[#1a1c21] transition-all">
-                                                            Deactivate Selected Properties
-                                                        </button>
-                                                    </div>
-                                                    <div className="flex items-center gap-3">
-                                                        <button className="bg-[#ff3d3d] text-white px-6 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:bg-[#ff3d3d]/90 transition-all">
-                                                            Clear all
-                                                        </button>
-                                                        <button className="bg-[#2FED9A] text-[#1a1c21] px-8 py-2.5 rounded-lg font-black text-[11px] uppercase tracking-widest hover:shadow-lg transition-all">
-                                                            Submit
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                                <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
-                                                    <table className="w-full text-left border-collapse">
-                                                        <thead>
-                                                            <tr className="bg-gray-50 text-[11px] font-black text-gray-500 uppercase tracking-widest border-b border-gray-100">
-                                                                <th className="px-6 py-4 w-10">
-                                                                    <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-teal-500 focus:ring-teal-500" />
-                                                                </th>
-                                                                <th className="px-6 py-4">Property ID</th>
-                                                                <th className="px-6 py-4">Description</th>
-                                                                <th className="px-6 py-4">Current Price</th>
-                                                                <th className="px-6 py-4">Recommended Price</th>
-                                                                <th className="px-6 py-4">Status</th>
-                                                                <th className="px-6 py-4">Set New Price</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td colSpan={7} className="px-6 py-20 text-center">
-                                                                    <p className="text-sm font-bold text-gray-300">No Records found</p>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        ) : activeSidebarItem === 'favorite-property' ? (
-                                            <div className="space-y-8 animate-fade-in-up">
-                                                <div className="border-b border-gray-100 pb-2">
-                                                    <h3 className="text-sm font-black text-[#1a1c21] uppercase tracking-wider relative inline-block pb-1">
-                                                        Favorite Properties
-                                                        <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#2FED9A]"></div>
-                                                    </h3>
-                                                </div>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
-                                                    {[
-                                                        {
-                                                            id: 'PROP-001',
-                                                            title: 'Elite Residency 2BHK',
-                                                            location: 'Sector 128, Noida',
-                                                            price: '₹1.25 Cr',
-                                                            type: 'Apartment',
-                                                            details: '2 BHK • 1250 sq.ft',
-                                                            image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=400'
-                                                        },
-                                                        {
-                                                            id: 'PROP-002',
-                                                            title: 'Luxury Villa Pine',
-                                                            location: 'Zeta 1, Greater Noida',
-                                                            price: '₹3.50 Cr',
-                                                            type: 'Villa',
-                                                            details: '4 BHK • 3500 sq.ft',
-                                                            image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=400'
-                                                        }
-                                                    ].map((prop) => (
-                                                        <div key={prop.id} className="group relative bg-white rounded-[24px] border border-gray-100 overflow-hidden transition-all hover:shadow-xl hover:shadow-gray-200/40 hover:border-emerald-100/50">
-                                                            <div className="relative h-48 overflow-hidden">
-                                                                <img
-                                                                    src={prop.image}
-                                                                    alt={prop.title}
-                                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                                                />
-                                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                                                <div className="absolute top-4 left-4 flex gap-2">
-                                                                    <div className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[9px] font-black uppercase tracking-widest text-[#1a1c21] shadow-sm">
-                                                                        {prop.type}
-                                                                    </div>
+                                                        <div className="p-6 space-y-4">
+                                                            <div className="space-y-1">
+                                                                <h4 className="text-lg font-bold text-[#1a1c21] tracking-tight">{prop.title}</h4>
+                                                                <div className="flex items-center gap-1.5 text-xs font-medium text-gray-400">
+                                                                    <MapPin size={12} className="text-gray-300" />
+                                                                    {prop.location}
                                                                 </div>
-                                                                <button className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-md rounded-full text-red-500 shadow-sm hover:scale-110 transition-transform">
-                                                                    <Heart size={14} fill="currentColor" />
+                                                            </div>
+                                                            <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                                                                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{prop.details}</span>
+                                                                <button className="flex items-center gap-1 text-[#1a1c21] font-bold text-[10px] uppercase tracking-widest hover:text-emerald-500 transition-colors group/btn">
+                                                                    Details <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
                                                                 </button>
-                                                                <div className="absolute bottom-4 left-6 text-white opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
-                                                                    <p className="text-sm font-black uppercase tracking-widest">{prop.price}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="p-6 space-y-4">
-                                                                <div className="space-y-1">
-                                                                    <h4 className="text-lg font-bold text-[#1a1c21] tracking-tight">{prop.title}</h4>
-                                                                    <div className="flex items-center gap-1.5 text-xs font-medium text-gray-400">
-                                                                        <MapPin size={12} className="text-gray-300" />
-                                                                        {prop.location}
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                                                                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{prop.details}</span>
-                                                                    <button className="flex items-center gap-1 text-[#1a1c21] font-bold text-[10px] uppercase tracking-widest hover:text-emerald-500 transition-colors group/btn">
-                                                                        Details <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-                                                                    </button>
-                                                                </div>
                                                             </div>
                                                         </div>
-                                                    ))}
-                                                </div>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ) : (
-                                            <div className="h-full flex flex-col items-center justify-center space-y-6 opacity-40">
-                                                <LayoutDashboard size={80} className="text-gray-200" />
-                                                <div className="text-center space-y-2">
-                                                    <h3 className="text-2xl font-black uppercase tracking-tight">Section Coming Soon</h3>
-                                                    <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Agent Content Implementation in Progress</p>
-                                                </div>
+                                        </div>
+                                    ) : (
+                                        <div className="h-full flex flex-col items-center justify-center space-y-6 opacity-40">
+                                            <LayoutDashboard size={80} className="text-gray-200" />
+                                            <div className="text-center space-y-2">
+                                                <h3 className="text-2xl font-black uppercase tracking-tight">Section Coming Soon</h3>
+                                                <p className="text-sm font-bold text-gray-400 uppercase tracking-[0.2em]">Agent Content Implementation in Progress</p>
                                             </div>
-                                        )}
-                                    </>
+                                        </div>
+                                    )}
+                                </>
                             </div>
                         ) : activeTab === 'profile' ? (
                             <div className="space-y-12 animate-fade-in-up">
@@ -570,13 +592,13 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                                             <div className="space-y-4">
                                                 <h4 className="text-[13px] font-black text-[#1a1c21] uppercase tracking-widest">Property Type</h4>
                                                 <div className="flex gap-4">
-                                                    <button 
+                                                    <button
                                                         onClick={() => setSelectedPropertyType('residential')}
                                                         className={`flex items-center gap-3 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${selectedPropertyType === 'residential' ? 'bg-[#2FED9A] text-[#1a1c21] shadow-lg shadow-teal-100' : 'bg-white border border-gray-100 text-gray-400 hover:border-teal-200'}`}
                                                     >
                                                         <Home size={16} /> Residential
                                                     </button>
-                                                    <button 
+                                                    <button
                                                         onClick={() => setSelectedPropertyType('commercial')}
                                                         className={`flex items-center gap-3 px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${selectedPropertyType === 'commercial' ? 'bg-[#2FED9A] text-[#1a1c21] shadow-lg shadow-teal-100' : 'bg-white border border-gray-100 text-gray-400 hover:border-teal-200'}`}
                                                     >
@@ -1455,41 +1477,10 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                             </div>
                         ) : activeTab === 'projects' ? (
                             <div className="space-y-12 animate-fade-in-up">
-                                <div className="flex items-center justify-between border-b border-gray-100 pb-6">
-                                    <div className="space-y-1">
-                                        <h2 className="text-3xl font-black text-[#1a1c21] uppercase tracking-tight">Projects</h2>
-                                        <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Manage Your Projects</p>
-                                    </div>
-                                </div>
+
 
                                 {activeSidebarItem === 'manage-projects' ? (
-                                    <div className="space-y-8 animate-fade-in-up">
-                                        <div className="bg-white border border-gray-100 rounded-[30px] overflow-hidden shadow-sm">
-                                            <table className="w-full text-left border-collapse">
-                                                <thead>
-                                                    <tr className="bg-gray-50/50 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
-                                                        <th className="px-8 py-5 border-r border-gray-50">Sr. no.</th>
-                                                        <th className="px-8 py-5 border-r border-gray-50">Project Name</th>
-                                                        <th className="px-8 py-5 border-r border-gray-50">Builder Name</th>
-                                                        <th className="px-8 py-5 border-r border-gray-50">Project Type</th>
-                                                        <th className="px-8 py-5 border-r border-gray-50">Status</th>
-                                                        <th className="px-8 py-5 border-r border-gray-50">View Site</th>
-                                                        <th className="px-8 py-5">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td colSpan={7} className="px-8 py-20 text-center">
-                                                            <div className="flex flex-col items-center gap-4 opacity-40">
-                                                                <Building2 size={40} className="text-gray-200" />
-                                                                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">No Projects Found</p>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                    <ManageProjectsView onAddProject={() => setActiveSidebarItem('add-project')} />
                                 ) : (
                                     <div className="h-full flex flex-col items-center justify-center space-y-6 opacity-40">
                                         <LayoutDashboard size={80} className="text-gray-200" />
@@ -1611,114 +1602,7 @@ const DeveloperDashboardView: React.FC<DeveloperDashboardViewProps> = ({ onNavig
                 </div>
             </div>
 
-            {/* 5. Premium Footer */}
-            <footer className="mt-40 bg-[#1a1c21] text-white pt-24 pb-12">
-                <div className="max-w-[1240px] mx-auto px-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-20">
-                        {/* Company Info */}
-                        <div className="lg:col-span-1 space-y-8">
-                            <div className="flex items-center gap-2">
-                                <span className="font-bold text-2xl text-white">Hunt</span>
-                                <MapPin className="text-red-600 fill-red-600" size={24} />
-                                <span className="font-bold text-2xl text-white">roperty</span>
-                            </div>
-                            <p className="text-sm text-gray-400 leading-relaxed font-medium">
-                                Hunt Property offers end-to-end real estate expertise with a refined, client-first approach, delivering buying, leasing, Vaastu, design, and investment solutions with precision and trust.
-                            </p>
-                            <div className="flex items-center gap-4">
-                                {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
-                                    <div key={idx} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-teal-500 hover:text-white transition-all cursor-pointer text-gray-400">
-                                        <Icon size={18} />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="flex items-center gap-4 pt-4">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" className="h-10 cursor-pointer hover:opacity-80 transition-opacity" />
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-10 cursor-pointer hover:opacity-80 transition-opacity" />
-                            </div>
-                        </div>
 
-                        {/* Subscription */}
-                        <div className="lg:col-span-3">
-                            <div className="bg-white/5 rounded-[40px] p-10 md:p-14 border border-white/10 relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px] -mr-48 -mt-48 transition-all group-hover:bg-teal-500/20"></div>
-                                <div className="relative z-10 space-y-8">
-                                    <div className="space-y-2">
-                                        <h3 className="text-2xl font-black uppercase tracking-tight">Subscribe to Market Watch</h3>
-                                        <p className="text-sm text-gray-400 font-medium">Subscribe for market insights, exclusive listings, trends, updates, and opportunities.</p>
-                                    </div>
-                                    <div className="flex flex-col md:flex-row gap-4">
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email address"
-                                            className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-8 py-5 text-sm focus:outline-none focus:border-teal-400 transition-colors"
-                                        />
-                                        <button className="bg-[#2FED9A] text-[#1a1c21] px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-wider hover:shadow-[0_0_30px_rgba(47,237,154,0.4)] transition-all active:scale-95">
-                                            Subscribe
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 mt-20">
-                                <div>
-                                    <h4 className="text-teal-500 font-black text-[11px] uppercase tracking-widest mb-8">Essentials</h4>
-                                    <ul className="space-y-4 text-sm text-gray-400 font-bold">
-                                        <li className="hover:text-white transition-colors cursor-pointer">Apply for Home Loan</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Advertise with Us</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">All Property</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Sitemap</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="text-teal-500 font-black text-[11px] uppercase tracking-widest mb-8">Company</h4>
-                                    <ul className="space-y-4 text-sm text-gray-400 font-bold">
-                                        <li className="hover:text-white transition-colors cursor-pointer">About Us</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Careers</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Testimonials</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Blogs</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Customer Care</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Contact Us</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="text-teal-500 font-black text-[11px] uppercase tracking-widest mb-8">Company Policy</h4>
-                                    <ul className="space-y-4 text-sm text-gray-400 font-bold">
-                                        <li className="hover:text-white transition-colors cursor-pointer">Terms and Conditions</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Privacy Policy</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Refund and Cancellation Policy</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Package Policy</li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 className="text-teal-500 font-black text-[11px] uppercase tracking-widest mb-8">Property Services</h4>
-                                    <ul className="space-y-4 text-sm text-gray-400 font-bold">
-                                        <li className="hover:text-white transition-colors cursor-pointer">Search Property</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Search Projects</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Search Agents</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Home loan calculator</li>
-                                        <li className="hover:text-white transition-colors cursor-pointer">Property Cost Calculator</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-                        <div className="flex gap-6">
-                            <span>Privacy Policy</span>
-                            <span>Terms of Service</span>
-                            <span className="text-gray-300">RERA: UPRERAAGT20169</span>
-                        </div>
-                        <div>
-                            © Copyright 2017 - Huntproperty.com - All Rights Reserved
-                        </div>
-                        <div>
-                            Powered By : Catalyst E Page PVT LTD
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </div >
     );
 };

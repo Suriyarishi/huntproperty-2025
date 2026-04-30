@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     LayoutDashboard, Plus, Search, Filter,
     MoreVertical, Edit3, Trash2, ExternalLink,
-    MapPin, Building2, Tag, Calendar, ChevronRight
+    MapPin, Building2, Tag, Calendar, ChevronRight,
+    AlertTriangle, X
 } from 'lucide-react';
 
 interface Project {
@@ -21,6 +22,8 @@ interface ManageProjectsViewProps {
 }
 
 const ManageProjectsView: React.FC<ManageProjectsViewProps> = ({ onAddProject }) => {
+    const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
+
     const projects: Project[] = [
         {
             id: 'PRJ-001',
@@ -167,7 +170,10 @@ const ManageProjectsView: React.FC<ManageProjectsViewProps> = ({ onAddProject })
                                     <button className="flex items-center gap-2 px-5 py-2 bg-gray-50 text-[#1a1c21] rounded-lg font-bold text-[10px] uppercase tracking-widest hover:bg-[#1a1c21] hover:text-white transition-all shadow-sm">
                                         <Edit3 size={12} /> Edit Project
                                     </button>
-                                    <button className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-all">
+                                    <button 
+                                        onClick={() => setProjectToDelete(project)}
+                                        className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-all"
+                                    >
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
@@ -191,6 +197,67 @@ const ManageProjectsView: React.FC<ManageProjectsViewProps> = ({ onAddProject })
                     Load More Projects
                 </button>
             </div>
+
+
+            {/* Delete Confirmation Modal */}
+            {projectToDelete && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div 
+                        className="absolute inset-0 bg-[#1a1c21]/80 backdrop-blur-sm animate-fade-in"
+                        onClick={() => setProjectToDelete(null)}
+                    ></div>
+                    
+                    {/* Modal Content */}
+                    <div className="relative bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl animate-scale-in">
+                        <div className="p-8 space-y-8">
+                            {/* Icon & Close */}
+                            <div className="flex items-start justify-between">
+                                <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500">
+                                    <AlertTriangle size={28} />
+                                </div>
+                                <button 
+                                    onClick={() => setProjectToDelete(null)}
+                                    className="p-2 hover:bg-gray-50 rounded-full transition-colors text-gray-400"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            {/* Text Content */}
+                            <div className="space-y-3">
+                                <h3 className="text-2xl font-black text-[#1a1c21] uppercase tracking-tight">Delete Project?</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed font-medium">
+                                    Are you sure you want to delete <span className="font-bold text-[#1a1c21]">"{projectToDelete.name}"</span>? 
+                                    This action cannot be undone and all associated data will be permanently removed.
+                                </p>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex flex-col gap-3 pt-2">
+                                <button 
+                                    onClick={() => {
+                                        // Handle actual deletion logic here
+                                        setProjectToDelete(null);
+                                    }}
+                                    className="w-full bg-[#1a1c21] text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-red-500 transition-all shadow-xl shadow-red-500/10"
+                                >
+                                    Confirm Deletion
+                                </button>
+                                <button 
+                                    onClick={() => setProjectToDelete(null)}
+                                    className="w-full bg-white text-gray-400 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:text-[#1a1c21] transition-all"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Status Accent */}
+                        <div className="h-2 bg-red-500 w-full opacity-20"></div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

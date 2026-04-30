@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X, LayoutDashboard } from 'lucide-react';
+import { Menu, User, ArrowLeft, ChevronDown, LogIn, UserPlus, Briefcase, MapPin, Home, X, LayoutDashboard, Bell, Check } from 'lucide-react';
 
 interface NavbarProps {
     onNavigate: (view: any) => void;
@@ -11,9 +11,16 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailView, onBack, backLabel }) => {
   const [showAuthMenu, setShowAuthMenu] = useState(false);
-  // Defaulting to 'Buy' to satisfy the "always shown" request on initial mount
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [activeNotificationTab, setActiveNotificationTab] = useState('All');
   const [activeDropdown, setActiveDropdown] = useState<string | null>('Buy');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const notifications = [
+    { id: 1, type: 'property', title: 'Price Dropped by ₹5L', desc: '2 BHK in Mumbai now available at lower price', time: '2 mins ago', unread: true, image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=100&q=80' },
+    { id: 2, type: 'alert', title: 'New Project Alert', desc: 'Godrej Tropical Isle just launched in Sector 146', time: '1 hour ago', unread: true },
+    { id: 3, type: 'plan', title: 'Subscription Expiring', desc: 'Your Premium plan expires in 3 days. Renew now.', time: '1 day ago', unread: false }
+  ];
 
   const handleMouseEnter = (menu: string) => setActiveDropdown(menu);
   const handleMouseLeave = () => setActiveDropdown(null);
@@ -239,7 +246,77 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
               <div className="relative">
                   <button 
-                      onClick={() => setShowAuthMenu(!showAuthMenu)}
+                      onClick={() => { setShowNotifications(!showNotifications); setShowAuthMenu(false); setActiveDropdown(null); }}
+                      className="relative p-2 rounded-full hover:bg-slate-100 transition-all text-[#1A1A1A] group"
+                  >
+                      <Bell size={20} className="stroke-[2.5]" />
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#2FED9A] rounded-full ring-2 ring-white"></span>
+                  </button>
+
+                  {showNotifications && (
+                      <div className="absolute right-0 top-full mt-4 w-[360px] bg-white rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] border border-gray-100 p-2 flex flex-col animate-fade-in-up origin-top-right z-50">
+                          <div className="p-4 border-b border-gray-50 flex items-center justify-between">
+                              <h3 className="font-bold text-[#1A1A1A] text-[15px]">Notifications</h3>
+                              <button className="text-[11px] font-bold text-[#2FED9A] hover:text-teal-600 uppercase tracking-widest flex items-center gap-1">
+                                  <Check size={14} /> Mark all as read
+                              </button>
+                          </div>
+                          
+                          <div className="flex px-4 py-2 gap-2 border-b border-gray-50">
+                              {['All', 'Property Alerts', 'Plan'].map(tab => (
+                                  <button 
+                                    key={tab}
+                                    onClick={() => setActiveNotificationTab(tab)}
+                                    className={`px-4 py-1.5 rounded-full text-[11px] font-bold transition-colors ${activeNotificationTab === tab ? 'bg-[#2FED9A]/10 text-[#2FED9A]' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'}`}
+                                  >
+                                      {tab}
+                                  </button>
+                              ))}
+                          </div>
+
+                          <div className="max-h-[320px] overflow-y-auto no-scrollbar py-2">
+                              {notifications.filter(n => activeNotificationTab === 'All' || (activeNotificationTab === 'Property Alerts' && n.type === 'property') || (activeNotificationTab === 'Plan' && n.type === 'plan')).map(notif => (
+                                  <div key={notif.id} className={`flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors cursor-pointer group ${notif.unread ? 'bg-[#2FED9A]/5' : ''}`}>
+                                      <div className="relative shrink-0">
+                                          {notif.image ? (
+                                              <img src={notif.image} alt="Property" className="w-12 h-12 rounded-xl object-cover" />
+                                          ) : (
+                                              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400">
+                                                  <Bell size={20} />
+                                              </div>
+                                          )}
+                                          {notif.unread && <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#2FED9A] rounded-full border-2 border-white"></div>}
+                                      </div>
+                                      
+                                      <div className="flex-1 min-w-0">
+                                          <h4 className="text-[13px] font-bold text-[#1A1A1A] truncate leading-tight group-hover:text-[#2FED9A] transition-colors">{notif.title}</h4>
+                                          <p className="text-[11px] text-gray-500 line-clamp-2 mt-0.5 leading-snug">{notif.desc}</p>
+                                          <div className="flex items-center justify-between mt-2">
+                                              <span className="text-[10px] font-semibold text-gray-400">{notif.time}</span>
+                                              <button className="text-[10px] font-black text-[#2FED9A] uppercase tracking-widest hover:text-teal-600">
+                                                  View Details
+                                              </button>
+                                          </div>
+                                      </div>
+                                  </div>
+                              ))}
+                          </div>
+
+                          <div className="p-3 border-t border-gray-50">
+                              <button 
+                                onClick={() => { onNavigate('notifications'); setShowNotifications(false); }}
+                                className="w-full py-2.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-[#1A1A1A] font-bold text-xs uppercase tracking-widest transition-colors"
+                              >
+                                  View All Notifications
+                              </button>
+                          </div>
+                      </div>
+                  )}
+              </div>
+
+              <div className="relative">
+                  <button 
+                      onClick={() => { setShowAuthMenu(!showAuthMenu); setShowNotifications(false); }}
                       className="flex items-center gap-1 p-2 rounded-full hover:bg-slate-100 transition-all text-[#1A1A1A]"
                   >
                       <User size={20} className="stroke-[2.5]" />
@@ -247,7 +324,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
                   </button>
 
                   {showAuthMenu && (
-                      <div className="absolute right-0 top-full mt-4 w-52 sm:w-60 bg-white rounded-3xl shadow-2xl border border-slate-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right">
+                      <div className="absolute right-0 top-full mt-4 w-52 sm:w-60 bg-white rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] border border-gray-100 p-2 flex flex-col gap-1 animate-fade-in-up origin-top-right z-50">
                           <button onClick={() => { onNavigate('dashboard'); setShowAuthMenu(false); setActiveDropdown(null); }} className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 hover:bg-slate-50 rounded-2xl text-left text-sm sm:text-[15px] font-bold text-[#1A1A1A]">
                               <LayoutDashboard size={16} className="text-red-600" /> Dashboard
                           </button>

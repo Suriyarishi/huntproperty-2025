@@ -1,10 +1,10 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, Sliders, MapPin, Home, DollarSign, 
   ArrowRight, ClipboardEdit, ChevronDown, Sparkles, 
   X, LocateFixed, Building2, Layers
 } from 'lucide-react';
+import { useToast } from './ToastContext';
 
 interface HeroProps {
     onSearch: () => void;
@@ -15,6 +15,35 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ onSearch, onPostProperty, onPostRequirement }) => {
   const [activeTab, setActiveTab] = useState<'buy' | 'rent' | 'sell'>('buy');
   const [searchQuery, setSearchQuery] = useState('');
+  const { addToast } = useToast();
+
+  useEffect(() => {
+    // Show a sample push notification shortly after the home screen loads
+    const timer = setTimeout(() => {
+      addToast({
+        title: "Price Dropped by ₹5L",
+        description: "2 BHK in Mumbai now available at lower price. Act fast before it's gone!",
+        variant: 'property',
+        ctaText: "View Details",
+        imageUrl: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=400&q=80"
+      });
+    }, 2000);
+    
+    // Add a second system notification
+    const timer2 = setTimeout(() => {
+        addToast({
+            title: "New Projects Launched",
+            description: "3 premium properties just added in your preferred location.",
+            variant: 'system',
+            ctaText: "Explore Now"
+        });
+    }, 4500);
+
+    return () => {
+        clearTimeout(timer);
+        clearTimeout(timer2);
+    };
+  }, [addToast]);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
