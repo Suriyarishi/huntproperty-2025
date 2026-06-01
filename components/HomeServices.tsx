@@ -76,7 +76,7 @@ const SERVICES = [
   { 
     id: 'room-dekho', 
     view: 'room-dekho',
-    title: 'Room dekho', 
+    title: 'RoomSpot', 
     description: 'Explore and discover the perfect room for your stay.', 
     icon: Search, 
     theme: {

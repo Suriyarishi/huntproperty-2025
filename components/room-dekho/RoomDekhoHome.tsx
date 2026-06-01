@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RoomDekhoView } from './types';
 import { Map, Zap, CheckCircle2, Shield, ArrowRight } from 'lucide-react';
 
@@ -21,6 +21,8 @@ const FEATURES = [
 ];
 
 const RoomDekhoHome: React.FC<RoomDekhoHomeProps> = ({ onNavigate }) => {
+    const [howItWorksMode, setHowItWorksMode] = useState<'find' | 'list'>('find');
+
     return (
         <div className="pb-24">
             {/* Hero Section */}
@@ -29,14 +31,14 @@ const RoomDekhoHome: React.FC<RoomDekhoHomeProps> = ({ onNavigate }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
                 
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 backdrop-blur-sm">
-                        <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse"></span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-sm">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                         <span className="text-sm font-semibold tracking-wide uppercase">India's Smartest Rental Network</span>
                     </div>
                     
                     <h1 className="text-5xl md:text-7xl font-display font-extrabold tracking-tight leading-tight">
                         Find rooms near you.<br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-teal-400">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">
                             Zero brokerage.
                         </span>
                     </h1>
@@ -48,7 +50,7 @@ const RoomDekhoHome: React.FC<RoomDekhoHomeProps> = ({ onNavigate }) => {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                         <button 
                             onClick={() => onNavigate('map')}
-                            className="w-full sm:w-auto px-8 py-4 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-full text-lg transition-all shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)] flex items-center justify-center gap-2"
+                            className="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-full text-lg transition-all shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2"
                         >
                             <Map size={20} />
                             Find Rooms on Map
@@ -68,7 +70,7 @@ const RoomDekhoHome: React.FC<RoomDekhoHomeProps> = ({ onNavigate }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {FEATURES.map((feat, idx) => (
                         <div key={idx} className="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center gap-4 hover:-translate-y-1 transition-transform">
-                            <div className="w-14 h-14 rounded-full bg-violet-50 flex items-center justify-center text-violet-600">
+                            <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
                                 <feat.icon size={28} strokeWidth={1.5} />
                             </div>
                             <div>
@@ -77,6 +79,65 @@ const RoomDekhoHome: React.FC<RoomDekhoHomeProps> = ({ onNavigate }) => {
                             </div>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* How It Works */}
+            <div className="bg-[#111111] py-24 mt-20">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl sm:text-4xl font-display font-bold text-white mb-3 tracking-tight">How It Works</h2>
+                        <p className="text-slate-400 font-medium text-sm sm:text-base">Whether you’re searching for a room or sharing one, getting started is simple.</p>
+                    </div>
+
+                    <div className="flex justify-center mb-16">
+                        <div className="bg-[#1A1A1A] rounded-full p-1.5 inline-flex items-center gap-2 border border-white/5">
+                            <button
+                                onClick={() => setHowItWorksMode('find')}
+                                className={`px-6 sm:px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${howItWorksMode === 'find' ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                            >
+                                I need a room
+                            </button>
+                            <button
+                                onClick={() => setHowItWorksMode('list')}
+                                className={`px-6 sm:px-8 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${howItWorksMode === 'list' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                            >
+                                I have a room
+                            </button>
+                        </div>
+                    </div>
+
+                    {howItWorksMode === 'find' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-[#1A1A1A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#222222] hover:border-white/10 transition-all duration-300">
+                                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">Find rooms near you</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed font-medium">Browse available rooms in your area in just a tap.</p>
+                            </div>
+                            <div className="bg-[#1A1A1A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#222222] hover:border-white/10 transition-all duration-300">
+                                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">View rooms on the map</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed font-medium">Check rent, room type, and distance before you decide.</p>
+                            </div>
+                            <div className="bg-[#1A1A1A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#222222] hover:border-white/10 transition-all duration-300">
+                                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">Call the owner directly</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed font-medium">No broker, no hidden charges. Connect instantly.</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-[#1A1A1A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#222222] hover:border-white/10 transition-all duration-300">
+                                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">Post your room in 2 minutes</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed font-medium">Add rent, photos, and your contact number in a few easy steps.</p>
+                            </div>
+                            <div className="bg-[#1A1A1A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#222222] hover:border-white/10 transition-all duration-300">
+                                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">Your room appears on the map</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed font-medium">Nearby students and workers can discover your listing right away.</p>
+                            </div>
+                            <div className="bg-[#1A1A1A] border border-white/5 p-8 rounded-[2rem] hover:bg-[#222222] hover:border-white/10 transition-all duration-300">
+                                <h3 className="text-lg font-bold text-white mb-3 tracking-tight">Interested people call you directly</h3>
+                                <p className="text-slate-400 text-sm leading-relaxed font-medium">No middleman, no commission. Receive calls straight from interested tenants.</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -89,7 +150,7 @@ const RoomDekhoHome: React.FC<RoomDekhoHomeProps> = ({ onNavigate }) => {
                     </div>
                     <button 
                         onClick={() => onNavigate('city')}
-                        className="hidden sm:flex items-center gap-2 text-violet-600 font-semibold hover:text-violet-700 transition-colors"
+                        className="hidden sm:flex items-center gap-2 text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
                     >
                         View all cities <ArrowRight size={18} />
                     </button>

@@ -24,23 +24,23 @@ const RoomDekhoNavbar: React.FC<RoomDekhoNavbarProps> = ({ onNavigate, onExit, c
                         className="flex items-center gap-2 cursor-pointer group"
                         onClick={() => onNavigate('home')}
                     >
-                        <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center text-white group-hover:bg-violet-700 transition-colors shadow-inner">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white group-hover:bg-emerald-700 transition-colors shadow-inner">
                             <MapPin size={18} />
                         </div>
-                        <span className="font-display font-bold text-xl tracking-tight text-slate-900 group-hover:text-violet-700 transition-colors">
+                        <span className="font-display font-bold text-xl tracking-tight text-slate-900 group-hover:text-emerald-700 transition-colors">
                             RoomSpot
                         </span>
                     </div>
                 </div>
 
                 <div className="hidden md:flex items-center gap-8">
-                    <button onClick={() => onNavigate('map')} className={`text-sm font-medium transition-colors ${currentView === 'map' ? 'text-violet-600' : 'text-slate-600 hover:text-violet-600'}`}>
+                    <button onClick={() => onNavigate('map')} className={`text-sm font-medium transition-colors ${currentView === 'map' ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600'}`}>
                         Find Rooms
                     </button>
-                    <button onClick={() => onNavigate('city')} className={`text-sm font-medium transition-colors ${currentView === 'city' ? 'text-violet-600' : 'text-slate-600 hover:text-violet-600'}`}>
+                    <button onClick={() => onNavigate('city')} className={`text-sm font-medium transition-colors ${currentView === 'city' ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600'}`}>
                         Cities
                     </button>
-                    <button onClick={() => onNavigate('blog')} className={`text-sm font-medium transition-colors ${currentView === 'blog' ? 'text-violet-600' : 'text-slate-600 hover:text-violet-600'}`}>
+                    <button onClick={() => onNavigate('blog')} className={`text-sm font-medium transition-colors ${currentView === 'blog' ? 'text-emerald-600' : 'text-slate-600 hover:text-emerald-600'}`}>
                         Blog
                     </button>
                 </div>
@@ -48,7 +48,7 @@ const RoomDekhoNavbar: React.FC<RoomDekhoNavbarProps> = ({ onNavigate, onExit, c
                 <div className="flex items-center gap-3">
                     <button 
                         onClick={() => onNavigate('list')}
-                        className="hidden sm:flex items-center gap-2 px-4 py-2 bg-violet-50 text-violet-700 hover:bg-violet-100 font-semibold rounded-full text-sm transition-all shadow-sm"
+                        className="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold rounded-full text-sm transition-all shadow-sm"
                     >
                         <PlusCircle size={16} />
                         List Your Room
