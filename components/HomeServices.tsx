@@ -8,7 +8,8 @@ import {
   Handshake, 
   UserCircle,
   ArrowRight,
-  ChevronRight
+  ChevronRight,
+  Search
 } from 'lucide-react';
 
 interface HomeServicesProps {
@@ -70,6 +71,20 @@ const SERVICES = [
       iconBg: 'bg-purple-100',
       iconColor: 'text-purple-600',
       hoverBg: 'hover:bg-purple-100/50'
+    }
+  },
+  { 
+    id: 'room-dekho', 
+    view: 'room-dekho',
+    title: 'Room dekho', 
+    description: 'Explore and discover the perfect room for your stay.', 
+    icon: Search, 
+    theme: {
+      bg: 'bg-cyan-50/50',
+      border: 'border-cyan-100',
+      iconBg: 'bg-cyan-100',
+      iconColor: 'text-cyan-600',
+      hoverBg: 'hover:bg-cyan-100/50'
     }
   },
   { 
@@ -138,11 +153,7 @@ const HomeServices: React.FC<HomeServicesProps> = ({ onNavigate }) => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {SERVICES.slice(0, 4).map((service) => (
-          <ServiceCard key={service.id} service={service} onClick={() => onNavigate(service.view)} />
-        ))}
-        <div className="hidden lg:block"></div> {/* Spacer for layout balance */}
-        {SERVICES.slice(4).map((service) => (
+        {SERVICES.map((service) => (
           <ServiceCard key={service.id} service={service} onClick={() => onNavigate(service.view)} />
         ))}
       </div>

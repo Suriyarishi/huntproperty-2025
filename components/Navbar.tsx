@@ -133,8 +133,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, onPostProperty, isDetailVie
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-[100] px-4 sm:px-6 py-6 pointer-events-none">
-        <div className="max-w-[95rem] mx-auto glass-panel rounded-full px-4 sm:px-8 py-3 flex items-center justify-between pointer-events-auto shadow-2xl bg-white/95 backdrop-blur-xl border border-white/40">
+      <nav className="sticky top-0 z-[100] w-full pointer-events-none transition-all duration-300">
+        <div className="w-full px-4 sm:px-8 py-3 flex items-center justify-between pointer-events-auto shadow-sm bg-white/95 backdrop-blur-xl border-b border-gray-100">
           
           {/* Logo & Back Button */}
           <div className="flex items-center gap-4 sm:gap-6">

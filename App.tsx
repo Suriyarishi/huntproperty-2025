@@ -34,6 +34,7 @@ import PropertyCostCalulatorView from './components/PropertyCostCalulator';
 import CustomerCareView from './components/CustomerCareView';
 import AdvertiseWithUsView from './components/AdvertiseWithUsView';
 import HomeServices from './components/HomeServices';
+import RoomDekhoApp from './components/room-dekho/RoomDekhoApp';
 import InstagramFeed from './components/InstagramFeed';
 import PostRequirementView from './components/PostRequirementView';
 import VastuView from './components/VastuView';
@@ -1020,7 +1021,7 @@ const BUILDERS: Builder[] = [
     { id: 'b4', name: 'Kanakia Builder', activeProjects: 195, citiesCovered: 6, brandLogo: 'https://www.kanakia.com/wp-content/uploads/2021/05/logo.png' },
 ];
 
-type ViewState = 'home' | 'property' | 'project-detail' | 'builder-projects' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'privacy' | 'refund-policy' | 'package-policy' | 'search-projects' | 'testimonials' | 'sitemap' | 'agent-dashboard' | 'developer-dashboard' | 'project-listing' | 'builder-overview' | 'location-categories' | 'project-listings' | 'unit-detail';
+type ViewState = 'home' | 'property' | 'project-detail' | 'builder-projects' | 'add-property' | 'buy' | 'rent' | 'sell' | 'agents' | 'insights' | 'insight-detail' | 'login' | 'register' | 'home-loans' | 'home-loan-calculator' | 'channel-partner' | 'employee-login' | 'rera' | 'legal-advisory' | 'master-plans' | 'news-gallery' | 'media-gallery' | 'video-gallery' | 'articles' | 'nri-center' | 'covid' | 'career' | 'post-requirement' | 'vastu' | 'investors' | 'dashboard' | 'ad-packages' | 'worth-calculator' | 'PropertyCostCalulator' | 'customer-care' | 'advertise' | 'about-us' | 'terms' | 'privacy' | 'refund-policy' | 'package-policy' | 'search-projects' | 'testimonials' | 'sitemap' | 'agent-dashboard' | 'developer-dashboard' | 'project-listing' | 'builder-overview' | 'location-categories' | 'project-listings' | 'unit-detail' | 'room-dekho';
 
 function App() {
     const [currentView, setCurrentView] = useState<ViewState>('home');
@@ -1354,6 +1355,8 @@ function App() {
                         onBack={() => setCurrentView('project-detail')}
                     />
                 ) : null;
+            case 'room-dekho':
+                return <RoomDekhoApp onExit={() => handleNavigate('home')} />;
             case 'builder-projects':
                 if (selectedBuilder) {
                     const builderProjects = PROJECTS.filter(p => p.developer === selectedBuilder.name);
@@ -1402,6 +1405,8 @@ function App() {
             case 'nri-center': return <NRICenterView />;
             case 'covid': return <CovidView />;
             case 'notifications': return <NotificationsView />;
+            case 'room-dekho':
+                return <RoomDekhoApp onExit={handleBackToHome} />;
             case 'home':
             default:
                 return (
